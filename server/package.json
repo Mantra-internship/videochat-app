@@ -16,7 +16,7 @@
     "instamojo-nodejs": "^0.0.5",
     "mongoose": "^6.4.2",
     "nodemon": "^2.0.18",
-    "socket.io": "^4.5.1"
+    "socket.io": "2.3.0"
   },
   "devDependencies": {
     "dotenv": "^16.0.1",
