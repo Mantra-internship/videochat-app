@@ -1,41 +1,65 @@
 const mongoose = require("mongoose");
 
-const paymentSchema = new mongoose.Schema({
-  name: {
-    type: String,
-  },
+const paymentSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+    },
 
-  payReqId: {
-    type: String,
-    required: true,
-  },
+    phone: {
+      type: String,
+    },
 
-  phone: {
-    type: String,
-  },
+    email: {
+      type: String,
+    },
 
-  email: {
-    type: String,
-  },
+    purpose: {
+      type: String,
+    },
 
-  amount: {
-    type: Number,
-    required: true,
-  },
+    paymentRequestId: {
+      type: String,
+      required: true,
+    },
 
-  payId: {
-    type: String,
-  },
+    amount: {
+      type: Number,
+      required: true,
+    },
 
-  status: {
-    type: String,
-    required: true,
-  },
+    paymentId: {
+      type: String,
+    },
 
-  payLink: {
-    type: String,
-    required: true,
+    paymentRequestStatus: {
+      type: String,
+    },
+
+    paymentStatus: {
+      type: String,
+    },
+
+    paymentLink: {
+      type: String,
+      required: true,
+    },
+
+    currency: {
+      type: String,
+    },
+
+    paymentCreatedAt: {
+      type: Date,
+    },
+
+    paymentRequestCreatedAt: {
+      type: Date,
+    },
   },
-});
+  {
+    timestamps: true,
+  }
+);
 
 module.exports = mongoose.model("Payment", paymentSchema);
