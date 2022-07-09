@@ -12,7 +12,7 @@ const payment = {
       if (user) {
         const data = new Insta.PaymentData();
 
-        data.setRedirectUrl(process.env.REDIRECT_URL);
+        data.setRedirectUrl(process.env.REDIRECT_URL); // Store payment details
         data.send_sms = "True";
         // data.send_email = "True";
         // data.email = user.email;
@@ -25,7 +25,7 @@ const payment = {
           if (error) {
             console.log("Create payment error - ", error);
           } else {
-            const paymentRequestData = JSON.parse(response);
+            const paymentRequestData = JSON.parse(response); // JSON
             console.log(paymentRequestData);
 
             const payment = new Payment({
