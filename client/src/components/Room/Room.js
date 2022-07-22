@@ -32,6 +32,18 @@ const Room = (props) => {
     // Set Back Button Event
     window.addEventListener("popstate", goToBack);
 
+    const userPhone = sessionStorage.getItem('uPhone');
+    socket.emit("BE-token-create", { userPhone });
+    socket.on("FE-token-saver", (error, tokenObj) => {
+      // console.log(tokenObj);
+      if(error && error.code && (error.code === 400 || error.code === 404)){
+        props.history.push(`/getOTP`);
+      }else{
+        sessionStorage.setItem("userI", JSON.stringify(tokenObj));
+        socket.emit("BE-join-room", { roomId, userName: currentUser});
+      }
+    })
+
     // Connect Camera & Mic
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
@@ -39,7 +51,7 @@ const Room = (props) => {
         userVideoRef.current.srcObject = stream;
         userStream.current = stream;
 
-        socket.emit("BE-join-room", { roomId, userName: currentUser });
+        
         socket.on("FE-user-join", (users) => {
           // all users
           const peers = [];

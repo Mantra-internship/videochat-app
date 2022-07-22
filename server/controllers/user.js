@@ -8,9 +8,10 @@ const user = {
     try {
       const { name, phone } = req.body;
       let otp = 0;
-      while (otp === 0) {
-        otp = Math.floor(Math.random() * 10000);
-      }
+      // while (otp === 0) {
+      //   otp = Math.floor(Math.random() * 10000);
+      // }
+      otp = Math.floor(Math.random() * 8999) + 1000;
 
       const user = await User.findOne({ phone });
 
@@ -71,6 +72,7 @@ const user = {
         if (user.otp === otp) {
           user.otp = null;
           user.approved = true;
+          // sessionStorage.setItem("uPhone", user.phone);
           await user.save();
 
           return res.status(200).json({
