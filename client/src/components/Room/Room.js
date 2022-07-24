@@ -36,11 +36,11 @@ const Room = (props) => {
     socket.emit("BE-token-create", { userPhone });
     socket.on("FE-token-saver", (error, tokenObj) => {
       // console.log(tokenObj);
-      if(error && error.code && (error.code === 400 || error.code === 404)){
+      if (error && error.code && (error.code === 400 || error.code === 404)) {
         props.history.push(`/getOTP`);
-      }else{
+      } else {
         sessionStorage.setItem("userI", JSON.stringify(tokenObj));
-        socket.emit("BE-join-room", { roomId, userName: currentUser});
+        socket.emit("BE-join-room", { roomId, userName: currentUser });
       }
     })
 
@@ -51,7 +51,7 @@ const Room = (props) => {
         userVideoRef.current.srcObject = stream;
         userStream.current = stream;
 
-        
+
         socket.on("FE-user-join", (users) => {
           // all users
           const peers = [];
@@ -143,8 +143,20 @@ const Room = (props) => {
         };
       });
     });
+    const interval = setInterval(() => {
+      const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime);
+      console.log("eTime : ", eTime);
+      console.log(Date.now() / 1000);
+      let currTime = Math.ceil(Date.now() / 1000);
+      console.log("currTime : ", currTime);
+      if (currTime >= eTime) {
+        alert("Time Up : Credits Expired");
+        return clearInterval(interval);
+      }
+    }, 5000);
 
     return () => {
+      clearInterval(interval);
       socket.disconnect();
     };
     // eslint-disable-next-line
@@ -194,7 +206,6 @@ const Room = (props) => {
   function findPeer(id) {
     return peersRef.current.find((p) => p.peerID === id);
   }
-
   function createUserVideo(peer, index, arr) {
     return (
       <VideoBox
