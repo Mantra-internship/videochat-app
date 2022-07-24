@@ -113,6 +113,71 @@ const user = {
       });
     }
   },
+  // to fetch data of all astrologers 
+  getAstrologers: async (req, res) => {
+    try {
+      await User.find({ role: "astrologer" }, (error, astrologers) => {
+        if (error) {
+          return res.status(404).json({ message: "astrologers not found" });
+        }
+        else if (astrologers && astrologers.length() > 0) {
+          return res.status(200).json({ astrologers });
+        }
+        else {
+          return res.status(404).json({ message: "astrologers not found" });
+        }
+      });
+    }
+    catch (err) {
+      return res.status(400).json({ message: "something went wrong" });
+    }
+  },
+  // to save an individual user in DB
+  saveUser: async (req, res) => {
+    try {
+      const { phone, email, role } = req.body;
+
+      const user = await User.findOne({ phone });
+
+      if (user) {
+        user.email = email;
+        user.role = role;
+        await user.save();
+        return res.status(200).json({
+          message: "User Saved Successfully",
+        });
+      } else {
+        return res.status(404).json({
+          message: "User does not exist",
+        });
+      }
+    } catch (error) {
+      console.log("Controllers: saveUser - ", error);
+      return res.status(500).json({
+        message: "Something went wrong",
+      });
+    }
+  },
+  // to get data of an individual astrologer
+  getAstrologer: async (req, res) => {
+    try {
+      const { phone } = req.params.phone;
+      await User.findOne({ role: "astrologer", phone }, (error, astrologer) => {
+        if (error) {
+          return res.status(404).json({ message: "astrologer not found" });
+        }
+        else if (astrologer) {
+          return res.status(200).json(astrologer);
+        }
+        else {
+          return res.status(404).json({ message: "astrologer not found" });
+        }
+      });
+    }
+    catch (err) {
+      return res.status(400).json({ message: "something went wrong" });
+    }
+  },
 };
 
 module.exports = user;
