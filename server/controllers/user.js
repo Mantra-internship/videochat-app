@@ -8,9 +8,6 @@ const user = {
     try {
       const { name, phone } = req.body;
       let otp = 0;
-      // while (otp === 0) {
-      //   otp = Math.floor(Math.random() * 10000);
-      // }
       otp = Math.floor(Math.random() * 8999) + 1000;
 
       const user = await User.findOne({ phone });
@@ -120,15 +117,16 @@ const user = {
         if (error) {
           return res.status(404).json({ message: "astrologers not found" });
         }
-        else if (astrologers && astrologers.length() > 0) {
-          return res.status(200).json({ astrologers });
+        else if (astrologers && astrologers.length > 0) {
+          return res.status(200).json(astrologers);
         }
         else {
           return res.status(404).json({ message: "astrologers not found" });
         }
-      });
+      }).clone();
     }
     catch (err) {
+      // console.log(err)
       return res.status(400).json({ message: "something went wrong" });
     }
   },
@@ -161,10 +159,10 @@ const user = {
   // to get data of an individual astrologer
   getAstrologer: async (req, res) => {
     try {
-      const { phone } = req.params.phone;
+      const { phone } = req.params;
       await User.findOne({ role: "astrologer", phone }, (error, astrologer) => {
         if (error) {
-          return res.status(404).json({ message: "astrologer not found" });
+          return res.status(500).json({ message: "something went wrong" });
         }
         else if (astrologer) {
           return res.status(200).json(astrologer);
@@ -172,12 +170,81 @@ const user = {
         else {
           return res.status(404).json({ message: "astrologer not found" });
         }
-      });
+      }).clone();
     }
     catch (err) {
       return res.status(400).json({ message: "something went wrong" });
     }
   },
+
+  // To be modified
+  deleteUser: async (req, res) => {
+    try {
+      const { phone } = req.params;
+      otp = Math.floor(Math.random() * 8999) + 1000;
+      const user = await User.findOne({ phone });
+      if(user){
+        user.otp = otp;
+        await user.save();
+      }else{
+        return res.status(404).json({
+          message: "User not found"
+        })
+      }
+
+    }catch( err ){
+      return res.status(500).json({
+        message: "Something went wrong"
+      })
+    }
+
+    try{
+      if(process.env.NODE_ENV === "production"){
+        await twilio.messages.create({
+          body: `Your OTP for account deletion is ${otp}`,
+          from: process.env.TWILIO_PHONE_NUMBER,
+          to: phone
+        })
+      }else{
+        console.log(otp);
+      }
+      return res.status(200).json({
+        message: "OTP sent successfully"
+      })
+    }catch( err ){
+      console.log(err);
+      return res.status(500).json({
+        message: "Not able to send otp at the moment"
+      })
+    }
+  },
+
+  verifyDeleteOtp: async (req, res) => {
+    try{
+      const { otp, phone } = req.body;
+      const user = await User.findOne({ phone });
+      if(user){
+        if(otp == user.otp){
+          await user.delete();
+          return res.status(200).json({
+            message: "User deleted successfully"
+          })
+        }else{
+          return res.status(400).json({
+            message: "Incorrect OTP"
+          })
+        }
+      }else{
+        return res.status(404).json({
+          message: "User not found"
+        })
+      }
+    }catch( err ){
+      return res.status(500).json({
+        message: "Something went wrong"
+      })
+    }
+  }
 };
 
 module.exports = user;
