@@ -334,6 +334,12 @@ const Room = (props) => {
     }
   };
 
+  // Buy Credits 
+  const goToBuyCredits = () => {
+    props.history.push("/buy-credits");
+ }
+  
+
   const clickBackground = () => {
     if (!showVideoDevices) return;
 
@@ -382,9 +388,9 @@ const Room = (props) => {
         <VideoContainer>
           {/* Current User Video */}
           <VideoBox
-            className={`width-peer${peers.length > 8 ? "" : peers.length}`}
+            className={`width-peer${peers.length > 8 ? '' : peers.length}`}
           >
-            {userVideoAudio["localUser"].video ? null : (
+            {userVideoAudio['localUser'].video ? null : (
               <UserName>{currentUser}</UserName>
             )}
             <FaIcon className="fas fa-expand" />
@@ -406,11 +412,12 @@ const Room = (props) => {
           clickCameraDevice={clickCameraDevice}
           goToBack={goToBack}
           toggleCameraAudio={toggleCameraAudio}
-          userVideoAudio={userVideoAudio["localUser"]}
+          userVideoAudio={userVideoAudio['localUser']}
           screenShare={screenShare}
           videoDevices={videoDevices}
           showVideoDevices={showVideoDevices}
           setShowVideoDevices={setShowVideoDevices}
+          goToBuyCredits={goToBuyCredits}
         />
       </VideoAndBarContainer>
       <Chat display={displayChat} roomId={roomId} />

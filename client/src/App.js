@@ -14,6 +14,8 @@ function App() {
           <Route exact path="/" component={Main} />
           <Route exact path="/room/:roomId" component={Room} />
           <Route exact path="/payment-records" component={Payment_Records} />
+          {/* buy credit route with component to be implemented. */}
+          {/* <Route exact path="/buy-credits" component={Buy_Credits} /> */}
           {/* <Route component={NotFound} /> */}
         </Switch>
       </AppContainer>

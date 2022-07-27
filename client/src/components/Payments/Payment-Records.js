@@ -68,23 +68,27 @@ const Payment_records = (props) => {
               ) : (
                 <></>
               )}
-              <button
-                style={{
-                  padding: '5px 15px',
-                  margin: '5px 0',
-                }}
-              >
-                <a
+              {record.paymentRequestStatus !== 'Pending' ? (
+                <button
                   style={{
-                    textDecoration: 'none',
-                    color: '#000',
-                    fontSize: '15px',
+                    padding: '5px 15px',
+                    margin: '5px 0',
                   }}
-                  href="#"
                 >
-                  InVoice
-                </a>
-              </button>
+                  <a
+                    style={{
+                      textDecoration: 'none',
+                      color: '#000',
+                      fontSize: '15px',
+                    }}
+                    href="#"
+                  >
+                    InVoice
+                  </a>
+                </button>
+              ) : (
+                <></>
+              )}
             </Card>
           );
         })}

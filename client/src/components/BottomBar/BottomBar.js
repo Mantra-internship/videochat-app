@@ -11,7 +11,8 @@ const BottomBar = ({
   screenShare,
   videoDevices,
   showVideoDevices,
-  setShowVideoDevices
+  setShowVideoDevices,
+  goToBuyCredits
 }) => {
   const handleToggle = useCallback(
     (e) => {
@@ -23,12 +24,12 @@ const BottomBar = ({
   return (
     <Bar>
       <Left>
-        <CameraButton onClick={toggleCameraAudio} data-switch='video'>
+        <CameraButton onClick={toggleCameraAudio} data-switch="video">
           <div>
             {userVideoAudio.video ? (
-              <FaIcon className='fas fa-video'></FaIcon>
+              <FaIcon className="fas fa-video"></FaIcon>
             ) : (
-              <FaIcon className='fas fa-video-slash'></FaIcon>
+              <FaIcon className="fas fa-video-slash"></FaIcon>
             )}
           </div>
           Camera
@@ -37,20 +38,28 @@ const BottomBar = ({
           <SwitchList>
             {videoDevices.length > 0 &&
               videoDevices.map((device) => {
-                return <div key={device.deviceId} onClick={clickCameraDevice} data-value={device.deviceId} >{device.label}</div>;
+                return (
+                  <div
+                    key={device.deviceId}
+                    onClick={clickCameraDevice}
+                    data-value={device.deviceId}
+                  >
+                    {device.label}
+                  </div>
+                );
               })}
             <div>Switch Camera</div>
           </SwitchList>
         )}
         <SwitchMenu onClick={handleToggle}>
-          <i className='fas fa-angle-up'></i>
+          <i className="fas fa-angle-up"></i>
         </SwitchMenu>
-        <CameraButton onClick={toggleCameraAudio} data-switch='audio'>
+        <CameraButton onClick={toggleCameraAudio} data-switch="audio">
           <div>
             {userVideoAudio.audio ? (
-              <FaIcon className='fas fa-microphone'></FaIcon>
+              <FaIcon className="fas fa-microphone"></FaIcon>
             ) : (
-              <FaIcon className='fas fa-microphone-slash'></FaIcon>
+              <FaIcon className="fas fa-microphone-slash"></FaIcon>
             )}
           </div>
           Audio
@@ -59,7 +68,7 @@ const BottomBar = ({
       <Center>
         <ChatButton onClick={clickChat}>
           <div>
-            <FaIcon className='fas fa-comments'></FaIcon>
+            <FaIcon className="fas fa-comments"></FaIcon>
           </div>
           Chat
         </ChatButton>
@@ -73,6 +82,7 @@ const BottomBar = ({
         </ScreenButton>
       </Center>
       <Right>
+        <PaymentButton onClick={goToBuyCredits}>Buy Credits</PaymentButton>
         <StopButton onClick={goToBack}>Stop</StopButton>
       </Right>
     </Bar>
@@ -104,7 +114,11 @@ const Center = styled.div`
   justify-content: center;
 `;
 
-const Right = styled.div``;
+const Right = styled.div`
+  display: inline-flex;
+  width: 200px;
+  justify-content: space-between;
+`;
 
 const ChatButton = styled.div`
   width: 75px;
@@ -154,6 +168,30 @@ const StopButton = styled.div`
   margin-right: 15px;
   background-color: #ee2560;
   border-radius: 15px;
+  padding: 0 6px;
+
+  :hover {
+    background-color: #f25483;
+    cursor: pointer;
+  }
+`;
+
+const PaymentButton = styled.div`
+  width: 100px;
+  height: 30px;
+  border: none;
+  font-size: 15px;
+  line-height: 30px;
+  margin-right: 15px;
+  padding: 0 7px;
+  background-color: #ee2560;
+  border-radius: 15px;
+  cursor: pointer;
+
+  > a {
+    text-decoration: none;
+    color: white;
+  }
 
   :hover {
     background-color: #f25483;

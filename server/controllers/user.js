@@ -97,12 +97,12 @@ const user = {
 
   userPaymentRecord: async (req, res) => {
     try {
-      // console.log("ran");
-      // const paymentRecord = await Payment.find({ phone: "+919876920532" });
-      // return res.status(200).json({
-      //   message: "Payment record fetched successfully",
-      //   paymentRecord,
-      // });
+      console.log("ran");
+      const paymentRecord = await Payment.find({ phone: "+919876920532" });
+      return res.status(200).json({
+        message: "Payment record fetched successfully",
+        paymentRecord,
+      });
       jwt.verify(req.cookie.user, process.env.AUTH_SECRET, async (error, verifiedJWT) => {
         if(error){
           return res.status(500).json({
