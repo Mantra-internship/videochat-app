@@ -2,6 +2,7 @@ const User = require("../models/user");
 const Payment = require("../models/payment");
 const twilio = require("../utils/twilio");
 const { generateToken } = require("../utils/auth");
+const jwt = require('jsonwebtoken');
 
 const user = {
   getOtp: async (req, res) => {
@@ -71,10 +72,10 @@ const user = {
           user.approved = true;
           // sessionStorage.setItem("uPhone", user.phone);
           await user.save();
-
+          const token = generateToken(user.id);
+          res.cookie("user", token);
           return res.status(200).json({
-            message: "OTP verified successfully",
-            authToken: generateToken(user.id),
+            message: "OTP verified successfully"
           });
         } else {
           return res.status(400).json({
@@ -96,12 +97,26 @@ const user = {
 
   userPaymentRecord: async (req, res) => {
     try {
-      const userId = req.userId;
-      const user = await User.findOne({ _id: userId });
-      const paymentRecord = await Payment.find({ phone: user.phone });
-      return res.status(200).json({
-        message: "Payment record fetched successfully",
-        paymentRecord,
+      // console.log("ran");
+      // const paymentRecord = await Payment.find({ phone: "+919876920532" });
+      // return res.status(200).json({
+      //   message: "Payment record fetched successfully",
+      //   paymentRecord,
+      // });
+      jwt.verify(req.cookie.user, process.env.AUTH_SECRET, async (error, verifiedJWT) => {
+        if(error){
+          return res.status(500).json({
+            message: "Something went wrong",
+          });
+        }else{
+          const userId = req.userId;
+          const user = await User.findOne({ _id: userId });
+          const paymentRecord = await Payment.find({ phone: user.phone });
+          return res.status(200).json({
+            message: "Payment record fetched successfully",
+            paymentRecord,
+          });
+        }
       });
     } catch (error) {
       console.log("Controllers: userPaymentRecord - ", error);

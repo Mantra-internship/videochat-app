@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Main from "./components/Main/Main";
 import Room from "./components/Room/Room";
+import Payment_Records from "./components/Payments/Payment-Records";
 // import NotFound from "./components/NotFound/NotFound";
 import styled from "styled-components";
 
@@ -12,6 +13,7 @@ function App() {
         <Switch>
           <Route exact path="/" component={Main} />
           <Route exact path="/room/:roomId" component={Room} />
+          <Route exact path="/payment-records" component={Payment_Records} />
           {/* <Route component={NotFound} /> */}
         </Switch>
       </AppContainer>
