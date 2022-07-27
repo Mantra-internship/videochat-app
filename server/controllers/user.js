@@ -259,6 +259,47 @@ const user = {
         message: "Something went wrong"
       })
     }
+  },
+  getTransactionDetail: async (req, res) => {
+    try {
+      const paymentId = req.params.paymentId;
+      const userId = req.userId;
+      await User.findOne({ _id: userId }, (err, foundUser) => {
+        if(err){
+          console.log(err);
+          return res.status(500).json({
+            message: "Something went wrong"
+          })
+        }else if(foundUser){
+          // const phone = foundUser.phone;
+          await Payment.findOne({ paymentId }, (err, foundTransaction) => {
+            if(err){
+              console.log(err);
+              return res.status(500).json({
+                message: "Something went wrong"
+              })
+            }else if(foundTransaction){
+              console.log(foundTransaction);
+              return res.status(200).json(foundTransaction);
+            }else{
+              return res.status(404).json({
+                message: "Payment record not found"
+              })
+            }
+          })
+        }else{
+          return res.status(404).json({
+            message: "User not found"
+          })
+        }
+      })
+    }
+    catch(err){
+      console.log(err);
+      return res.status(500).json({
+        message: "Something went wrong"
+      })
+    }
   }
 };
 

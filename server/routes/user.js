@@ -31,6 +31,10 @@ router
     .post(userMid.authenticate, userCont.userPaymentRecord);
 
 router
+    .route("/getPaymentInfo/:paymentId")
+    .post(userMid.authenticate, userCont.getTransactionDetail);
+
+router
     .route("/delete/:phone")
     .post(userCont.deleteUser);
 
