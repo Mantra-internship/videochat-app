@@ -81,7 +81,7 @@ const Payment_records = (props) => {
                       color: '#000',
                       fontSize: '15px',
                     }}
-                    href="#"
+                    href={`\getPaymentInfo\${record.paymentId}`}
                   >
                     InVoice
                   </a>
