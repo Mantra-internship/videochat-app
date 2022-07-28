@@ -5,6 +5,7 @@ import Room from "./components/Room/Room";
 import Payment_Records from "./components/Payments/Payment-Records";
 // import NotFound from "./components/NotFound/NotFound";
 import styled from "styled-components";
+import Invoice_Main from "./components/Transaction_Invoice/Invoice_Main"
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           {/* buy credit route with component to be implemented. */}
           {/* <Route exact path="/buy-credits" component={Buy_Credits} /> */}
           {/* <Route component={NotFound} /> */}
+          <Route exact path="/getPaymentInfo/:paymentId" component={Invoice_Main} />
         </Switch>
       </AppContainer>
     </BrowserRouter>
