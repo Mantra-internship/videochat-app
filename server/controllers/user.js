@@ -97,26 +97,18 @@ const user = {
 
   userPaymentRecord: async (req, res) => {
     try {
-      console.log("ran");
-      const paymentRecord = await Payment.find({ phone: "+919876920532" });
+      // console.log("ran");
+      // const paymentRecord = await Payment.find({ phone: "+919876920532" });
+      // return res.status(200).json({
+      //   message: "Payment record fetched successfully",
+      //   paymentRecord,
+      // });
+      const userId = req.userId;
+      const user = await User.findOne({ _id: userId });
+      const paymentRecord = await Payment.find({ phone: user.phone });
       return res.status(200).json({
         message: "Payment record fetched successfully",
         paymentRecord,
-      });
-      jwt.verify(req.cookie.user, process.env.AUTH_SECRET, async (error, verifiedJWT) => {
-        if(error){
-          return res.status(500).json({
-            message: "Something went wrong",
-          });
-        }else{
-          const userId = req.userId;
-          const user = await User.findOne({ _id: userId });
-          const paymentRecord = await Payment.find({ phone: user.phone });
-          return res.status(200).json({
-            message: "Payment record fetched successfully",
-            paymentRecord,
-          });
-        }
       });
     } catch (error) {
       console.log("Controllers: userPaymentRecord - ", error);
@@ -271,8 +263,7 @@ const user = {
             message: "Something went wrong"
           })
         }else if(foundUser){
-          // const phone = foundUser.phone;
-          await Payment.findOne({ paymentId }, (err, foundTransaction) => {
+          Payment.findOne({ paymentId }, (err, foundTransaction) => {
             if(err){
               console.log(err);
               return res.status(500).json({

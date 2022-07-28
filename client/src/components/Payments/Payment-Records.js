@@ -4,36 +4,45 @@ import axios from 'axios';
 import styled from 'styled-components';
 
 const Payment_records = (props) => {
-  const [transactionData, setTransactionData] = useState([0]);
-  const [userId, setUserId] = useState('');
+  const [transactionData, setTransactionData] = useState([]);
+  // const [token, setToken] = useState("");
 
   useEffect(() => {
-    const temp = setTimeout(transactionDataFetcher(), 1000);
+    getToken();
+    transactionDataFetcher();
   }, []);
+
+  const getToken = () => {
+    const cArray = document.cookie.split(' ');
+    let anotherToken; 
+    cArray.map((string) => {
+      let sArray = string.split('=');
+      if (sArray[0] === 'user') {
+        anotherToken = sArray[1];
+        if(anotherToken[anotherToken.length - 1] === ';'){
+          anotherToken = anotherToken.slice(0, -1);
+        }
+      }
+    })
+    return anotherToken;
+  }
 
   // To be tested
   const transactionDataFetcher = async () => {
-    const cArray = document.cookie.split(' ');
-    cArray.forEach((string) => {
-      let sArray = string.split('=');
-      if (sArray[0] === 'user') {
-        // To be Updated (replace atob or shift functionality to backend for buffer use)
-        setUserId(
-          atob(sArray[1].split('.')[1].replace('-', '+').replace('_', '/')).id
-        );
-      }
-    });
     await axios
-      .post('http://localhost:5000/api/user/payment-record', {
-        header: { Authorization: `Bearer ${userId}` },
-      })
-      .then((resObj) => {
-        setTransactionData(resObj.data.paymentRecord);
-        console.log(transactionData);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      .post('http://localhost:5000/api/user/payment-record',
+        {},
+        {
+          headers: { authorization: `Bearer ` + getToken() },
+        })
+        .then((resObj) => {
+          setTransactionData(resObj.data.paymentRecord);
+          console.log(transactionData);
+        })
+        .catch((error) => {
+          console.log(error);
+          setTransactionData([]);
+        });
   };
   return (
     <>
