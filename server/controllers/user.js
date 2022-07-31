@@ -256,14 +256,14 @@ const user = {
     try {
       const paymentId = req.params.paymentId;
       const userId = req.userId;
-      await User.findOne({ _id: userId }, (err, foundUser) => {
+      await User.findOne({ _id: userId }, async (err, foundUser) => {
         if(err){
           console.log(err);
           return res.status(500).json({
             message: "Something went wrong"
           })
         }else if(foundUser){
-          Payment.findOne({ paymentId }, (err, foundTransaction) => {
+          await Payment.findOne({ paymentId }, (err, foundTransaction) => {
             if(err){
               console.log(err);
               return res.status(500).json({
@@ -277,13 +277,13 @@ const user = {
                 message: "Payment record not found"
               })
             }
-          })
+          }).clone();
         }else{
           return res.status(404).json({
             message: "User not found"
           })
         }
-      })
+      }).clone();
     }
     catch(err){
       console.log(err);

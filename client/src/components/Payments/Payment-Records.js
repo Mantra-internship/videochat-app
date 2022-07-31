@@ -27,7 +27,6 @@ const Payment_records = (props) => {
     return anotherToken;
   }
 
-  // To be tested
   const transactionDataFetcher = async () => {
     await axios
       .post('http://localhost:5000/api/user/payment-record',
@@ -90,7 +89,7 @@ const Payment_records = (props) => {
                       color: '#000',
                       fontSize: '15px',
                     }}
-                    href={`\getPaymentInfo\${record.paymentId}`}
+                    href={`/getPaymentInfo/${record.paymentId}`}
                   >
                     InVoice
                   </a>

@@ -6,34 +6,45 @@ import styled from 'styled-components';
 import Invoice from './Invoice';
 
 function Invoice_Main() {
-  const [invoiceData, setInvoiceData] = useState([0]);
-  const [token, setToken] = useState('');
+  const [invoiceData, setInvoiceData] = useState();
+  // const [token, setToken] = useState('');
 
   useEffect(() => {
-    const temp = setTimeout(transactionDataFetcher(), 1000);
+    getJwtToken();
+    transactionDataFetcher();
   }, []);
+
+  const getJwtToken = () => {
+    const cArray = document.cookie.split(' ');
+    let jwtToken; 
+    cArray.map((cString) => {
+      let sArray = cString.split('=');
+      if (sArray[0] === 'user') {
+        jwtToken = sArray[1];
+        if(jwtToken[jwtToken.length - 1] === ';'){
+          jwtToken = jwtToken.slice(0, -1);
+        }
+      }
+    })
+    return jwtToken;
+  }
 
   // To be tested
   const transactionDataFetcher = async () => {
-    const cArray = document.cookie.split(' ');
-    cArray.forEach((string) => {
-      let sArray = string.split('=');
-      if (sArray[0] === 'user') {
-        setUserId(sArray[1]);
-      }
-    });
 
     const currentURLArray = window.location.href.split('/');
     const len = currentURLArray.length;
     const paymentId = currentURLArray[len - 1];
 
     await axios
-      .post(`http://localhost:5000/api/user/getPaymentInfo/${paymentId}`, {
-        header: { Authorization: `Bearer ${token}` },
+      .post(`http://localhost:5000/api/user/getPaymentInfo/${paymentId}`,
+      {},
+      {
+        headers: { authorization: `Bearer ` + getJwtToken() },
       })
       .then((resObj) => {
-        setTransactionData(resObj.data.paymentRecord);
-        console.log(transactionData);
+        setInvoiceData(resObj.data);
+        console.log(resObj.data);
       })
       .catch((error) => {
         console.log(error);
@@ -42,7 +53,7 @@ function Invoice_Main() {
   return (
     <Fragment>
       <PDFViewer width="1000" height="600" className="app">
-        <Invoice invoice={invoice} />
+        <Invoice invoice={invoiceData} />
       </PDFViewer>
     </Fragment>
   );
