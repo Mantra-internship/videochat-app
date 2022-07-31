@@ -22,9 +22,9 @@ router
     .route("/astrologers").get(userCont.getAstrologers);
 
 // For testing
-router
-    .route("/payment-record")
-    .post(userCont.userPaymentRecord);
+// router
+//     .route("/payment-record")
+//     .post(userCont.userPaymentRecord);
 
 router
     .route("/payment-record")

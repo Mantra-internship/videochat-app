@@ -4,36 +4,44 @@ import axios from 'axios';
 import styled from 'styled-components';
 
 const Payment_records = (props) => {
-  const [transactionData, setTransactionData] = useState([0]);
-  const [userId, setUserId] = useState('');
+  const [transactionData, setTransactionData] = useState([]);
+  // const [token, setToken] = useState("");
 
   useEffect(() => {
-    const temp = setTimeout(transactionDataFetcher(), 1000);
+    getToken();
+    transactionDataFetcher();
   }, []);
 
-  // To be tested
-  const transactionDataFetcher = async () => {
+  const getToken = () => {
     const cArray = document.cookie.split(' ');
-    cArray.forEach((string) => {
+    let anotherToken; 
+    cArray.map((string) => {
       let sArray = string.split('=');
       if (sArray[0] === 'user') {
-        // To be Updated (replace atob or shift functionality to backend for buffer use)
-        setUserId(
-          atob(sArray[1].split('.')[1].replace('-', '+').replace('_', '/')).id
-        );
+        anotherToken = sArray[1];
+        if(anotherToken[anotherToken.length - 1] === ';'){
+          anotherToken = anotherToken.slice(0, -1);
+        }
       }
-    });
+    })
+    return anotherToken;
+  }
+
+  const transactionDataFetcher = async () => {
     await axios
-      .post('http://localhost:5000/api/user/payment-record', {
-        header: { Authorization: `Bearer ${userId}` },
-      })
-      .then((resObj) => {
-        setTransactionData(resObj.data.paymentRecord);
-        console.log(transactionData);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      .post('http://localhost:5000/api/user/payment-record',
+        {},
+        {
+          headers: { authorization: `Bearer ` + getToken() },
+        })
+        .then((resObj) => {
+          setTransactionData(resObj.data.paymentRecord);
+          console.log(transactionData);
+        })
+        .catch((error) => {
+          console.log(error);
+          setTransactionData([]);
+        });
   };
   return (
     <>
@@ -81,7 +89,7 @@ const Payment_records = (props) => {
                       color: '#000',
                       fontSize: '15px',
                     }}
-                    href={`\getPaymentInfo\${record.paymentId}`}
+                    href={`/getPaymentInfo/${record.paymentId}`}
                   >
                     InVoice
                   </a>

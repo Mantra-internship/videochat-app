@@ -20,14 +20,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function Invoice() {
+export default function Invoice(props) {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <Image style={styles.logo} src="https://play-lh.googleusercontent.com/wCnxghYaWoQq27vGPQ88pdLN0Tccwsgp_rRo6UmgwxnEFVIXQYd5F4dGc_UUQO4rC85l=w600-h300-pc0xffffff-pd" />
-        <InvoiceTitle title="Invoice" />
-        <InvoiceNo invoice={invoice} />
-        <BillTo invoice={invoice} />
+        <invoiceTitle title="Invoice" />
+        <invoiceId invoice={props.paymentId} />
+        <billTo invoice={props.name} />
         <InvoiceThankYouMsg />
       </Page>
     </Document>
