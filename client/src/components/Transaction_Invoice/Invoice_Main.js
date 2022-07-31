@@ -1,12 +1,12 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { PDFViewer } from '@react-pdf/renderer';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 import Invoice from './Invoice';
 
 function Invoice_Main() {
-  const [invoiceData, setInvoiceData] = useState();
+  const [invoiceData, setInvoiceData] = useState(false);
   // const [token, setToken] = useState('');
 
   useEffect(() => {
@@ -44,7 +44,7 @@ function Invoice_Main() {
       })
       .then((resObj) => {
         setInvoiceData(resObj.data);
-        console.log(resObj.data);
+        // console.log(resObj.data);
       })
       .catch((error) => {
         console.log(error);
@@ -53,7 +53,10 @@ function Invoice_Main() {
   return (
     <Fragment>
       <PDFViewer width="1000" height="600" className="app">
-        <Invoice invoice={invoiceData} />
+        {
+          invoiceData ? <Invoice invoice={invoiceData} /> : <></>
+        }
+        
       </PDFViewer>
     </Fragment>
   );
