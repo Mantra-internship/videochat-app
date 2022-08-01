@@ -6,6 +6,8 @@ import Payment_Records from "./components/Payments/Payment-Records";
 // import NotFound from "./components/NotFound/NotFound";
 import styled from "styled-components";
 import Invoice_Main from "./components/Transaction_Invoice/Invoice_Main"
+import AstrologerMain from "./components/Astrologer/AstrologerMain"
+import AstrologerPage from "./components/Astrologer/AstrologerPage"
 
 function App() {
   return (
@@ -18,7 +20,17 @@ function App() {
           {/* buy credit route with component to be implemented. */}
           {/* <Route exact path="/buy-credits" component={Buy_Credits} /> */}
           {/* <Route component={NotFound} /> */}
-          <Route exact path="/getPaymentInfo/:paymentId" component={Invoice_Main} />
+          <Route
+            exact
+            path="/getPaymentInfo/:paymentId"
+            component={Invoice_Main}
+          />
+          <Route exact path="/astrologers" component={AstrologerMain} />
+          <Route
+            exact
+            path="/astrologer/:uphone"
+            render={(props) => <AstrologerPage{...props} />}
+          />
         </Switch>
       </AppContainer>
     </BrowserRouter>

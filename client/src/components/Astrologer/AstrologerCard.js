@@ -1,58 +1,80 @@
 import React from 'react';
+import styled from 'styled-components';
 
-function AstrologerCard() {
+function AstrologerCard({ astrologer }) {
   return (
-    <div class="border">
-      <h1>OUR ASTROLOGERS</h1>
-      <div class="outer">
-        <div class="credits">
-          <div class="image">
-            <img src="" class="img" />
-            <p>
-              <b>Astrologer</b>
-            </p>
-          </div>
-        </div>
-        <div class="profile">
-          <div class="credits">
-            <div class="image">
-              <img src="." class="img" />
-              <p>
-                <b>Astrologer</b>
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="profile">
-          <div class="credits">
-            <div class="image">
-              <img src="./Images\images.png" class="img" />
-              <p>
-                <b>Astrologer</b>
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="credits1">
-          <div class="image">
-            <img src="./Images\images.png" class="img" />
-            <p>
-              <b>Astrologer</b>
-            </p>
-          </div>
-        </div>
-        <div class="credits2">
-          <div class="image">
-            <img src="./Images\images.png" class="img" />
-            <p>
-              <b>Astrologer</b>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div style="clear: both"></div>
-    </div>
+    <Card>
+      <img
+        style={{
+          width: '100px',
+          borderRadius: '20px',
+          margin: '0 31% 0 33%',
+        }}
+        src="https://freesvg.org/img/abstract-user-flat-4.png"
+      />
+      <h3
+        style={{
+          padding: '5px 20px',
+          margin: '5px 0 0 0',
+        }}
+      >
+        Name - {astrologer.name}
+      </h3>
+      <p
+        style={{
+          margin: '5px 0 20px 0',
+        }}
+      >
+        Phone - {astrologer.phone}
+      </p>
+      <button
+        style={{
+          padding: '10px 20px',
+          margin: '5px 0',
+        }}
+      >
+        <a
+          style={{
+            textDecoration: 'none',
+            color: '#000',
+            fontSize: '20px',
+          }}
+          href={`/astrologer/${astrologer.phone}`}
+        >
+          Connect
+        </a>
+      </button>
+    </Card>
   );
 }
+
+const Container = styled.div`
+  flex: 2;
+  margin-top: 20px;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+    width: 80%;
+    margin: 3% 0 8% 8%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+`;
+
+const Card = styled.div`
+  display: inline-block;
+  border: 2px solid #dfd1d1;
+  border-radius: 15%;
+  padding: 15px;
+  width: 300px;
+  height: 300px;
+  margin: 20px;
+
+  :hover{
+    border: 4px solid #ccc;
+  }
+}
+`;
 
 export default AstrologerCard;

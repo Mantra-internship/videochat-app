@@ -34,7 +34,8 @@ const Payment_records = (props) => {
         {
           headers: { authorization: `Bearer ` + getToken() },
         })
-        .then((resObj) => {
+      .then((resObj) => {
+          console.log(resObj.data)
           setTransactionData(resObj.data.paymentRecord);
           console.log(transactionData);
         })
