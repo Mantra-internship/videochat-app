@@ -1,13 +1,14 @@
-import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import Main from "./components/Main/Main";
-import Room from "./components/Room/Room";
-import Payment_Records from "./components/Payments/Payment-Records";
+import React from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Main from './components/Main/Main';
+import Room from './components/Room/Room';
+import Payment_Records from './components/Payments/Payment-Records';
 // import NotFound from "./components/NotFound/NotFound";
-import styled from "styled-components";
-import Invoice_Main from "./components/Transaction_Invoice/Invoice_Main"
-import AstrologerMain from "./components/Astrologer/AstrologerMain"
-import AstrologerPage from "./components/Astrologer/AstrologerPage"
+import styled from 'styled-components';
+import Invoice_Main from './components/Transaction_Invoice/Invoice_Main';
+import AstrologerMain from './components/Astrologer/AstrologerMain';
+import AstrologerPage from './components/Astrologer/AstrologerPage';
+import Buy_Credits from './components/CreditsPage/Buy_Credits'
 
 function App() {
   return (
@@ -17,8 +18,6 @@ function App() {
           <Route exact path="/" component={Main} />
           <Route exact path="/room/:roomId" component={Room} />
           <Route exact path="/payment-records" component={Payment_Records} />
-          {/* buy credit route with component to be implemented. */}
-          {/* <Route exact path="/buy-credits" component={Buy_Credits} /> */}
           {/* <Route component={NotFound} /> */}
           <Route
             exact
@@ -29,8 +28,9 @@ function App() {
           <Route
             exact
             path="/astrologer/:uphone"
-            render={(props) => <AstrologerPage{...props} />}
+            render={(props) => <AstrologerPage {...props} />}
           />
+          <Route exact path="/buy-credits" component={Buy_Credits} />
         </Switch>
       </AppContainer>
     </BrowserRouter>
