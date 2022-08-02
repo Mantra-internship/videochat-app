@@ -10,6 +10,8 @@ function Buy_Credits() {
         <CreditCard></CreditCard>
         <CreditCard></CreditCard>
         <CreditCard></CreditCard>
+        <CreditCard></CreditCard>
+        <CreditCard></CreditCard>
       </Inner>
     </Container>
   );
@@ -42,7 +44,7 @@ const Heading = styled.div`
   width: 100%;
   text-align: center;
   font-size: 7vw;
-  margin: -50px 0 50px 0;
+  margin: 0 0 50px 0;
 `;
 
 export default Buy_Credits;

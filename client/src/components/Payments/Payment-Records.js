@@ -109,9 +109,11 @@ const Payment_records = (props) => {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   height: 100vh;
-  width: 100%;
   padding: 30px;
+  overflow-x: hidden;
 `;
 
 const Heading = styled.div`
@@ -127,10 +129,17 @@ const Card = styled.div`
   align-items: center;
   justify-content: space-around;
   border: solid 1px #fff;
-  borderradius: 10px;
+  border-radius: 10px;
   margin: 20px;
   padding: 20px;
   font-size: 18px;
+  height: 400px;
+  width: 80vw;
+  overflow: hidden;
+
+  @media(max-width: 800px){
+    width: 350px;
+  }
 
   > p {
     // padding: 10px;
