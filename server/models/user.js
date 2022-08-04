@@ -8,10 +8,16 @@ const userSchema = new mongoose.Schema(
 
     phone: {
       type: String,
+      unique: true,
     },
 
     email: {
       type: String,
+    },
+
+    profilePic: {
+      type: String,
+      default: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1331&q=80"
     },
 
     otp: {
@@ -36,6 +42,12 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+
+    astrologerInfo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "AstrologerInfo",
+      default: null
+    }
   },
   {
     timestamps: true,
