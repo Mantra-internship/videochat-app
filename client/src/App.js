@@ -37,9 +37,14 @@ function App() {
           />
           <Route exact path="/buy-credits" component={Buy_Credits} />
           <Route exact path="/login" component={Login} />
-          {/* <Route exact path="/register" component={UserRegister} /> */}
+          {/* Register Routes */}
+          <Route exact path="/register" component={UserRegister} />
           {/* <Route exact path="/register" component={AstrologerRegister} /> */}
-          <Route exact path="/register" component={VerifyOtp} />
+          {/* <Route exact path="/register" component={VerifyOtp} /> */}
+
+          {/* Login Routes */}
+          <Route exact path="/login" component={Login} />
+          {/* <Route exact path="/login" component={VerifyOtp} /> */}
         </Switch>
       </AppContainer>
     </BrowserRouter>
