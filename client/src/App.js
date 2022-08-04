@@ -14,6 +14,7 @@ import Login from './components/Login/Login'
 import UserRegister from './components/Register/UserRegister'
 import AstrologerRegister from './components/Register/AstrologerRegister'
 import VerifyOtp from './components/Register/VerifyOtp'
+import Profile from './components/Profile/Profile'
 
 function App() {
   return (
@@ -45,6 +46,9 @@ function App() {
           {/* Login Routes */}
           <Route exact path="/login" component={Login} />
           {/* <Route exact path="/login" component={VerifyOtp} /> */}
+
+          {/* Profile Routes */}
+          <Route exact path="/profile" component={Profile} />
         </Switch>
       </AppContainer>
     </BrowserRouter>

@@ -3,11 +3,14 @@ import styled from 'styled-components';
 // import 'react-phone-input-2/lib/style.css';
 // import PhoneInput from 'react-phone-input-2';
 
-function UserRegister() {
+function Profile() {
   const [name, setName] = useState();
   const [email, setEmail] = useState('NULL');
   const [phone, setPhone] = useState();
   const [role, setRole] = useState();
+  const [speciality, setSpeciality] = useState();
+  const [description, setDescription] = useState();
+  const [experience, setExperience] = useState();
 
   const handleChange = (event) => {
     setRole(event.target.value);
@@ -21,7 +24,7 @@ function UserRegister() {
   return (
     <>
       <MainContainer>
-        <Heading>Register</Heading>
+        <Heading>Profile</Heading>
         <Inner>
           <Row>
             <Label htmlFor="Name">Full Name</Label>
@@ -30,6 +33,7 @@ function UserRegister() {
               id="Name"
               required
               placeholder="John Doe"
+              value="John Doe" // to be changed to dynamic content
               onChange={(event) => setName(event.target.value)}
             />
           </Row>
@@ -40,6 +44,7 @@ function UserRegister() {
               id="e-mail"
               default="NULL"
               placeholder="John@example.com"
+              value="John@example.com" // to be changed to dynamic content
               onChange={(event) => setEmail(event.target.value)}
             />
           </Row>
@@ -49,6 +54,7 @@ function UserRegister() {
               type="phone"
               id="phone"
               placeholder="+91XXXXXXXXXX"
+              value="+911234567890" // to be changed to dynamic content
               onChange={(event) => setPhone(event.target.value)}
             />
             {/* <PhoneInput
@@ -69,7 +75,10 @@ function UserRegister() {
           </Row>
           <Row>
             <Label htmlFor="role">Role</Label>
-            <Select value={role} onChange={handleChange}>
+            <Select
+              value="user" // to be changed to dynamic content
+              onChange={handleChange}
+            >
               <option value="" selected disabled hidden>
                 Are you a Astrologer or User?
               </option>
@@ -78,8 +87,40 @@ function UserRegister() {
               ))}
             </Select>
           </Row>
+          <Row>
+            <Label htmlFor="Speciality">Speciality</Label>
+            <Textarea
+              type="text"
+              id="Speciality"
+              required
+              placeholder="Kundli..."
+              value="John Doe" // to be changed to dynamic content
+              onChange={(event) => setSpeciality(event.target.value)}
+            />
+          </Row>
+          <Row>
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              type="text"
+              id="description"
+              required
+              placeholder="I am a"
+              value="I am a astrologer" // to be changed to dynamic content
+              onChange={(event) => setDescription(event.target.value)}
+            />
+          </Row>
+          <Row>
+            <Label htmlFor="experience">Experience</Label>
+            <Input
+              type="number"
+              id="experience"
+              placeholder="Years"
+              value="5" // to be changed to dynamic content
+              onChange={(event) => setExperience(event.target.value)}
+            />
+          </Row>
         </Inner>
-        <SendButton>Send OTP</SendButton>
+        <SendButton>Update Data</SendButton>
       </MainContainer>
     </>
   );
@@ -91,10 +132,10 @@ const MainContainer = styled.div`
   align-items: space-between;
   height: 100vh;
   width: 50vw;
+  overflow: hidden;
 
-  @media (max-width: 900px) {
+  @media (max-width: 1050px) {
     width: 90%;
-    margin: 30px 30px;
   }
 `;
 
@@ -102,11 +143,11 @@ const Heading = styled.div`
   width: 100%;
   text-align: center;
   font-size: 7vw;
-  margin: 20px 0;
+  margin: 10px 0;
 `;
 
 const Inner = styled.div`
-  margin-top: 80px;
+  margin-top: 20px;
 `;
 
 const Row = styled.div`
@@ -120,7 +161,7 @@ const Row = styled.div`
 const Label = styled.label``;
 
 const Input = styled.input`
-  width: 200px;
+  width: 250px;
   height: 35px;
   margin-left: 15px;
   padding-left: 10px;
@@ -128,13 +169,13 @@ const Input = styled.input`
   border: none;
   border-radius: 5px;
 
-  @media (min-width: 900px) {
-    width: 250px;
+  @media (max-width: 500px) {
+    width: 200px;
   }
 `;
 
 const Select = styled.select`
-  width: 210px;
+  width: 260px;
   height: 35px;
   margin-left: 15px;
   padding-left: 10px;
@@ -142,8 +183,24 @@ const Select = styled.select`
   border: none;
   border-radius: 5px;
 
-  @media (min-width: 900px) {
-    width: 260px;
+  @media (max-width: 500px) {
+    width: 210px;
+  }
+`;
+
+const Textarea = styled.textarea`
+  height: 70px;
+  width: 250px;
+  resize: none;
+  font-size: 20px;
+  outline: none;
+  margin-left: 15px;
+  padding-left: 10px;
+  border: none;
+  border-radius: 5px;
+
+  @media (max-width: 500px) {
+    width: 200px;
   }
 `;
 
@@ -164,4 +221,4 @@ const SendButton = styled.button`
   }
 `;
 
-export default UserRegister;
+export default Profile;
