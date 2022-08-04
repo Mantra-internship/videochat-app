@@ -26,7 +26,11 @@ router
     .route("/add-astrologer-info")
     .post(userMid.authenticate, userCont.addAstrologerDetails);
 
-router.route
+router
+    .route("/get-user")
+    .get(userMid.authenticate, userCont.getUser);
+
+router
     .route("/user/update")
     .post(userMid.authenticate , userCont.updateUser);
 

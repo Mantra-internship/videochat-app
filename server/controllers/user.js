@@ -58,15 +58,15 @@ const user = {
   registerGetOtp: async (req, res) => {
     try {
       const { name, phone, email, role } = req.body;
+      const otp = Math.floor(Math.random() * 8999) + 1000;
 
-      const foundUser = User.findOne({ phone });
-
+      const foundUser = await User.findOne({ phone });
+      console.log(foundUser);
       if(foundUser){
         return res.status(400).json({
-          message: "User with entered phone number already exists",
+          message: `User with entered phone number already exists`,
         });
       }else{
-        const otp = Math.floor(Math.random() * 8999) + 1000;
 
         const newUser = new User({
           name,
@@ -95,12 +95,14 @@ const user = {
           message: "OTP sent successfully",
         });
       }catch(error){
+        console.log(error)
         return res.status(500).json({
           message: "Something went wrong",
         });
       }
 
     } catch(error){
+      console.log(error);
       return res.status(500).json({
         message: "Something went wrong",
       });
@@ -145,7 +147,20 @@ const user = {
     try {
 
       const userId = req.userId;
+      const foundUser = await User.findOne({ _id: userId });
+
+      if(foundUser.role !== "astrologer"){
+        return res.status(400).json({
+          message: "Entered user is not an astrologer",
+        });
+      }else if(foundUser.astrologerInfo !== null){
+        return res.status(400).json({
+          message: "Entered user already has astrologer details saved"
+        });
+      }
+
       const { description, languages, specialities, experience } = req.body;
+
       const newAstrologerInfo = new AstrologerInfo({
         description,
         languages,
@@ -155,9 +170,12 @@ const user = {
       })
 
       const savedInfo = await newAstrologerInfo.save();
-      const foundUser = User.findOne({ _id: userId });
       foundUser.astrologerInfo = savedInfo._id;
       await foundUser.save();
+
+      return res.status(200).json({
+        message: "Details saved successfully"
+      })
 
     }catch(error){
       return res.status(500).json({ 
@@ -202,6 +220,28 @@ const user = {
       return res.status(500).json({ message: "something went wrong" });
     }
   },
+  
+  // For profile
+  getUser: async (req, res) => {
+    try{
+      const userId = req.userId;
+      const foundUser = await User.findOne({ _id: userId });
+
+      if(foundUser.role === "astrologer" && foundUser.astrologerInfo !== null){
+        await foundUser.populate("astrologerInfo");
+      }
+
+      return res.status(200).json({
+        foundUser
+      });
+
+    }catch(error){
+      return res.status(500).json({
+        message: "Something went wrong"
+      });
+    }
+  },
+
   // to save an individual user in DB
   updateUser: async (req, res) => {
     try {
