@@ -11,15 +11,24 @@ router
     .post(userMid.validate, userCont.verifyOtp);
 
 router
-    .route("/add-user")
-    .post(userCont.saveUser);
+    .route("/register/get-otp")
+    .post(userMid.registerValidate, userCont.registerGetOtp);
 
 router
     .route("/astrologer/:phone")
     .get(userCont.getAstrologer);
 
 router
-    .route("/astrologers").get(userCont.getAstrologers);
+    .route("/astrologers")
+    .get(userCont.getAstrologers);
+
+router
+    .route("/add-astrologer-info")
+    .post(userMid.authenticate, userCont.addAstrologerDetails);
+
+router.route
+    .route("/user/update")
+    .post(userMid.authenticate , userCont.updateUser);
 
 // For testing
 // router
