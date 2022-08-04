@@ -19,7 +19,7 @@ function VerifyOtp(props) {
       .then((response) => {
         console.log(response.data);
         document.cookie = `user=${response.data.token}`;
-        if (role === 'user') {
+        if (role === 'user' || role === '') {
           props.history.push('/');
         } else {
           props.history.push('/astro-register');

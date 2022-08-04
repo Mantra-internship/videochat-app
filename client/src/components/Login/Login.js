@@ -1,8 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 
-function Login() {
+function Login(props) {
   const [phone, setPhone] = useState();
+
+  let data = {
+    phone,
+  };
+
+  // send phone to backend for login
+  const postData = async () => {
+    await axios
+      .post('http://localhost:5000/api/user/get-otp', data)
+      .then((response) => {
+        console.log(response.data);
+        sessionStorage.setItem('phone', phone);
+        sessionStorage.setItem('role', '');
+        props.history.push('/verify-otp');
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('Something went wrong');
+      });
+  };
+
   return (
     <>
       <MainContainer>
@@ -33,7 +55,7 @@ function Login() {
             /> */}
           </Row>
         </Inner>
-        <SendButton>Get OTP</SendButton>
+        <SendButton onClick={postData}>Get OTP</SendButton>
       </MainContainer>
     </>
   );

@@ -47,8 +47,9 @@ const Main = (props) => {
         <Input type="text" id="userName" ref={userRef} />
       </Row>
       <JoinButton onClick={clickJoin}> Join </JoinButton>
-      <JoinButton><a href="/register">Register</a></JoinButton>
       {err ? <Error>{errMsg}</Error> : null}
+      <JoinButton><a href="/register">Register</a></JoinButton>
+      <JoinButton><a href="/login">Login</a></JoinButton>
     </MainContainer>
   );
 };
