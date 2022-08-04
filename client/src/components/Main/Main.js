@@ -47,6 +47,7 @@ const Main = (props) => {
         <Input type="text" id="userName" ref={userRef} />
       </Row>
       <JoinButton onClick={clickJoin}> Join </JoinButton>
+      <JoinButton><a href="/register">Register</a></JoinButton>
       {err ? <Error>{errMsg}</Error> : null}
     </MainContainer>
   );
@@ -97,6 +98,11 @@ const JoinButton = styled.button`
   :hover {
     background-color: #7bb1d1;
     cursor: pointer;
+  }
+
+  a {
+    text-decoration: none;
+    color: #d8e9ef;
   }
 `;
 

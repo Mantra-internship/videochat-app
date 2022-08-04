@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 // import 'react-phone-input-2/lib/style.css';
 // import PhoneInput from 'react-phone-input-2';
 
-function UserRegister() {
+function UserRegister(props) {
   const [name, setName] = useState();
   const [email, setEmail] = useState('NULL');
   const [phone, setPhone] = useState();
@@ -17,6 +18,29 @@ function UserRegister() {
     { label: 'Astrologer', value: 'astrologer' },
     { label: 'User', value: 'user' },
   ];
+
+  // axios request to sava a new astrologer or user depending on the role.
+  let data = {
+    name,
+    email,
+    phone,
+    role,
+  };
+
+  const postData = async () => {
+    await axios
+      .post('http://localhost:5000/api/user/register/get-otp', data)
+      .then((response) => {
+        console.log(response.data);
+        sessionStorage.setItem('phone', phone);
+        sessionStorage.setItem('role', role);
+        props.history.push('/verify-otp');
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('Something went wrong');
+      });
+  };
 
   return (
     <>
@@ -79,7 +103,7 @@ function UserRegister() {
             </Select>
           </Row>
         </Inner>
-        <SendButton>Send OTP</SendButton>
+        <SendButton onClick={postData}>Send OTP</SendButton>
       </MainContainer>
     </>
   );

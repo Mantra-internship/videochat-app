@@ -123,7 +123,8 @@ const user = {
           const token = generateToken(user.id);
           res.cookie("user", token);
           return res.status(200).json({
-            message: "OTP verified successfully"
+            message: "OTP verified successfully",
+            token,
           });
         } else {
           return res.status(400).json({

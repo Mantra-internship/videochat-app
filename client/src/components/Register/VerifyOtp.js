@@ -1,8 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 
-function VerifyOtp() {
+function VerifyOtp(props) {
   const [otp, setOtp] = useState();
+
+  const role = sessionStorage.getItem('role');
+
+  // axios request to sava a new astrologer or user depending on the role.
+  let data = {
+    otp,
+    phone: sessionStorage.getItem('phone'),
+  };
+
+  const otpValidater = async () => {
+    await axios
+      .post('http://localhost:5000/api/user/verify-otp', data)
+      .then((response) => {
+        console.log(response.data);
+        document.cookie = `user=${response.data.token}`;
+        if (role === 'user') {
+          props.history.push('/');
+        } else {
+          props.history.push('/astro-register');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('Something went wrong');
+      });
+  };
+
   return (
     <>
       <MainContainer>
@@ -18,7 +46,7 @@ function VerifyOtp() {
             />
           </Row>
         </Inner>
-        <SendButton>Verify OTP</SendButton>
+        <SendButton onClick={otpValidater}>Verify OTP</SendButton>
       </MainContainer>
     </>
   );

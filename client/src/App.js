@@ -40,8 +40,8 @@ function App() {
           <Route exact path="/login" component={Login} />
           {/* Register Routes */}
           <Route exact path="/register" component={UserRegister} />
-          {/* <Route exact path="/register" component={AstrologerRegister} /> */}
-          {/* <Route exact path="/register" component={VerifyOtp} /> */}
+          <Route exact path="/astro-register" component={AstrologerRegister} />
+          <Route exact path="/verify-otp" component={VerifyOtp} />
 
           {/* Login Routes */}
           <Route exact path="/login" component={Login} />

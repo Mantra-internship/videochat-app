@@ -1,11 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 
-function AstrologerRegister() {
+function AstrologerRegister(props) {
   const [speciality, setSpeciality] = useState();
-  const [languages, setLanguages] =  useState();
+  const [languages, setLanguages] = useState();
   const [description, setDescription] = useState();
   const [experience, setExperience] = useState();
+
+  // axios request to sava a new astrologer or user depending on the role.
+  let data = {
+    speciality,
+    languages,
+    description,
+    experience,
+  };
+
+  const getToken = () => {
+    const cArray = document.cookie.split(' ');
+    let anotherToken;
+    cArray.map((string) => {
+      let sArray = string.split('=');
+      if (sArray[0] === 'user') {
+        anotherToken = sArray[1];
+        if (anotherToken[anotherToken.length - 1] === ';') {
+          anotherToken = anotherToken.slice(0, -1);
+        }
+      }
+    });
+    return anotherToken;
+  };
+
+  const saveAstrologerData = async () => {
+    await axios
+      .post('http://localhost:5000/api/user/add-astrologer-info', data, {
+        // send the JWT token
+        headers: { authorization: `Bearer ` + getToken() },
+      })
+      .then((response) => {
+        console.log(response.data);
+        props.history.push('/');
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('Something went wrong');
+      });
+  };
 
   return (
     <>
@@ -52,7 +92,7 @@ function AstrologerRegister() {
             />
           </Row>
         </Inner>
-        <Button>Save Data</Button>
+        <Button onClick={saveAstrologerData}>Save Data</Button>
       </MainContainer>
     </>
   );
