@@ -9,6 +9,7 @@ function Profile() {
   const [phone, setPhone] = useState();
   const [role, setRole] = useState();
   const [speciality, setSpeciality] = useState();
+  const [languages, setLanguages] = useState();
   const [description, setDescription] = useState();
   const [experience, setExperience] = useState();
 
@@ -96,6 +97,17 @@ function Profile() {
               placeholder="Kundli..."
               value="John Doe" // to be changed to dynamic content
               onChange={(event) => setSpeciality(event.target.value)}
+            />
+          </Row>
+          <Row>
+            <Label htmlFor="Languages">Languages</Label>
+            <Textarea
+              type="text"
+              id="Languages"
+              required
+              placeholder="Hindi, English..."
+              value="John Doe" // to be changed to dynamic content
+              onChange={(event) => setLanguages(event.target.value)}
             />
           </Row>
           <Row>
