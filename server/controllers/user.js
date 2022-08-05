@@ -246,8 +246,9 @@ const user = {
   // to save an individual user in DB
   updateUser: async (req, res) => {
     try {
+      const userID = req.userId;
       const { name, phone, email, role, profilePic } = req.body;
-      const user = await User.findOne({ phone });
+      const user = await User.findOne({ _id: userID });
       
       if (user) {
         user.name = name;
