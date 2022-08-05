@@ -125,6 +125,7 @@ const user = {
           return res.status(200).json({
             message: "OTP verified successfully",
             token,
+            role: user.role
           });
         } else {
           return res.status(400).json({

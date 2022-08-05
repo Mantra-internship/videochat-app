@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import socket from '../../socket';
 
@@ -45,32 +46,34 @@ const Main = (props) => {
   const handleLogout = () => {
     // document.cookie = 'user=';
     deleteCookie('user', '', 1);
-    sessionStorage.setItem('isAuthenticated', false);
     window.location.reload();
   };
 
-  let isAuthenticated = sessionStorage.getItem('isAuthenticated');
+  let isAuthenticated = document.cookie == '' ? false : true;
   console.log('isAuthenticated', isAuthenticated);
 
   return (
     <MainContainer>
       {isAuthenticated === true ? (
-        <JoinButton onClick={handleLogout}>Logout</JoinButton>
+        <>
+          <JoinButton onClick={handleLogout}>Logout</JoinButton>
+          <JoinButton><Link to="/profile">Profile</Link></JoinButton>
+        </>
       ) : (
         <>
           <JoinButton>
-            <a href="/register">Register</a>
+            <Link to="/register">Register</Link>
           </JoinButton>
           <JoinButton>
-            <a href="/login">Login</a>
+            <Link to="/login">Login</Link>
           </JoinButton>
         </>
       )}
       <JoinButton>
-        <a href="/payment-records">Payment Records</a>
+        <Link to="/payment-records">Payment Records</Link>
       </JoinButton>
       <JoinButton>
-        <a href="/astrologers">All Astrologers</a>
+        <Link to="/astrologers">All Astrologers</Link>
       </JoinButton>
       <Row>
         <Label htmlFor="roomName">Room Name</Label>

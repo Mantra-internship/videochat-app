@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import Main from './components/Main/Main';
 import Room from './components/Room/Room';
 import Payment_Records from './components/Payments/Payment-Records';
-// import NotFound from "./components/NotFound/NotFound";
 import styled from 'styled-components';
 
 import Invoice_Main from './components/Transaction_Invoice/Invoice_Main';
@@ -18,15 +17,40 @@ import Profile from './components/Profile/Profile';
 import PageNotFound from './components/PageNotFound/PageNotFound';
 
 function App() {
-  // localStorage.setItem('isAuthenticated', false);
-  let isAuthenticated = sessionStorage.getItem('isAuthenticated');
-  console.log(isAuthenticated)
+  let isAuthenticated = false;
+  if (document.cookie != '') {
+    isAuthenticated = true;
+  }
   return (
     <BrowserRouter>
       <AppContainer>
         <Switch>
           <Route exact path="/" component={Main} />
-          <Route exact path="/room/:roomId" component={Room} />
+
+          {/* {PUBLIC ROUTES} */}
+          <Route exact path="/astrologers" component={AstrologerMain} />
+          <Route
+            exact
+            path="/astrologer/:uphone"
+            render={(props) => <AstrologerPage {...props} />}
+          />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/buy-credits" component={Buy_Credits} />
+          <Route exact path="/register" component={UserRegister} />
+          <Route exact path="/astro-register" component={AstrologerRegister} />
+          <Route exact path="/verify-otp" component={VerifyOtp} />
+          {/* {PUBLIC ROUTES} */}
+
+          {/* {PRIVATE ROUTES} */}
+          <Route
+            exact
+            path="/room/:roomId"
+            render={() =>
+              isAuthenticated === true ? <Room /> : <Redirect to="/login" />
+            }
+          />
+          {/* <Route exact path="/room/:roomId" component={Room} /> */}
+
           <Route
             exact
             path="/payment-records"
@@ -39,32 +63,34 @@ function App() {
             }
           />
           {/* <Route exact path="/payment-records" component={Payment_Records} /> */}
-          {/* <Route component={NotFound} /> */}
+
           <Route
             exact
             path="/getPaymentInfo/:paymentId"
-            component={Invoice_Main}
+            render={() =>
+              isAuthenticated === true ? (
+                <Invoice_Main />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
           />
-          <Route exact path="/astrologers" component={AstrologerMain} />
+          {/* <Route
+            exact
+            path="/getPaymentInfo/:paymentId"
+            component={Invoice_Main}
+          /> */}
+
           <Route
             exact
-            path="/astrologer/:uphone"
-            render={(props) => <AstrologerPage {...props} />}
+            path="/profile"
+            render={() =>
+              isAuthenticated === true ? <Profile /> : <Redirect to="/login" />
+            }
           />
-          <Route exact path="/buy-credits" component={Buy_Credits} />
-          <Route exact path="/login" component={Login} />
-          {/* Register Routes */}
-          <Route exact path="/register" component={UserRegister} />
-          <Route exact path="/astro-register" component={AstrologerRegister} />
-          <Route exact path="/verify-otp" component={VerifyOtp} />
+          {/* <Route exact path="/profile" component={Profile} /> */}
 
-          {/* Login Routes */}
-          <Route exact path="/login" component={Login} />
-          {/* <Route exact path="/login" component={VerifyOtp} /> */}
-
-          {/* Profile Routes */}
-          <Route exact path="/profile" component={Profile} />
-
+          {/* No Page Found Component */}
           <Route component={PageNotFound} />
         </Switch>
       </AppContainer>

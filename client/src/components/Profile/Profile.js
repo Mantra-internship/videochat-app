@@ -4,24 +4,20 @@ import axios from 'axios';
 // import 'react-phone-input-2/lib/style.css';
 // import PhoneInput from 'react-phone-input-2';
 
+import UserProfile from './UserProfile';
+import AstroProfile from './AstroProfile';
+
 function Profile(props) {
   const [name, setName] = useState();
   const [email, setEmail] = useState('NULL');
   const [phone, setPhone] = useState();
   const [role, setRole] = useState();
-  const [speciality, setSpeciality] = useState();
-  const [languages, setLanguages] = useState();
-  const [description, setDescription] = useState();
-  const [experience, setExperience] = useState();
+  const [speciality, setSpeciality] = useState('');
+  const [languages, setLanguages] = useState('');
+  const [description, setDescription] = useState('');
+  const [experience, setExperience] = useState('');
 
-  const handleChange = (event) => {
-    setRole(event.target.value);
-  };
-
-  const options = [
-    { label: 'Astrologer', value: 'astrologer' },
-    { label: 'User', value: 'user' },
-  ];
+  let designation = sessionStorage.getItem('role');
 
   useEffect(() => {
     getToken();
@@ -90,7 +86,7 @@ function Profile(props) {
       .post(
         'http://localhost:5000/api/user/update',
         {
-          data
+          data,
         },
         {
           headers: { authorization: `Bearer ` + getToken() },
@@ -111,110 +107,8 @@ function Profile(props) {
       <MainContainer>
         <Heading>Profile</Heading>
         <Inner>
-          <Row>
-            <Label htmlFor="Name">Full Name</Label>
-            <Input
-              type="text"
-              id="Name"
-              required
-              placeholder="John Doe"
-              value={name} // to be changed to dynamic content
-              onChange={(event) => setName(event.target.value)}
-            />
-          </Row>
-          <Row>
-            <Label htmlFor="e-mail">E-Mail</Label>
-            <Input
-              type="e-mail"
-              id="e-mail"
-              default="NULL"
-              placeholder="John@example.com"
-              value={email} // to be changed to dynamic content
-              onChange={(event) => setEmail(event.target.value)}
-            />
-          </Row>
-          <Row>
-            <Label htmlFor="phone">Phone Number</Label>
-            <Input
-              type="phone"
-              id="phone"
-              placeholder="+91XXXXXXXXXX"
-              value={phone} // to be changed to dynamic content
-              onChange={(event) => setPhone(event.target.value)}
-            />
-            {/* <PhoneInput
-              id="phone"
-              required
-              placeholder="+91XXXXXXXXXX"
-              value={phone}
-              onChange={setPhone}
-              style={{
-                width: '30px',
-                height: '35px',
-                marginLeft: '5px',
-                outline: 'none',
-                border: 'none',
-                borderRadius: '5px',
-              }}
-            /> */}
-          </Row>
-          <Row>
-            <Label htmlFor="role">Role</Label>
-            <Select
-              value={role} // to be changed to dynamic content
-              onChange={handleChange}
-            >
-              <option value="" selected disabled hidden>
-                Are you a Astrologer or User?
-              </option>
-              {options.map((option) => (
-                <option value={option.value}>{option.label}</option>
-              ))}
-            </Select>
-          </Row>
-          <Row>
-            <Label htmlFor="Speciality">Speciality</Label>
-            <Textarea
-              type="text"
-              id="Speciality"
-              required
-              placeholder="Kundli..."
-              value={speciality} // to be changed to dynamic content
-              onChange={(event) => setSpeciality(event.target.value)}
-            />
-          </Row>
-          <Row>
-            <Label htmlFor="Languages">Languages</Label>
-            <Textarea
-              type="text"
-              id="Languages"
-              required
-              placeholder="Hindi, English..."
-              value={languages} // to be changed to dynamic content
-              onChange={(event) => setLanguages(event.target.value)}
-            />
-          </Row>
-          <Row>
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              type="text"
-              id="description"
-              required
-              placeholder="I am a"
-              value={description} // to be changed to dynamic content
-              onChange={(event) => setDescription(event.target.value)}
-            />
-          </Row>
-          <Row>
-            <Label htmlFor="experience">Experience</Label>
-            <Input
-              type="number"
-              id="experience"
-              placeholder="Years"
-              value={experience} // to be changed to dynamic content
-              onChange={(event) => setExperience(event.target.value)}
-            />
-          </Row>
+          <UserProfile props={data} setData={setData} />
+          <AstroProfile props={data} setData={setData} />
         </Inner>
         <SendButton onClick={postData}>Update Data</SendButton>
       </MainContainer>
@@ -244,60 +138,6 @@ const Heading = styled.div`
 
 const Inner = styled.div`
   margin-top: 20px;
-`;
-
-const Row = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 15px;
-  line-height: 35px;
-`;
-
-const Label = styled.label``;
-
-const Input = styled.input`
-  width: 250px;
-  height: 35px;
-  margin-left: 15px;
-  padding-left: 10px;
-  outline: none;
-  border: none;
-  border-radius: 5px;
-
-  @media (max-width: 500px) {
-    width: 200px;
-  }
-`;
-
-const Select = styled.select`
-  width: 260px;
-  height: 35px;
-  margin-left: 15px;
-  padding-left: 10px;
-  outline: none;
-  border: none;
-  border-radius: 5px;
-
-  @media (max-width: 500px) {
-    width: 210px;
-  }
-`;
-
-const Textarea = styled.textarea`
-  height: 70px;
-  width: 250px;
-  resize: none;
-  font-size: 20px;
-  outline: none;
-  margin-left: 15px;
-  padding-left: 10px;
-  border: none;
-  border-radius: 5px;
-
-  @media (max-width: 500px) {
-    width: 200px;
-  }
 `;
 
 const SendButton = styled.button`

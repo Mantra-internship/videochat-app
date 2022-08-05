@@ -5,7 +5,7 @@ import axios from 'axios';
 function VerifyOtp(props) {
   const [otp, setOtp] = useState();
 
-  const role = sessionStorage.getItem('role');
+  let role = sessionStorage.getItem('role');
 
   // function to set cookie
   const createCookie = (cookieName, cookieValue, daysToExpire) => {
@@ -26,12 +26,13 @@ function VerifyOtp(props) {
       .post('http://localhost:5000/api/user/verify-otp', data)
       .then((response) => {
         console.log(response.data);
-        // document.cookie = `user=${response.data.token}`;
         createCookie('user', response.data.token, 1);
-        sessionStorage.setItem('isAuthenticated', true);
+
         if (role === 'user' || role === '') {
-          props.history.push('/profile');
+          props.history.push('/');
         } else {
+          role = response.data.role;
+          sessionStorage.setItem('role', role);
           props.history.push('/astro-register');
         }
       })
