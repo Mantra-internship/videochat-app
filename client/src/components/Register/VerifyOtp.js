@@ -7,6 +7,14 @@ function VerifyOtp(props) {
 
   const role = sessionStorage.getItem('role');
 
+  // function to set cookie
+  const createCookie = (cookieName, cookieValue, daysToExpire) => {
+    var date = new Date();
+    date.setTime(date.getTime() + daysToExpire * 24 * 60 * 60 * 1000);
+    document.cookie =
+      cookieName + '=' + cookieValue + '; expires=' + date.toGMTString();
+  };
+
   // axios request to sava a new astrologer or user depending on the role.
   let data = {
     otp,
@@ -18,9 +26,11 @@ function VerifyOtp(props) {
       .post('http://localhost:5000/api/user/verify-otp', data)
       .then((response) => {
         console.log(response.data);
-        document.cookie = `user=${response.data.token}`;
+        // document.cookie = `user=${response.data.token}`;
+        createCookie('user', response.data.token, 1);
+        sessionStorage.setItem('isAuthenticated', true);
         if (role === 'user' || role === '') {
-          props.history.push('/');
+          props.history.push('/profile');
         } else {
           props.history.push('/astro-register');
         }

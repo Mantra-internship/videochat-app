@@ -14,35 +14,37 @@ const Payment_records = (props) => {
 
   const getToken = () => {
     const cArray = document.cookie.split(' ');
-    let anotherToken; 
+    let anotherToken;
     cArray.map((string) => {
       let sArray = string.split('=');
       if (sArray[0] === 'user') {
         anotherToken = sArray[1];
-        if(anotherToken[anotherToken.length - 1] === ';'){
+        if (anotherToken[anotherToken.length - 1] === ';') {
           anotherToken = anotherToken.slice(0, -1);
         }
       }
-    })
+    });
     return anotherToken;
-  }
+  };
 
   const transactionDataFetcher = async () => {
     await axios
-      .post('http://localhost:5000/api/user/payment-record',
+      .post(
+        'http://localhost:5000/api/user/payment-record',
         {},
         {
           headers: { authorization: `Bearer ` + getToken() },
-        })
+        }
+      )
       .then((resObj) => {
-          console.log(resObj.data)
-          setTransactionData(resObj.data.paymentRecord);
-          console.log(transactionData);
-        })
-        .catch((error) => {
-          console.log(error);
-          setTransactionData([]);
-        });
+        console.log(resObj.data);
+        setTransactionData(resObj.data.paymentRecord);
+        console.log(transactionData);
+      })
+      .catch((error) => {
+        console.log(error);
+        setTransactionData([]);
+      });
   };
   return (
     <>
@@ -137,7 +139,7 @@ const Card = styled.div`
   width: 80vw;
   overflow: hidden;
 
-  @media(max-width: 800px){
+  @media (max-width: 800px) {
     width: 350px;
   }
 

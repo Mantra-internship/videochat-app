@@ -10,7 +10,6 @@ function AstrologerMain() {
   useEffect(() => {
     astrologersDataFetcher();
   }, []);
- 
 
   const astrologersDataFetcher = async () => {
     await axios
@@ -31,7 +30,12 @@ function AstrologerMain() {
       <Heading>Our Astrologers</Heading>
       <Container>
         {astrologersData.map((astrologer) => {
-          return <AstrologerCard key={astrologer.id}  astrologer={astrologer}></AstrologerCard>;
+          return (
+            <AstrologerCard
+              key={astrologer.id}
+              astrologer={astrologer}
+            ></AstrologerCard>
+          );
         })}
       </Container>
     </>
@@ -42,15 +46,18 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
+  flex: 3;
+  flex-direction: row;
+  height: 100vh;
+  flex-wrap: wrap;
+  // flex-grow: 3;
   margin-top: 20px;
 
   @media (max-width: 768px) {
     padding: 20px;
-    margin: 20px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    overflow-x: hidden;
   }
 `;
 

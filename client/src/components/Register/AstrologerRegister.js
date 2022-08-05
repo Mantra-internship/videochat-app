@@ -39,7 +39,7 @@ function AstrologerRegister(props) {
       })
       .then((response) => {
         console.log(response.data);
-        props.history.push('/');
+        props.history.push('/profile');
       })
       .catch((err) => {
         console.log(err);

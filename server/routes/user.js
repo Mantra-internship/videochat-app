@@ -28,7 +28,7 @@ router
 
 router
     .route("/get-user")
-    .get(userMid.authenticate, userCont.getUser);
+    .post(userMid.authenticate, userCont.getUser);
 
 router
     .route("/user/update")

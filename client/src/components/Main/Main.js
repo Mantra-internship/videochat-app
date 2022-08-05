@@ -9,7 +9,6 @@ const Main = (props) => {
   const [errMsg, setErrMsg] = useState('');
 
   useEffect(() => {
-
     socket.on('FE-error-user-exist', ({ error }) => {
       if (!error) {
         const roomName = roomRef.current.value;
@@ -36,8 +35,43 @@ const Main = (props) => {
     }
   }
 
+  const deleteCookie = (cookieName, cookieValue, daysToExpire) => {
+    var date = new Date();
+    date.setTime(date.getTime() - daysToExpire * 24 * 60 * 60 * 1000);
+    document.cookie =
+      cookieName + '=' + cookieValue + '; expires=' + date.toGMTString();
+  };
+
+  const handleLogout = () => {
+    // document.cookie = 'user=';
+    deleteCookie('user', '', 1);
+    sessionStorage.setItem('isAuthenticated', false);
+    window.location.reload();
+  };
+
+  let isAuthenticated = sessionStorage.getItem('isAuthenticated');
+  console.log('isAuthenticated', isAuthenticated);
+
   return (
     <MainContainer>
+      {isAuthenticated === true ? (
+        <JoinButton onClick={handleLogout}>Logout</JoinButton>
+      ) : (
+        <>
+          <JoinButton>
+            <a href="/register">Register</a>
+          </JoinButton>
+          <JoinButton>
+            <a href="/login">Login</a>
+          </JoinButton>
+        </>
+      )}
+      <JoinButton>
+        <a href="/payment-records">Payment Records</a>
+      </JoinButton>
+      <JoinButton>
+        <a href="/astrologers">All Astrologers</a>
+      </JoinButton>
       <Row>
         <Label htmlFor="roomName">Room Name</Label>
         <Input type="text" id="roomName" ref={roomRef} />
@@ -48,8 +82,6 @@ const Main = (props) => {
       </Row>
       <JoinButton onClick={clickJoin}> Join </JoinButton>
       {err ? <Error>{errMsg}</Error> : null}
-      <JoinButton><a href="/register">Register</a></JoinButton>
-      <JoinButton><a href="/login">Login</a></JoinButton>
     </MainContainer>
   );
 };

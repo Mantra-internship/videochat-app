@@ -54,7 +54,7 @@ const Container = styled.div`
 
   @media (max-width: 768px) {
     padding: 20px;
-    width: 80%;
+    width: 100%;
     margin: 3% 0 8% 8%;
     display: flex;
     flex-direction: column;

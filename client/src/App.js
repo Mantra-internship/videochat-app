@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import Main from './components/Main/Main';
 import Room from './components/Room/Room';
 import Payment_Records from './components/Payments/Payment-Records';
@@ -9,21 +9,36 @@ import styled from 'styled-components';
 import Invoice_Main from './components/Transaction_Invoice/Invoice_Main';
 import AstrologerMain from './components/Astrologer/AstrologerMain';
 import AstrologerPage from './components/Astrologer/AstrologerPage';
-import Buy_Credits from './components/CreditsPage/Buy_Credits'
-import Login from './components/Login/Login'
-import UserRegister from './components/Register/UserRegister'
-import AstrologerRegister from './components/Register/AstrologerRegister'
-import VerifyOtp from './components/Register/VerifyOtp'
-import Profile from './components/Profile/Profile'
+import Buy_Credits from './components/CreditsPage/Buy_Credits';
+import Login from './components/Login/Login';
+import UserRegister from './components/Register/UserRegister';
+import AstrologerRegister from './components/Register/AstrologerRegister';
+import VerifyOtp from './components/Register/VerifyOtp';
+import Profile from './components/Profile/Profile';
+import PageNotFound from './components/PageNotFound/PageNotFound';
 
 function App() {
+  // localStorage.setItem('isAuthenticated', false);
+  let isAuthenticated = sessionStorage.getItem('isAuthenticated');
+  console.log(isAuthenticated)
   return (
     <BrowserRouter>
       <AppContainer>
         <Switch>
           <Route exact path="/" component={Main} />
           <Route exact path="/room/:roomId" component={Room} />
-          <Route exact path="/payment-records" component={Payment_Records} />
+          <Route
+            exact
+            path="/payment-records"
+            render={() =>
+              isAuthenticated === true ? (
+                <Payment_Records />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          {/* <Route exact path="/payment-records" component={Payment_Records} /> */}
           {/* <Route component={NotFound} /> */}
           <Route
             exact
@@ -49,6 +64,8 @@ function App() {
 
           {/* Profile Routes */}
           <Route exact path="/profile" component={Profile} />
+
+          <Route component={PageNotFound} />
         </Switch>
       </AppContainer>
     </BrowserRouter>

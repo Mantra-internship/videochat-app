@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 // import 'react-phone-input-2/lib/style.css';
 // import PhoneInput from 'react-phone-input-2';
 
-function Profile() {
+function Profile(props) {
   const [name, setName] = useState();
   const [email, setEmail] = useState('NULL');
   const [phone, setPhone] = useState();
@@ -22,6 +23,89 @@ function Profile() {
     { label: 'User', value: 'user' },
   ];
 
+  useEffect(() => {
+    getToken();
+    getData();
+  }, []);
+
+  const getToken = () => {
+    const cArray = document.cookie.split(' ');
+    let anotherToken;
+    cArray.map((string) => {
+      let sArray = string.split('=');
+      if (sArray[0] === 'user') {
+        anotherToken = sArray[1];
+        if (anotherToken[anotherToken.length - 1] === ';') {
+          anotherToken = anotherToken.slice(0, -1);
+        }
+      }
+    });
+    return anotherToken;
+  };
+
+  let data = {
+    name,
+    email,
+    phone,
+    role,
+    speciality,
+    languages,
+    description,
+    experience,
+  };
+
+  const setData = (data) => {
+    setName(data.name);
+    setEmail(data.email);
+    setPhone(data.phone);
+    setRole(data.role);
+    setSpeciality(data.astrologerInfo.specialities);
+    setLanguages(data.astrologerInfo.languages);
+    setDescription(data.astrologerInfo.description);
+    setExperience(data.astrologerInfo.experience);
+  };
+
+  const getData = async () => {
+    await axios
+      .post(
+        'http://localhost:5000/api/user/get-user',
+        {},
+        {
+          headers: { authorization: `Bearer ` + getToken() },
+        }
+      )
+      .then((response) => {
+        console.log(response.data.foundUser);
+        setData(response.data.foundUser);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('Something went wrong');
+      });
+  };
+
+  const postData = async () => {
+    console.log({ data });
+    await axios
+      .post(
+        'http://localhost:5000/api/user/update',
+        {
+          data
+        },
+        {
+          headers: { authorization: `Bearer ` + getToken() },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        alert('Updated Successfully');
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('Something went wrong');
+      });
+  };
+
   return (
     <>
       <MainContainer>
@@ -34,7 +118,7 @@ function Profile() {
               id="Name"
               required
               placeholder="John Doe"
-              value="John Doe" // to be changed to dynamic content
+              value={name} // to be changed to dynamic content
               onChange={(event) => setName(event.target.value)}
             />
           </Row>
@@ -45,7 +129,7 @@ function Profile() {
               id="e-mail"
               default="NULL"
               placeholder="John@example.com"
-              value="John@example.com" // to be changed to dynamic content
+              value={email} // to be changed to dynamic content
               onChange={(event) => setEmail(event.target.value)}
             />
           </Row>
@@ -55,7 +139,7 @@ function Profile() {
               type="phone"
               id="phone"
               placeholder="+91XXXXXXXXXX"
-              value="+911234567890" // to be changed to dynamic content
+              value={phone} // to be changed to dynamic content
               onChange={(event) => setPhone(event.target.value)}
             />
             {/* <PhoneInput
@@ -77,7 +161,7 @@ function Profile() {
           <Row>
             <Label htmlFor="role">Role</Label>
             <Select
-              value="user" // to be changed to dynamic content
+              value={role} // to be changed to dynamic content
               onChange={handleChange}
             >
               <option value="" selected disabled hidden>
@@ -95,7 +179,7 @@ function Profile() {
               id="Speciality"
               required
               placeholder="Kundli..."
-              value="John Doe" // to be changed to dynamic content
+              value={speciality} // to be changed to dynamic content
               onChange={(event) => setSpeciality(event.target.value)}
             />
           </Row>
@@ -106,7 +190,7 @@ function Profile() {
               id="Languages"
               required
               placeholder="Hindi, English..."
-              value="John Doe" // to be changed to dynamic content
+              value={languages} // to be changed to dynamic content
               onChange={(event) => setLanguages(event.target.value)}
             />
           </Row>
@@ -117,7 +201,7 @@ function Profile() {
               id="description"
               required
               placeholder="I am a"
-              value="I am a astrologer" // to be changed to dynamic content
+              value={description} // to be changed to dynamic content
               onChange={(event) => setDescription(event.target.value)}
             />
           </Row>
@@ -127,12 +211,12 @@ function Profile() {
               type="number"
               id="experience"
               placeholder="Years"
-              value="5" // to be changed to dynamic content
+              value={experience} // to be changed to dynamic content
               onChange={(event) => setExperience(event.target.value)}
             />
           </Row>
         </Inner>
-        <SendButton>Update Data</SendButton>
+        <SendButton onClick={postData}>Update Data</SendButton>
       </MainContainer>
     </>
   );
