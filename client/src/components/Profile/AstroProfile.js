@@ -1,8 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 
-function AstroProfile(props) {
+function AstroProfile({
+  data,
+  specialitiesRef,
+  languagesRef,
+  descriptionRef,
+  experienceRef
+}) {
   return (
     <>
       <Row>
@@ -12,8 +17,8 @@ function AstroProfile(props) {
           id="Speciality"
           required
           placeholder="Kundli..."
-          value={props.speciality} // to be changed to dynamic content
-          onChange={(event) => setSpeciality(event.target.value)}
+          defaultValue={ data ? data.specialities : "Kundli"}
+          ref={specialitiesRef}
         />
       </Row>
       <Row>
@@ -23,8 +28,8 @@ function AstroProfile(props) {
           id="Languages"
           required
           placeholder="Hindi, English..."
-          value={props.languages} // to be changed to dynamic content
-          onChange={(event) => setLanguages(event.target.value)}
+          defaultValue={data ? data.languages : "Hindi, English"}
+          ref={languagesRef}
         />
       </Row>
       <Row>
@@ -34,8 +39,8 @@ function AstroProfile(props) {
           id="description"
           required
           placeholder="I am a"
-          value={props.description} // to be changed to dynamic content
-          onChange={(event) => setDescription(event.target.value)}
+          defaultValue={data ? data.description : "I am a"}
+          ref={descriptionRef}
         />
       </Row>
       <Row>
@@ -44,8 +49,8 @@ function AstroProfile(props) {
           type="number"
           id="experience"
           placeholder="Years"
-          value={props.experience} // to be changed to dynamic content
-          onChange={(event) => setExperience(event.target.value)}
+          defaultValue={data ? data.experience : 0}
+          ref={experienceRef}
         />
       </Row>
     </>

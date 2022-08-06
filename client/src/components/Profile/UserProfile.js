@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 
-function UserProfile(props) {
-  const handleChange = (event) => {
-    setRole(event.target.value);
-  };
+function UserProfile({
+  data,
+  nameRef,
+  emailRef,
+  phoneRef,
+  setRole
+}) {
 
   const options = [
     { label: 'Astrologer', value: 'astrologer' },
@@ -21,8 +23,8 @@ function UserProfile(props) {
           id="Name"
           required
           placeholder="John Doe"
-          value={props.name} // to be changed to dynamic content
-          onChange={(event) => setName(event.target.value)}
+          defaultValue={data.name}
+          ref={nameRef}
         />
       </Row>
       <Row>
@@ -32,8 +34,8 @@ function UserProfile(props) {
           id="e-mail"
           default="NULL"
           placeholder="John@example.com"
-          value={props.email} // to be changed to dynamic content
-          onChange={(event) => setEmail(event.target.value)}
+          defaultValue={data.email}
+          ref={emailRef}
         />
       </Row>
       <Row>
@@ -42,35 +44,16 @@ function UserProfile(props) {
           type="phone"
           id="phone"
           placeholder="+91XXXXXXXXXX"
-          value={props.phone} // to be changed to dynamic content
-          onChange={(event) => setPhone(event.target.value)}
+          defaultValue={data.phone}
+          ref={phoneRef}
         />
-        {/* <PhoneInput
-              id="phone"
-              required
-              placeholder="+91XXXXXXXXXX"
-              value={phone}
-              onChange={setPhone}
-              style={{
-                width: '30px',
-                height: '35px',
-                marginLeft: '5px',
-                outline: 'none',
-                border: 'none',
-                borderRadius: '5px',
-              }}
-            /> */}
       </Row>
       <Row>
         <Label htmlFor="role">Role</Label>
         <Select
-          value={props.role} // to be changed to dynamic content
-          onChange={handleChange}
-          defaultValue="Are you a Astrologer or a User"
+          defaultValue={data.role}
+          onChange={(event) => setRole(event.target.value)}
         >
-          {/* <option value="" selected disabled hidden>
-                Are you a Astrologer or User?
-              </option> */}
           {options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}

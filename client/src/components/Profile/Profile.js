@@ -1,26 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-// import 'react-phone-input-2/lib/style.css';
-// import PhoneInput from 'react-phone-input-2';
-
 import UserProfile from './UserProfile';
 import AstroProfile from './AstroProfile';
 
 function Profile(props) {
-  const [name, setName] = useState();
-  const [email, setEmail] = useState('NULL');
-  const [phone, setPhone] = useState();
-  const [role, setRole] = useState();
-  const [speciality, setSpeciality] = useState('');
-  const [languages, setLanguages] = useState('');
-  const [description, setDescription] = useState('');
-  const [experience, setExperience] = useState('');
 
-  let designation = sessionStorage.getItem('role');
+  const [role, setRole] = useState('')
+  const [loader, setLoader] = useState(true);
+  const [user, setUser] = useState();
+
+  const nameRef = useRef('');
+  const emailRef = useRef('');
+  const phoneRef = useRef('');
+  const specialitiesRef = useRef('');
+  const languagesRef = useRef('');
+  const descriptionRef = useRef('');
+  const experienceRef = useRef('');
 
   useEffect(() => {
-    getToken();
     getData();
   }, []);
 
@@ -39,28 +37,6 @@ function Profile(props) {
     return anotherToken;
   };
 
-  let data = {
-    name,
-    email,
-    phone,
-    role,
-    speciality,
-    languages,
-    description,
-    experience,
-  };
-
-  const setData = (data) => {
-    setName(data.name);
-    setEmail(data.email);
-    setPhone(data.phone);
-    setRole(data.role);
-    setSpeciality(data.astrologerInfo.specialities);
-    setLanguages(data.astrologerInfo.languages);
-    setDescription(data.astrologerInfo.description);
-    setExperience(data.astrologerInfo.experience);
-  };
-
   const getData = async () => {
     await axios
       .post(
@@ -72,7 +48,9 @@ function Profile(props) {
       )
       .then((response) => {
         console.log(response.data.foundUser);
-        setData(response.data.foundUser);
+        setUser(response.data.foundUser);
+        setRole(response.data.foundUser.role);
+        setLoader(false);
       })
       .catch((err) => {
         console.log(err);
@@ -81,13 +59,35 @@ function Profile(props) {
   };
 
   const postData = async () => {
-    console.log({ data });
+    console.log("posting")
+    let newData = {
+      name: nameRef.current.value,
+      email: emailRef.current.value,
+      phone: phoneRef.current.value,
+      role
+    }
+    
+    if(role === "astrologer"){
+      const specialitiesArray = await specialitiesRef.current.value.split(",").map((speciality) => {
+        return speciality.trim();
+      });
+
+      const languagesArray = await languagesRef.current.value.split(",").map((speciality) => {
+        return speciality.trim();
+      });
+
+      newData = {
+        ...newData,
+        specialities: specialitiesArray,
+        languages: languagesArray,
+        description: descriptionRef.current.value,
+        experience: experienceRef.current.value
+      }
+    }
+    console.log(newData);
     await axios
       .post(
-        'http://localhost:5000/api/user/update',
-        {
-          data,
-        },
+        'http://localhost:5000/api/user/user/update', newData,
         {
           headers: { authorization: `Bearer ` + getToken() },
         }
@@ -106,10 +106,34 @@ function Profile(props) {
     <>
       <MainContainer>
         <Heading>Profile</Heading>
-        <Inner>
-          <UserProfile props={data} setData={setData} />
-          <AstroProfile props={data} setData={setData} />
-        </Inner>
+        {
+          loader ? 
+            <Inner>
+              <h3>Loading...</h3>
+            </Inner>
+          :
+            <Inner>
+              <UserProfile 
+                data={user}
+                nameRef={nameRef}
+                emailRef={emailRef}
+                phoneRef={phoneRef}
+                setRole={setRole}
+              />
+              {
+                role === "astrologer" ?
+                  <AstroProfile 
+                    data={user.astrologerInfo}
+                    specialitiesRef={specialitiesRef}
+                    languagesRef={languagesRef}
+                    descriptionRef={descriptionRef}
+                    experienceRef={experienceRef}
+                  />
+                :
+                  <></>
+              }
+            </Inner>
+        }
         <SendButton onClick={postData}>Update Data</SendButton>
       </MainContainer>
     </>
@@ -122,7 +146,9 @@ const MainContainer = styled.div`
   align-items: space-between;
   height: 100vh;
   width: 50vw;
-  overflow: hidden;
+  padding: 0 5vw;
+  padding-bottom: 20px;
+  overflow-y: scroll;
 
   @media (max-width: 1050px) {
     width: 90%;
