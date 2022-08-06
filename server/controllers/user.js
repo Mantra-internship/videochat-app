@@ -265,7 +265,7 @@ const user = {
         }else if(user.role === "astrologer"){
           const { description, languages, specialities, experience } = req.body;
           const foundInfo = await AstrologerInfo.findOne({ userId: user._id });
-
+          
           if(foundInfo){
             foundInfo.description = description,
             foundInfo.languages = languages,
@@ -281,6 +281,7 @@ const user = {
           }
 
         }else{
+          const { description, languages, specialities, experience } = req.body;
           const newAstrologerInfo = new AstrologerInfo({
             userId: user._id,
             description,
