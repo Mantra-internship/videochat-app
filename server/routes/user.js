@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const userMid = require("../middlewares/user");
 const userCont = require("../controllers/user");
+const authCont = require("../controllers/auth");
 
 router
     .route("/get-otp")
@@ -13,6 +14,10 @@ router
 router
     .route("/register/get-otp")
     .post(userMid.registerValidate, userCont.registerGetOtp);
+
+router
+    .route("/authenticate-user")
+    .post(userMid.authenticate, authCont.idReturner);
 
 router
     .route("/astrologer/:phone")

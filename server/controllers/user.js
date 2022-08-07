@@ -261,6 +261,7 @@ const user = {
           user.astrologerInfo = null;
           if(user.role === "astrologer"){
             await AstrologerInfo.findOneAndDelete({userId: user._id});
+            user.role = "user";
           }
         }else if(user.role === "astrologer"){
           const { description, languages, specialities, experience } = req.body;

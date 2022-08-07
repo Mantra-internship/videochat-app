@@ -17,7 +17,7 @@ function AstroProfile({
           id="Speciality"
           required
           placeholder="Kundli..."
-          defaultValue={ data ? data.specialities : "Kundli"}
+          defaultValue={ data ? data.specialities : ""}
           ref={specialitiesRef}
         />
       </Row>
@@ -28,7 +28,7 @@ function AstroProfile({
           id="Languages"
           required
           placeholder="Hindi, English..."
-          defaultValue={data ? data.languages : "Hindi, English"}
+          defaultValue={data ? data.languages : ""}
           ref={languagesRef}
         />
       </Row>
@@ -39,7 +39,7 @@ function AstroProfile({
           id="description"
           required
           placeholder="I am a"
-          defaultValue={data ? data.description : "I am a"}
+          defaultValue={data ? data.description : ""}
           ref={descriptionRef}
         />
       </Row>

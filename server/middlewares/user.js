@@ -48,12 +48,14 @@ const user = {
       } else {
         return res.status(404).json({
           message: "Invalid auth token",
+          isAuthenticated: false,
         });
       }
     } catch (error) {
       console.log("Middlewares: UserAuthenticate - ", error);
       return res.status(500).json({
         message: error.message,
+        isAuthenticated: false,
       });
     }
   },
