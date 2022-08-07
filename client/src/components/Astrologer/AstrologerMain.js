@@ -32,7 +32,7 @@ function AstrologerMain() {
         {astrologersData.map((astrologer) => {
           return (
             <AstrologerCard
-              key={astrologer.id}
+              key={astrologer.phone}
               astrologer={astrologer}
             ></AstrologerCard>
           );

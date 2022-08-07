@@ -16,6 +16,8 @@ import VerifyOtp from './components/Register/VerifyOtp';
 import Profile from './components/Profile/Profile';
 import PageNotFound from './components/PageNotFound/PageNotFound';
 
+import Navbar from './components/Navbar/Navbar'
+
 function App() {
   let isAuthenticated = false;
   if (document.cookie != '') {
@@ -23,6 +25,7 @@ function App() {
   }
   return (
     <BrowserRouter>
+      <Navbar />
       <AppContainer>
         <Switch>
           <Route exact path="/" component={Main} />
