@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -25,19 +25,54 @@ function Navbar() {
       </Logo>
       <MainNav display={displayNav}>
         <NavLi>
-          <NavLink href="/astrologers">Astrologers</NavLink>
+          <NavLink>
+            <Link
+              style={{ textDecoration: 'none', color: 'white' }}
+              to="/astrologers"
+            >
+              Astrologers
+            </Link>
+          </NavLink>
         </NavLi>
         <NavLi>
-          <NavLink href="/payment-records">Payment Records</NavLink>
+          <NavLink>
+            <Link
+              style={{ textDecoration: 'none', color: 'white' }}
+              to="/payment-records"
+            >
+              Payment Records
+            </Link>
+          </NavLink>
         </NavLi>
         <NavLi>
-          <NavLink href="/login">Login</NavLink>
+          <NavLink>
+            <Link
+              style={{ textDecoration: 'none', color: 'white' }}
+              to="/login"
+            >
+              Login
+            </Link>
+          </NavLink>
         </NavLi>
         <NavLi>
-          <NavLink href="/register">Register</NavLink>
+          <NavLink>
+            <Link
+              style={{ textDecoration: 'none', color: 'white' }}
+              to="/register"
+            >
+              Register
+            </Link>
+          </NavLink>
         </NavLi>
         <NavLi>
-          <NavLink href="/profile">Profile</NavLink>
+          <NavLink>
+            <Link
+              style={{ textDecoration: 'none', color: 'white' }}
+              to="/profile"
+            >
+              Profile
+            </Link>
+          </NavLink>
         </NavLi>
       </MainNav>
     </Bar>
@@ -77,7 +112,7 @@ const NavLi = styled.li`
   text-align: center;
   margin: 15px auto;
 `;
-const NavLink = styled.a`
+const NavLink = styled.div`
   list-style-type: none;
   display: flex;
   text-decoration: none;

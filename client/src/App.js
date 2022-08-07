@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import Main from './components/Main/Main';
 import Room from './components/Room/Room';
@@ -16,13 +16,62 @@ import VerifyOtp from './components/Register/VerifyOtp';
 import Profile from './components/Profile/Profile';
 import PageNotFound from './components/PageNotFound/PageNotFound';
 
-import Navbar from './components/Navbar/Navbar'
+import Navbar from './components/Navbar/Navbar';
+import axios from 'axios';
 
-function App() {
-  let isAuthenticated = false;
-  if (document.cookie != '') {
-    isAuthenticated = true;
-  }
+function App(props) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  const getToken = () => {
+    const cArray = document.cookie.split(' ');
+    let anotherToken;
+    cArray.map((string) => {
+      let sArray = string.split('=');
+      if (sArray[0] === 'user') {
+        anotherToken = sArray[1];
+        if (anotherToken[anotherToken.length - 1] === ';') {
+          anotherToken = anotherToken.slice(0, -1);
+        }
+      }
+    });
+    return anotherToken;
+  };
+
+  const checkAuth = async () => {
+    const jwtToken = document.cookie;
+    if (jwtToken == null) {
+      setIsAuthenticated(false);
+      return;
+    }
+
+    // console.log({ token });
+
+    await axios
+      .post(
+        'http://localhost:5000/api/user/authenticate-user',
+        {},
+        {
+          headers: { authorization: `Bearer ` + getToken() },
+        }
+      )
+      .then((resObj) => {
+        console.log(resObj);
+        if (resObj.data.isAuthenticated) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsAuthenticated(false);
+      });
+    console.log('isAuthenticated', isAuthenticated);
+  };
+
   return (
     <BrowserRouter>
       <Navbar />
@@ -41,7 +90,12 @@ function App() {
           <Route exact path="/buy-credits" component={Buy_Credits} />
           <Route exact path="/register" component={UserRegister} />
           <Route exact path="/astro-register" component={AstrologerRegister} />
-          <Route exact path="/verify-otp" component={VerifyOtp} />
+          <Route
+            exact
+            path="/verify-otp"
+            render={(props) =>
+              <VerifyOtp {...props} checker={setIsAuthenticated} />}
+          />
           {/* {PUBLIC ROUTES} */}
 
           {/* {PRIVATE ROUTES} */}
@@ -49,49 +103,33 @@ function App() {
             exact
             path="/room/:roomId"
             render={() =>
-              isAuthenticated === true ? <Room /> : <Redirect to="/login" />
+              isAuthenticated ? <Room /> : <Redirect to="/login" />
             }
           />
-          {/* <Route exact path="/room/:roomId" component={Room} /> */}
 
           <Route
             exact
             path="/payment-records"
             render={() =>
-              isAuthenticated === true ? (
-                <Payment_Records />
-              ) : (
-                <Redirect to="/login" />
-              )
+              isAuthenticated ? <Payment_Records /> : <Redirect to="/login" />
             }
           />
-          {/* <Route exact path="/payment-records" component={Payment_Records} /> */}
 
           <Route
             exact
             path="/getPaymentInfo/:paymentId"
             render={() =>
-              isAuthenticated === true ? (
-                <Invoice_Main />
-              ) : (
-                <Redirect to="/login" />
-              )
+              isAuthenticated ? <Invoice_Main /> : <Redirect to="/login" />
             }
           />
-          {/* <Route
-            exact
-            path="/getPaymentInfo/:paymentId"
-            component={Invoice_Main}
-          /> */}
 
           <Route
             exact
             path="/profile"
             render={() =>
-              isAuthenticated === true ? <Profile /> : <Redirect to="/login" />
+              isAuthenticated ? <Profile /> : <Redirect to="/login" />
             }
           />
-          {/* <Route exact path="/profile" component={Profile} /> */}
 
           {/* No Page Found Component */}
           <Route component={PageNotFound} />

@@ -50,7 +50,7 @@ const Main = (props) => {
   };
 
   let isAuthenticated = document.cookie == '' ? false : true;
-  console.log('isAuthenticated', isAuthenticated);
+  // console.log('isAuthenticated', isAuthenticated);
 
   return (
     <MainContainer>

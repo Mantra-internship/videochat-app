@@ -8,7 +8,6 @@ const Payment_records = (props) => {
   // const [token, setToken] = useState("");
 
   useEffect(() => {
-    getToken();
     transactionDataFetcher();
   }, []);
 
