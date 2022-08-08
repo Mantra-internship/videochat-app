@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
+import Phone from './Phone';
 
 function UserProfile({
   data,
   nameRef,
   emailRef,
-  phoneRef,
-  setRole
+  setRole,
+  getToken
 }) {
 
   const options = [
@@ -38,16 +39,10 @@ function UserProfile({
           ref={emailRef}
         />
       </Row>
-      <Row>
-        <Label htmlFor="phone">Phone Number</Label>
-        <Input
-          type="phone"
-          id="phone"
-          placeholder="+91XXXXXXXXXX"
-          defaultValue={data.phone}
-          ref={phoneRef}
-        />
-      </Row>
+      <Phone 
+        phone={data.phone}
+        getToken={getToken}
+      />
       <Row>
         <Label htmlFor="role">Role</Label>
         <Select
