@@ -39,6 +39,14 @@ router
     .route("/user/update")
     .post(userMid.authenticate , userCont.updateUser);
 
+router
+    .route("/phone-update")
+    .post(userMid.authenticate , userCont.dualGetOtp);
+
+router
+    .route("/phone-update-verify")
+    .post(userMid.authenticate , userCont.dualVerifyOtp);
+
 // For testing
 // router
 //     .route("/payment-record")
