@@ -248,12 +248,11 @@ const user = {
   updateUser: async (req, res) => {
     try {
       const userID = req.userId;
-      const { name, phone, email, role, profilePic } = req.body;
+      const { name, email, role, profilePic } = req.body;
       const user = await User.findOne({ _id: userID });
       
       if (user) {
         user.name = name;
-        user.phone = phone;
         user.email = email;
         user.profilePic = profilePic;
 
@@ -438,6 +437,110 @@ const user = {
       return res.status(500).json({
         message: "Something went wrong"
       })
+    }
+  },
+
+  dualGetOtp: async (req, res) => {
+    try{
+      const userId = req.userId;
+      const { newPhone } = req.body;
+
+      if(!newPhone){
+        return res.status(400).json({
+          message: "Please fill all the fields"
+        });
+      }
+
+      const foundUser = await User.findOne({ _id: userId });
+      const otp = Math.floor(Math.random() * 8999) + 1000;
+      const tempPhoneOtp = Math.floor(Math.random() * 8999) + 1000;
+
+      if(foundUser){
+        foundUser.tempPhone = newPhone;
+        foundUser.tempPhoneOtp = tempPhoneOtp;
+        foundUser.otp = otp;
+        await foundUser.save();
+
+      }else{
+        return res.status(404).json({
+          message: "User not found"
+        })
+      }
+
+      try{
+
+        if (process.env.NODE_ENV === "production") {
+          const defaultPhoneMsg = await twilio.messages.create({
+            body: `Your OTP is ${otp}`,
+            from: process.env.TWILIO_PHONE_NUMBER,
+            to: foundUser.phone,
+          });
+          const tempPhoneMsg = await twilio.messages.create({
+            body: `Your OTP is ${tempPhoneOtp}`,
+            from: process.env.TWILIO_PHONE_NUMBER,
+            to: newPhone,
+          });
+        } else {
+          console.log(otp);
+          console.log(tempPhoneOtp);
+        }
+
+      }catch(error){
+        console.log(error)
+        return res.status(500).json({
+          message: "Unable to send OTP at the moment"
+        })
+      }
+
+      return res.status(200).json({
+        message: "OTPs sent successfully"
+      })
+
+    }catch(error){
+      return res.status(500).json({
+        message: "Something went wrong"
+      })
+    }
+  },
+
+  dualVerifyOtp: async (req, res) => {
+    try{
+      const userId = req.userId;
+      const { oldPhoneOtp, newPhoneOtp } = req.body;
+  
+      if(!oldPhoneOtp || !newPhoneOtp){
+        return res.status(400).json({
+          message: "Please fill all the OTP fields"
+        })
+      }
+  
+      const foundUser = await User.findOne({ _id: userId });
+  
+      if(foundUser){
+        if(foundUser.otp === oldPhoneOtp && foundUser.tempPhoneOtp === newPhoneOtp){
+          foundUser.prevPhone = foundUser.phone;
+          foundUser.phone = foundUser.tempPhone;
+          foundUser.tempPhone = foundUser.otp = foundUser.tempPhoneOtp = null;
+          await foundUser.save();
+          return res.status(200).json({
+            message: "Phone number updated successfully"
+          });
+        }else{
+          return res.status(401).json({
+            message: "Incorrect OTP"
+          });
+        }
+      }else{
+        return res.status(404).json({
+          message: "User not found"
+        });
+      }
+
+    }catch(error){
+      console.log(error);
+      return res.status(500).json({
+        message: "Something went wrong"
+      });
     }
   }
 };

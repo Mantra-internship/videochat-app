@@ -12,7 +12,6 @@ function Profile(props) {
 
   const nameRef = useRef('');
   const emailRef = useRef('');
-  const phoneRef = useRef('');
   const specialitiesRef = useRef('');
   const languagesRef = useRef('');
   const descriptionRef = useRef('');
@@ -63,7 +62,6 @@ function Profile(props) {
     let newData = {
       name: nameRef.current.value,
       email: emailRef.current.value,
-      phone: phoneRef.current.value,
       role
     }
     
@@ -117,8 +115,8 @@ function Profile(props) {
                 data={user}
                 nameRef={nameRef}
                 emailRef={emailRef}
-                phoneRef={phoneRef}
                 setRole={setRole}
+                getToken={getToken}
               />
               {
                 role === "astrologer" ?

@@ -24,6 +24,22 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
 
+    // To keep record of previous number incase of phone number updation
+    prevPhone: {
+      type: String,
+      default: null,
+    },
+
+    tempPhone: {
+      type: String,
+      default: null,
+    },
+
+    tempPhoneOtp: {
+      type: String,
+      default: null,
+    },
+
     authToken: {
       type: String,
     },
