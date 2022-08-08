@@ -38,7 +38,7 @@ const Main = (props) => {
 
  
 
-  let isAuthenticated = props.isAuthenticated;
+  let isAuthenticated = true;
 
   return (
     <MainContainer>

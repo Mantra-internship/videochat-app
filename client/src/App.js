@@ -84,7 +84,7 @@ function App(props) {
             exact
             path="/"
             render={(props) => (
-              <Main {...props} isAuthenticated={isAuthenticated} />
+              <Main {...props} />
             )}
           />
 
