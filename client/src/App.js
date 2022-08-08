@@ -74,10 +74,19 @@ function App(props) {
 
   return (
     <BrowserRouter>
-      <Navbar />
+      <Navbar
+        isAuthenticated={isAuthenticated}
+        setIsAuthenticated={setIsAuthenticated}
+      />
       <AppContainer>
         <Switch>
-          <Route exact path="/" component={Main} />
+          <Route
+            exact
+            path="/"
+            render={(props) => (
+              <Main {...props} isAuthenticated={isAuthenticated} />
+            )}
+          />
 
           {/* {PUBLIC ROUTES} */}
           <Route exact path="/astrologers" component={AstrologerMain} />
@@ -86,15 +95,38 @@ function App(props) {
             path="/astrologer/:uphone"
             render={(props) => <AstrologerPage {...props} />}
           />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/buy-credits" component={Buy_Credits} />
-          <Route exact path="/register" component={UserRegister} />
-          <Route exact path="/astro-register" component={AstrologerRegister} />
+          <Route
+            exact
+            path="/login"
+            render={(props) =>
+              isAuthenticated ? <Redirect to="/" /> : <Login {...props} />
+            }
+          />
+
+          <Route
+            exact
+            path="/register"
+            render={() =>
+              isAuthenticated ? <Redirect to="/" /> : <UserRegister />
+            }
+          />
+          <Route
+            exact
+            path="/astro-register"
+            render={() =>
+              isAuthenticated ? <Redirect to="/" /> : <AstrologerRegister />
+            }
+          />
           <Route
             exact
             path="/verify-otp"
             render={(props) =>
-              <VerifyOtp {...props} checker={setIsAuthenticated} />}
+              isAuthenticated ? (
+                <Redirect to="/" />
+              ) : (
+                <VerifyOtp {...props} checker={setIsAuthenticated} />
+              )
+            }
           />
           {/* {PUBLIC ROUTES} */}
 
@@ -104,6 +136,13 @@ function App(props) {
             path="/room/:roomId"
             render={() =>
               isAuthenticated ? <Room /> : <Redirect to="/login" />
+            }
+          />
+          <Route
+            exact
+            path="/buy-credits"
+            render={() =>
+              isAuthenticated ? <Buy_Credits /> : <Redirect to="/login" />
             }
           />
 

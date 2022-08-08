@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-function Navbar() {
+function Navbar(props) {
   const [displayNav, setDisplayNav] = useState('none');
 
   const toggleNavBar = () => {
@@ -15,13 +15,33 @@ function Navbar() {
     }
   };
 
+  const deleteCookie = (cookieName, cookieValue, daysToExpire) => {
+    var date = new Date();
+    date.setTime(date.getTime() - daysToExpire * 24 * 60 * 60 * 1000);
+    document.cookie =
+      cookieName + '=' + cookieValue + '; expires=' + date.toGMTString();
+  };
+
+  const handleLogout = () => {
+    // document.cookie = 'user=';
+    deleteCookie('user', '', 1);
+    props.setIsAuthenticated(false);
+    window.location.reload();
+  };
+
+  let isAuthenticated = props.isAuthenticated;
+
   return (
     <Bar>
       <NavBarToggle onClick={() => toggleNavBar()}>
         <Hamburger />
       </NavBarToggle>
       <Logo>
-        <NavLink href="/">Home</NavLink>
+        <NavLink>
+          <Link style={{ textDecoration: 'none', color: 'white' }} to="/">
+            Home
+          </Link>
+        </NavLink>
       </Logo>
       <MainNav display={displayNav}>
         <NavLi>
@@ -34,46 +54,71 @@ function Navbar() {
             </Link>
           </NavLink>
         </NavLi>
-        <NavLi>
-          <NavLink>
-            <Link
-              style={{ textDecoration: 'none', color: 'white' }}
-              to="/payment-records"
-            >
-              Payment Records
-            </Link>
-          </NavLink>
-        </NavLi>
-        <NavLi>
-          <NavLink>
-            <Link
-              style={{ textDecoration: 'none', color: 'white' }}
-              to="/login"
-            >
-              Login
-            </Link>
-          </NavLink>
-        </NavLi>
-        <NavLi>
-          <NavLink>
-            <Link
-              style={{ textDecoration: 'none', color: 'white' }}
-              to="/register"
-            >
-              Register
-            </Link>
-          </NavLink>
-        </NavLi>
-        <NavLi>
-          <NavLink>
-            <Link
-              style={{ textDecoration: 'none', color: 'white' }}
-              to="/profile"
-            >
-              Profile
-            </Link>
-          </NavLink>
-        </NavLi>
+        {isAuthenticated ? (
+          <>
+            <NavLi>
+              <NavLink>
+                <Link
+                  style={{ textDecoration: 'none', color: 'white' }}
+                  to="/profile"
+                >
+                  Profile
+                </Link>
+              </NavLink>
+            </NavLi>
+            <NavLi>
+              <NavLink>
+                <Link
+                  style={{ textDecoration: 'none', color: 'white' }}
+                  to="/payment-records"
+                >
+                  Payment Records
+                </Link>
+              </NavLink>
+            </NavLi>
+            <NavLi>
+              <NavLink>
+                <button
+                  style={{
+                    background: 'none',
+                    color: 'white',
+                    border: 'none',
+                    outline: 'none',
+                    fontSize: '18px',
+                    margin: '0',
+                    cursor: 'pointer',
+                  }}
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+              </NavLink>
+            </NavLi>
+          </>
+        ) : (
+          <>
+            <NavLi>
+              <NavLink>
+                <Link
+                  style={{ textDecoration: 'none', color: 'white' }}
+                  to="/login"
+                >
+                  Login
+                </Link>
+              </NavLink>
+            </NavLi>
+            <NavLi>
+              <NavLink>
+                <Link
+                  style={{ textDecoration: 'none', color: 'white' }}
+                  to="/register"
+                >
+                  Register
+                </Link>
+              </NavLink>
+            </NavLi>
+          </>
+        )}
       </MainNav>
     </Bar>
   );
@@ -99,11 +144,13 @@ const Bar = styled.nav`
 `;
 const MainNav = styled.ul`
   list-style-type: none;
+  
   display: ${(props) => props.display};
   flex-direction: column;
   @media (min-width: 768px) {
     display: flex !important;
     margin-right: 30px;
+    height: 100vh;
     flex-direction: row;
     justify-content: flex-end;
   }
