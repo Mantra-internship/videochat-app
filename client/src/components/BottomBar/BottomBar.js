@@ -12,7 +12,8 @@ const BottomBar = ({
   videoDevices,
   showVideoDevices,
   setShowVideoDevices,
-  goToBuyCredits
+  goToBuyCredits,
+  enabled
 }) => {
   const handleToggle = useCallback(
     (e) => {
@@ -23,47 +24,47 @@ const BottomBar = ({
 
   return (
     <Bar>
-      <Left>
-        <CameraButton onClick={toggleCameraAudio} data-switch="video">
-          <div>
-            {userVideoAudio.video ? (
-              <FaIcon className="fas fa-video"></FaIcon>
-            ) : (
-              <FaIcon className="fas fa-video-slash"></FaIcon>
+      <Left>        
+            <CameraButton onClick={toggleCameraAudio} data-switch="video">
+              <div>
+                {userVideoAudio.video ? (
+                  <FaIcon className="fas fa-video"></FaIcon>
+                ) : (
+                  <FaIcon className="fas fa-video-slash"></FaIcon>
+                )}
+              </div>
+              Camera
+            </CameraButton>
+            {showVideoDevices && (
+              <SwitchList>
+                {videoDevices.length > 0 &&
+                  videoDevices.map((device) => {
+                    return (
+                      <div
+                        key={device.deviceId}
+                        onClick={clickCameraDevice}
+                        data-value={device.deviceId}
+                      >
+                        {device.label}
+                      </div>
+                    );
+                  })}
+                <div>Switch Camera</div>
+              </SwitchList>
             )}
-          </div>
-          Camera
-        </CameraButton>
-        {showVideoDevices && (
-          <SwitchList>
-            {videoDevices.length > 0 &&
-              videoDevices.map((device) => {
-                return (
-                  <div
-                    key={device.deviceId}
-                    onClick={clickCameraDevice}
-                    data-value={device.deviceId}
-                  >
-                    {device.label}
-                  </div>
-                );
-              })}
-            <div>Switch Camera</div>
-          </SwitchList>
-        )}
-        <SwitchMenu onClick={handleToggle}>
-          <i className="fas fa-angle-up"></i>
-        </SwitchMenu>
-        <CameraButton onClick={toggleCameraAudio} data-switch="audio">
-          <div>
-            {userVideoAudio.audio ? (
-              <FaIcon className="fas fa-microphone"></FaIcon>
-            ) : (
-              <FaIcon className="fas fa-microphone-slash"></FaIcon>
-            )}
-          </div>
-          Audio
-        </CameraButton>
+            <SwitchMenu onClick={handleToggle}>
+              <i className="fas fa-angle-up"></i>
+            </SwitchMenu>
+            <CameraButton onClick={toggleCameraAudio} data-switch="audio">
+              <div>
+                {userVideoAudio.audio ? (
+                  <FaIcon className="fas fa-microphone"></FaIcon>
+                ) : (
+                  <FaIcon className="fas fa-microphone-slash"></FaIcon>
+                )}
+              </div>
+              Audio
+            </CameraButton>
       </Left>
       <Center>
         <ChatButton onClick={clickChat}>
@@ -72,14 +73,14 @@ const BottomBar = ({
           </div>
           Chat
         </ChatButton>
-        <ScreenButton onClick={clickScreenSharing}>
+        {/* <ScreenButton onClick={clickScreenSharing}>
           <div>
             <FaIcon
               className={`fas fa-desktop ${screenShare ? 'sharing' : ''}`}
             ></FaIcon>
           </div>
           Share Screen
-        </ScreenButton>
+        </ScreenButton> */}
       </Center>
       <Right>
         <PaymentButton onClick={goToBuyCredits}>Buy Credits</PaymentButton>

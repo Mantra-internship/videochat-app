@@ -4,6 +4,7 @@ const videoChat = (socket, io, socketList) => {
   socket.on("BE-join-room", ({ roomId, userName }) => {
     // Socket Join RoomName
     socket.join(roomId);
+    //change this to false
     socketList[socket.id] = { userName, video: true, audio: true };
 
     // Set User List
