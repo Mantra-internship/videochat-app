@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 // import 'react-phone-input-2/lib/style.css';
@@ -9,6 +10,8 @@ function UserRegister(props) {
   const [email, setEmail] = useState('NULL');
   const [phone, setPhone] = useState();
   const [role, setRole] = useState();
+
+  const history = useHistory();
 
   const handleChange = (event) => {
     setRole(event.target.value);
@@ -32,9 +35,10 @@ function UserRegister(props) {
       .post('http://localhost:5000/api/user/register/get-otp', data)
       .then((response) => {
         console.log(response.data);
+        alert('OTP send Successfully')
         sessionStorage.setItem('phone', phone);
         sessionStorage.setItem('role', role);
-        props.history.push('/verify-otp');
+        history.push('/verify-otp');
       })
       .catch((err) => {
         console.log(err);
@@ -75,21 +79,6 @@ function UserRegister(props) {
               placeholder="+91XXXXXXXXXX"
               onChange={(event) => setPhone(event.target.value)}
             />
-            {/* <PhoneInput
-              id="phone"
-              required
-              placeholder="+91XXXXXXXXXX"
-              value={phone}
-              onChange={setPhone}
-              style={{
-                width: '30px',
-                height: '35px',
-                marginLeft: '5px',
-                outline: 'none',
-                border: 'none',
-                borderRadius: '5px',
-              }}
-            /> */}
           </Row>
           <Row>
             <Label htmlFor="role">Role</Label>
@@ -98,7 +87,9 @@ function UserRegister(props) {
                 Are you a Astrologer or User?
               </option>
               {options.map((option) => (
-                <option value={option.value}>{option.label}</option>
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
               ))}
             </Select>
           </Row>

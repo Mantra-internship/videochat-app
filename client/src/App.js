@@ -106,16 +106,18 @@ function App(props) {
           <Route
             exact
             path="/register"
-            render={() =>
-              isAuthenticated ? <Redirect to="/" /> : <UserRegister />
+            render={(props) =>
+              isAuthenticated ? (
+                <Redirect to="/" />
+              ) : (
+                <UserRegister {...props} />
+              )
             }
           />
           <Route
             exact
-            path="/astro-register"
-            render={() =>
-              isAuthenticated ? <Redirect to="/" /> : <AstrologerRegister />
-            }
+            path="/astrologer-register"
+            render={(props) => <AstrologerRegister {...props} />}
           />
           <Route
             exact
@@ -134,39 +136,55 @@ function App(props) {
           <Route
             exact
             path="/room/:roomId"
-            render={() =>
-              isAuthenticated ? <Room /> : <Redirect to="/login" />
+            render={(props) =>
+              isAuthenticated ? <Room {...props} /> : <Redirect to="/login" />
             }
           />
           <Route
             exact
             path="/buy-credits"
-            render={() =>
-              isAuthenticated ? <Buy_Credits /> : <Redirect to="/login" />
+            render={(props) =>
+              isAuthenticated ? (
+                <Buy_Credits {...props} />
+              ) : (
+                <Redirect to="/login" />
+              )
             }
           />
 
           <Route
             exact
             path="/payment-records"
-            render={() =>
-              isAuthenticated ? <Payment_Records /> : <Redirect to="/login" />
+            render={(props) =>
+              isAuthenticated ? (
+                <Payment_Records {...props} />
+              ) : (
+                <Redirect to="/login" />
+              )
             }
           />
 
           <Route
             exact
             path="/getPaymentInfo/:paymentId"
-            render={() =>
-              isAuthenticated ? <Invoice_Main /> : <Redirect to="/login" />
+            render={(props) =>
+              isAuthenticated ? (
+                <Invoice_Main {...props} />
+              ) : (
+                <Redirect to="/login" />
+              )
             }
           />
 
           <Route
             exact
             path="/profile"
-            render={() =>
-              isAuthenticated ? <Profile /> : <Redirect to="/login" />
+            render={(props) =>
+              isAuthenticated ? (
+                <Profile {...props} />
+              ) : (
+                <Redirect to="/login" />
+              )
             }
           />
 

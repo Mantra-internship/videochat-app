@@ -30,6 +30,7 @@ function Navbar(props) {
   };
 
   let isAuthenticated = props.isAuthenticated;
+  console.log({ isAuthenticated });
 
   return (
     <Bar>
@@ -144,13 +145,11 @@ const Bar = styled.nav`
 `;
 const MainNav = styled.ul`
   list-style-type: none;
-  
   display: ${(props) => props.display};
   flex-direction: column;
   @media (min-width: 768px) {
     display: flex !important;
     margin-right: 30px;
-    height: 100vh;
     flex-direction: row;
     justify-content: flex-end;
   }

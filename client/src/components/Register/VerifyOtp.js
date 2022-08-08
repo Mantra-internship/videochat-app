@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 
 function VerifyOtp(props) {
   const [otp, setOtp] = useState();
+
+  let history = useHistory();
 
   let role = sessionStorage.getItem('role');
 
@@ -25,17 +28,18 @@ function VerifyOtp(props) {
     await axios
       .post('http://localhost:5000/api/user/verify-otp', data)
       .then((response) => {
-        console.log(response.data.message);
+        // console.log(response.data.message);
         createCookie('user', response.data.token, 1);
+        props.checker(true);
 
-        if (role === 'user' || role === '') {
-          props.checker(true);
-          props.history.push('/');
+        if (response.data.role === 'user') {
+          console.log('user')
+          history.push('/');
         } else {
+          console.log('astrologer');
           role = response.data.role;
           sessionStorage.setItem('role', role);
-          props.checker(true);
-          props.history.push('/astro-register');
+          history.push('/astrologer-register');
         }
       })
       .catch((err) => {
