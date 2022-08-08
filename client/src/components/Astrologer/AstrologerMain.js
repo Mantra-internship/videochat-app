@@ -15,15 +15,26 @@ function AstrologerMain() {
     await axios
       .get('http://localhost:5000/api/user/astrologers')
       .then((resObj) => {
-        console.log(resObj.data)
+        // console.log(resObj.data)
         setAstrologersData(resObj.data);
-        console.log(astrologersData);
+        // console.log(astrologersData);
       })
       .catch((error) => {
         console.log(error);
         setAstrologersData([]);
       });
   };
+
+  if (astrologersData.length === 0)
+    return (
+      <>
+        <Heading>Transaction history</Heading>
+        <Container>
+          <div>No Transaction History</div>
+        </Container>
+      </>
+    );
+
   return (
     // loop through all the astrolgors and display them in details
     <>
@@ -32,7 +43,7 @@ function AstrologerMain() {
         {astrologersData.map((astrologer) => {
           return (
             <AstrologerCard
-              key={astrologer.phone}
+              key={astrologer.phone + 1}
               astrologer={astrologer}
             ></AstrologerCard>
           );

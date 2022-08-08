@@ -36,9 +36,9 @@ const Payment_records = (props) => {
         }
       )
       .then((resObj) => {
-        console.log(resObj.data);
+        // console.log(resObj.data);
         setTransactionData(resObj.data.paymentRecord);
-        console.log(transactionData);
+        // console.log(transactionData);
       })
       .catch((error) => {
         console.log(error);
@@ -62,7 +62,7 @@ const Payment_records = (props) => {
       <Container>
         {transactionData.map((record) => {
           return (
-            <Card>
+            <Card key={record.paymentRequestId}>
               <p>Name - {record.name}</p>
               <p>Phone - {record.phone}</p>
               <p>Payment Request Status - {record.paymentRequestStatus}</p>

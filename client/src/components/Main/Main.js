@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import socket from '../../socket';
 
@@ -36,25 +35,8 @@ const Main = (props) => {
     }
   }
 
- 
-
-  let isAuthenticated = true;
-
   return (
     <MainContainer>
-      {isAuthenticated === true ? (
-        <>
-          <JoinButton>
-            <Link to="/buy-credits">Buy Credits</Link>
-          </JoinButton>
-        </>
-      ) : (
-        <>
-          <JoinButton>
-            <Link to="/astrologers">All Astrologers</Link>
-          </JoinButton>
-        </>
-      )}
       <Row>
         <Label htmlFor="roomName">Room Name</Label>
         <Input type="text" id="roomName" ref={roomRef} />

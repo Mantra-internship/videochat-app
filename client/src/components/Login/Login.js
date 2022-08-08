@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
@@ -14,7 +14,7 @@ function Login(props) {
     await axios
       .post('http://localhost:5000/api/user/get-otp', data)
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         sessionStorage.setItem('phone', phone);
         sessionStorage.setItem('role', '');
         props.history.push('/verify-otp');

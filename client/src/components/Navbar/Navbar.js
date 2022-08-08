@@ -12,6 +12,8 @@ function Navbar(props) {
         return setDisplayNav('flex');
       case 'flex':
         return setDisplayNav('none');
+      default:
+        return setDisplayNav('none');
     }
   };
 
@@ -30,7 +32,6 @@ function Navbar(props) {
   };
 
   let isAuthenticated = props.isAuthenticated;
-  console.log({ isAuthenticated });
 
   return (
     <Bar>
@@ -64,6 +65,16 @@ function Navbar(props) {
                   to="/profile"
                 >
                   Profile
+                </Link>
+              </NavLink>
+            </NavLi>
+            <NavLi>
+              <NavLink>
+                <Link
+                  style={{ textDecoration: 'none', color: 'white' }}
+                  to="/buy-credits"
+                >
+                  Buy Credits
                 </Link>
               </NavLink>
             </NavLi>

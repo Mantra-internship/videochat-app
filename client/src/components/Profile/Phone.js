@@ -14,7 +14,6 @@ function Phone({
   const oldPhoneOtpRef = useRef();
   const newPhoneOtpRef = useRef();
   
-  console.log(userPhone);
 
   const otpSender = async () => {
     // to accomodate all country codes for now
@@ -31,7 +30,7 @@ function Phone({
             headers: { authorization: `Bearer ` + getToken() },
           }
         ).then((response) => {
-          console.log(response);
+          // console.log(response);
           setShowFields(true);
           alert(response.data.message);
         }).catch((error) => {
@@ -150,34 +149,34 @@ const Input = styled.input`
   }
 `;
 
-const Select = styled.select`
-  width: 260px;
-  height: 35px;
-  margin-left: 15px;
-  padding-left: 10px;
-  outline: none;
-  border: none;
-  border-radius: 5px;
+// const Select = styled.select`
+//   width: 260px;
+//   height: 35px;
+//   margin-left: 15px;
+//   padding-left: 10px;
+//   outline: none;
+//   border: none;
+//   border-radius: 5px;
 
-  @media (max-width: 500px) {
-    width: 210px;
-  }
-`;
+//   @media (max-width: 500px) {
+//     width: 210px;
+//   }
+// `;
 
-const Textarea = styled.textarea`
-  height: 70px;
-  width: 250px;
-  resize: none;
-  font-size: 20px;
-  outline: none;
-  margin-left: 15px;
-  padding-left: 10px;
-  border: none;
-  border-radius: 5px;
+// const Textarea = styled.textarea`
+//   height: 70px;
+//   width: 250px;
+//   resize: none;
+//   font-size: 20px;
+//   outline: none;
+//   margin-left: 15px;
+//   padding-left: 10px;
+//   border: none;
+//   border-radius: 5px;
 
-  @media (max-width: 500px) {
-    width: 200px;
-  }
-`;
+//   @media (max-width: 500px) {
+//     width: 200px;
+//   }
+// `;
 
 export default Phone;

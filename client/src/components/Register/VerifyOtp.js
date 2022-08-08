@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -32,14 +32,16 @@ function VerifyOtp(props) {
         createCookie('user', response.data.token, 1);
         props.checker(true);
 
-        if (response.data.role === 'user') {
-          console.log('user')
+        if (response.data.action === 'register') {
+          if (response.data.role === 'user') {
+            history.push('/');
+          } else {
+            role = response.data.role;
+            sessionStorage.setItem('role', role);
+            history.push('/astrologer-register');
+          }
+        } else if (response.data.action === 'login') {
           history.push('/');
-        } else {
-          console.log('astrologer');
-          role = response.data.role;
-          sessionStorage.setItem('role', role);
-          history.push('/astrologer-register');
         }
       })
       .catch((err) => {

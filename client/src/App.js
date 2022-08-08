@@ -80,13 +80,7 @@ function App(props) {
       />
       <AppContainer>
         <Switch>
-          <Route
-            exact
-            path="/"
-            render={(props) => (
-              <Main {...props} />
-            )}
-          />
+          <Route exact path="/" render={(props) => <Main {...props} />} />
 
           {/* {PUBLIC ROUTES} */}
           <Route exact path="/astrologers" component={AstrologerMain} />
@@ -167,13 +161,7 @@ function App(props) {
           <Route
             exact
             path="/getPaymentInfo/:paymentId"
-            render={(props) =>
-              isAuthenticated ? (
-                <Invoice_Main {...props} />
-              ) : (
-                <Redirect to="/login" />
-              )
-            }
+            render={(props) => <Invoice_Main {...props} />}
           />
 
           <Route

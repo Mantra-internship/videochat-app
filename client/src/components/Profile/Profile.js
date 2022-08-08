@@ -46,7 +46,7 @@ function Profile(props) {
         }
       )
       .then((response) => {
-        console.log(response.data.foundUser);
+        // console.log(response.data.foundUser);
         setUser(response.data.foundUser);
         setRole(response.data.foundUser.role);
         setLoader(false);
@@ -58,7 +58,7 @@ function Profile(props) {
   };
 
   const postData = async () => {
-    console.log("posting")
+    // console.log("posting")
     let newData = {
       name: nameRef.current.value,
       email: emailRef.current.value,
@@ -91,7 +91,7 @@ function Profile(props) {
         }
       )
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         alert('Updated Successfully');
       })
       .catch((err) => {
@@ -146,10 +146,10 @@ const MainContainer = styled.div`
   width: 50vw;
   padding: 0 5vw;
   padding-bottom: 20px;
-  overflow-y: scroll;
 
   @media (max-width: 1050px) {
-    width: 90%;
+    width: 80%;
+    overflow-x: hidden;
   }
 `;
 

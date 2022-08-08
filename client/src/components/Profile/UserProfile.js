@@ -98,20 +98,20 @@ const Select = styled.select`
   }
 `;
 
-const Textarea = styled.textarea`
-  height: 70px;
-  width: 250px;
-  resize: none;
-  font-size: 20px;
-  outline: none;
-  margin-left: 15px;
-  padding-left: 10px;
-  border: none;
-  border-radius: 5px;
+// const Textarea = styled.textarea`
+//   height: 70px;
+//   width: 250px;
+//   resize: none;
+//   font-size: 20px;
+//   outline: none;
+//   margin-left: 15px;
+//   padding-left: 10px;
+//   border: none;
+//   border-radius: 5px;
 
-  @media (max-width: 500px) {
-    width: 200px;
-  }
-`;
+//   @media (max-width: 500px) {
+//     width: 200px;
+//   }
+// `;
 
 export default UserProfile;

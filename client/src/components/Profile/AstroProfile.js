@@ -81,19 +81,19 @@ const Input = styled.input`
   }
 `;
 
-const Select = styled.select`
-  width: 260px;
-  height: 35px;
-  margin-left: 15px;
-  padding-left: 10px;
-  outline: none;
-  border: none;
-  border-radius: 5px;
+// const Select = styled.select`
+//   width: 260px;
+//   height: 35px;
+//   margin-left: 15px;
+//   padding-left: 10px;
+//   outline: none;
+//   border: none;
+//   border-radius: 5px;
 
-  @media (max-width: 500px) {
-    width: 210px;
-  }
-`;
+//   @media (max-width: 500px) {
+//     width: 210px;
+//   }
+// `;
 
 const Textarea = styled.textarea`
   height: 70px;

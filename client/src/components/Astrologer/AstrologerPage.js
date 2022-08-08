@@ -20,9 +20,9 @@ function AstrologersPage(props) {
         {}
       )
       .then((resObj) => {
-        console.log(resObj.data);
+        // console.log(resObj.data);
         setAstrologerData(resObj.data);
-        console.log(astrologerData);
+        // console.log(astrologerData);
       })
       .catch((error) => {
         console.log(error);
@@ -43,6 +43,7 @@ function AstrologersPage(props) {
                 borderRadius: '121px',
                 border: '3px solid red',
               }}
+              alt="user"
               src={'https://freesvg.org/img/abstract-user-flat-4.png'}
             />
           </div>
@@ -60,6 +61,7 @@ function AstrologersPage(props) {
                 marginLeft: '10px',
               }}
               src="https://d1gcna0o0ldu5v.cloudfront.net/fit-in/20x20/assets/images/astrologer_profile/verified.webp"
+              alt="verified"
             />
           ) : (
             <></>
@@ -75,6 +77,7 @@ function AstrologersPage(props) {
               border: '1px solid red',
               marginTop: '0',
             }}
+            alt="chatoffline"
           />
           <p
             style={{
@@ -94,10 +97,10 @@ function AstrologersPage(props) {
               height: '50px',
               borderRadius: '121px',
               border: '1px solid red',
-              display: 'inline-block',
               marginLeft: '35px',
               marginTop: '0',
             }}
+            alt="calloffline"
           />
           <p
             style={{
@@ -112,13 +115,13 @@ function AstrologersPage(props) {
           <img
             src="https://d1gcna0o0ldu5v.cloudfront.net/fit-in/20x20/assets/images/astrologer_profile/reports.webp
     "
+            alt="reports"
             style={{
               display: 'inline-block',
               width: '50px',
               height: '50px',
               borderRadius: '121px',
               border: '1px solid red',
-              display: 'inline-block',
               marginLeft: '35px',
               marginTop: '0',
             }}
@@ -140,7 +143,7 @@ function AstrologersPage(props) {
           <p style={{ fontSize: '20px', marginTop: '0' }}>
             <b>4</b> years
           </p>
-          <p
+          {/* <p
             style={{
               fontSize: '20px',
               marginTop: '0',
@@ -152,7 +155,7 @@ function AstrologersPage(props) {
           >
             Tarot
           </p>
-          <br></br>
+          <br></br> */}
           <button
             style={{
               border: '2px solid red',
@@ -169,10 +172,10 @@ function AstrologersPage(props) {
                 height: '50px',
                 borderRadius: '121px',
                 border: '1px solid red',
-                display: 'inline-block',
                 marginLeft: '35px',
                 marginTop: '0',
               }}
+              alt="busy-status-chat"
             />
             <p
               style={{
@@ -205,6 +208,7 @@ function AstrologersPage(props) {
                 borderRadius: '121px',
                 border: '1px solid red',
               }}
+              alt="busy-status-call"
             />
             <p
               style={{

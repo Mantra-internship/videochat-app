@@ -11,6 +11,7 @@ function AstrologerCard({ astrologer }) {
           margin: '0 31% 0 33%',
         }}
         src="https://freesvg.org/img/abstract-user-flat-4.png"
+        alt="user"
       />
       <h3
         style={{
