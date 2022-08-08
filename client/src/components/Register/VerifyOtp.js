@@ -25,19 +25,22 @@ function VerifyOtp(props) {
     await axios
       .post('http://localhost:5000/api/user/verify-otp', data)
       .then((response) => {
-        console.log(response.data);
+        console.log(response.data.message);
         createCookie('user', response.data.token, 1);
 
         if (role === 'user' || role === '') {
+          props.checker(true);
           props.history.push('/');
         } else {
           role = response.data.role;
           sessionStorage.setItem('role', role);
+          props.checker(true);
           props.history.push('/astro-register');
         }
       })
       .catch((err) => {
         console.log(err);
+        props.checker(false);
         alert('Something went wrong');
       });
   };

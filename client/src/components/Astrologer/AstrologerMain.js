@@ -15,7 +15,7 @@ function AstrologerMain() {
     await axios
       .get('http://localhost:5000/api/user/astrologers')
       .then((resObj) => {
-        // console.log(resObj.data)
+        console.log(resObj.data)
         setAstrologersData(resObj.data);
         console.log(astrologersData);
       })
@@ -32,7 +32,7 @@ function AstrologerMain() {
         {astrologersData.map((astrologer) => {
           return (
             <AstrologerCard
-              key={astrologer.id}
+              key={astrologer.phone}
               astrologer={astrologer}
             ></AstrologerCard>
           );

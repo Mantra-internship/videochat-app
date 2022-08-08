@@ -36,45 +36,25 @@ const Main = (props) => {
     }
   }
 
-  const deleteCookie = (cookieName, cookieValue, daysToExpire) => {
-    var date = new Date();
-    date.setTime(date.getTime() - daysToExpire * 24 * 60 * 60 * 1000);
-    document.cookie =
-      cookieName + '=' + cookieValue + '; expires=' + date.toGMTString();
-  };
+ 
 
-  const handleLogout = () => {
-    // document.cookie = 'user=';
-    deleteCookie('user', '', 1);
-    window.location.reload();
-  };
-
-  let isAuthenticated = document.cookie == '' ? false : true;
-  console.log('isAuthenticated', isAuthenticated);
+  let isAuthenticated = props.isAuthenticated;
 
   return (
     <MainContainer>
       {isAuthenticated === true ? (
         <>
-          <JoinButton onClick={handleLogout}>Logout</JoinButton>
-          <JoinButton><Link to="/profile">Profile</Link></JoinButton>
+          <JoinButton>
+            <Link to="/buy-credits">Buy Credits</Link>
+          </JoinButton>
         </>
       ) : (
         <>
           <JoinButton>
-            <Link to="/register">Register</Link>
-          </JoinButton>
-          <JoinButton>
-            <Link to="/login">Login</Link>
+            <Link to="/astrologers">All Astrologers</Link>
           </JoinButton>
         </>
       )}
-      <JoinButton>
-        <Link to="/payment-records">Payment Records</Link>
-      </JoinButton>
-      <JoinButton>
-        <Link to="/astrologers">All Astrologers</Link>
-      </JoinButton>
       <Row>
         <Label htmlFor="roomName">Room Name</Label>
         <Input type="text" id="roomName" ref={roomRef} />

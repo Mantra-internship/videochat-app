@@ -8,7 +8,6 @@ const Payment_records = (props) => {
   // const [token, setToken] = useState("");
 
   useEffect(() => {
-    getToken();
     transactionDataFetcher();
   }, []);
 
@@ -46,6 +45,17 @@ const Payment_records = (props) => {
         setTransactionData([]);
       });
   };
+
+  if (transactionData.length === 0)
+    return (
+      <>
+        <Heading>Transaction history</Heading>
+        <Container>
+          <div>No Transaction History</div>
+        </Container>
+      </>
+    );
+
   return (
     <>
       <Heading>Transaction history</Heading>
