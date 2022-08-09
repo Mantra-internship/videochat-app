@@ -72,4 +72,6 @@ const Heading = styled.div`
   margin: 0 0 50px 0;
 `;
 
+
+
 export default Buy_Credits;
