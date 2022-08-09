@@ -30,7 +30,7 @@ function CreditCard({ credit }) {
   const createPayment = async () => {
     await axios
       .post(
-        'http://localhost:5000/api/payment/create-payment',
+        'https://video-chat-backend99.herokuapp.com/api/payment/create-payment',
         { amount: credit.amount },
         {
           headers: { authorization: `Bearer ` + getToken() },
@@ -41,7 +41,7 @@ function CreditCard({ credit }) {
         setPaymentLink(res.data.paymentLink);
         // history.push(res.data.paymentLink);
         console.log(paymentLink);
-        openInNewTab(res.data.paymentLink)
+        openInNewTab(res.data.paymentLink);
       })
       .catch((error) => {
         console.log(error);

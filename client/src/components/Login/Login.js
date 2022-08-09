@@ -12,7 +12,7 @@ function Login(props) {
   // send phone to backend for login
   const postData = async () => {
     await axios
-      .post('http://localhost:5000/api/user/get-otp', data)
+      .post('https://video-chat-backend99.herokuapp.com/api/user/get-otp', data)
       .then((response) => {
         // console.log(response.data);
         sessionStorage.setItem('phone', phone);

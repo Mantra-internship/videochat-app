@@ -15,7 +15,7 @@ function AstrologersPage(props) {
   const astrologersDataFetcher = async () => {
     await axios
       .get(
-        'http://localhost:5000/api/user/astrologer/' +
+        'https://video-chat-backend99.herokuapp.com/api/user/astrologer/' +
           props.match.params.uphone,
         {}
       )

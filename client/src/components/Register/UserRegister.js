@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -32,10 +32,13 @@ function UserRegister(props) {
 
   const postData = async () => {
     await axios
-      .post('http://localhost:5000/api/user/register/get-otp', data)
+      .post(
+        'https://video-chat-backend99.herokuapp.com/api/user/register/get-otp',
+        data
+      )
       .then((response) => {
         // console.log(response.data);
-        alert('OTP send Successfully')
+        alert('OTP send Successfully');
         sessionStorage.setItem('phone', phone);
         sessionStorage.setItem('role', role);
         history.push('/verify-otp');

@@ -29,7 +29,7 @@ const Payment_records = (props) => {
   const transactionDataFetcher = async () => {
     await axios
       .post(
-        'http://localhost:5000/api/user/payment-record',
+        'https://video-chat-backend99.herokuapp.com/api/user/payment-record',
         {},
         {
           headers: { authorization: `Bearer ` + getToken() },

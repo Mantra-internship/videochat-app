@@ -33,10 +33,14 @@ function AstrologerRegister(props) {
 
   const saveAstrologerData = async () => {
     await axios
-      .post('http://localhost:5000/api/user/add-astrologer-info', data, {
-        // send the JWT token
-        headers: { authorization: `Bearer ` + getToken() },
-      })
+      .post(
+        'https://video-chat-backend99.herokuapp.com/api/user/add-astrologer-info',
+        data,
+        {
+          // send the JWT token
+          headers: { authorization: `Bearer ` + getToken() },
+        }
+      )
       .then((response) => {
         // console.log(response.data);
         props.history.push('/profile');

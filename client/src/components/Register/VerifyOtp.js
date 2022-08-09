@@ -26,7 +26,10 @@ function VerifyOtp(props) {
 
   const otpValidater = async () => {
     await axios
-      .post('http://localhost:5000/api/user/verify-otp', data)
+      .post(
+        'https://video-chat-backend99.herokuapp.com/api/user/verify-otp',
+        data
+      )
       .then((response) => {
         // console.log(response.data.message);
         createCookie('user', response.data.token, 1);

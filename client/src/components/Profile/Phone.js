@@ -22,21 +22,23 @@ function Phone({
     }else{
       await axios
         .post(
-          'http://localhost:5000/api/user/phone-update',
+          'https://video-chat-backend99.herokuapp.com/api/user/phone-update',
           {
-            newPhone: userPhone
+            newPhone: userPhone,
           },
           {
             headers: { authorization: `Bearer ` + getToken() },
           }
-        ).then((response) => {
+        )
+        .then((response) => {
           // console.log(response);
           setShowFields(true);
           alert(response.data.message);
-        }).catch((error) => {
-          console.log(error);
-          alert("something went wrong");
         })
+        .catch((error) => {
+          console.log(error);
+          alert('something went wrong');
+        });
     }
   }
 

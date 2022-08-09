@@ -51,7 +51,7 @@ function App(props) {
 
     await axios
       .post(
-        'http://localhost:5000/api/user/authenticate-user',
+        'https://video-chat-backend99.herokuapp.com/api/user/authenticate-user',
         {},
         {
           headers: { authorization: `Bearer ` + getToken() },

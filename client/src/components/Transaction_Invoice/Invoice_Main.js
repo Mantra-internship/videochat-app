@@ -37,11 +37,13 @@ function Invoice_Main() {
     const paymentId = currentURLArray[len - 1];
 
     await axios
-      .post(`http://localhost:5000/api/user/getPaymentInfo/${paymentId}`,
-      {},
-      {
-        headers: { authorization: `Bearer ` + getJwtToken() },
-      })
+      .post(
+        `https://video-chat-backend99.herokuapp.com/api/user/getPaymentInfo/${paymentId}`,
+        {},
+        {
+          headers: { authorization: `Bearer ` + getJwtToken() },
+        }
+      )
       .then((resObj) => {
         setInvoiceData(resObj.data);
         // console.log(resObj.data);

@@ -13,7 +13,7 @@ function AstrologerMain() {
 
   const astrologersDataFetcher = async () => {
     await axios
-      .get('http://localhost:5000/api/user/astrologers')
+      .get('https://video-chat-backend99.herokuapp.com/api/user/astrologers')
       .then((resObj) => {
         // console.log(resObj.data)
         setAstrologersData(resObj.data);
