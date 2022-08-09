@@ -65,7 +65,7 @@ const Container = styled.div`
 
 const Card = styled.div`
   display: inline-block;
-  border: 2px solid #dfd1d1;
+  border: 4px solid #ccc;
   border-radius: 15%;
   padding: 15px;
   width: 300px;
@@ -73,7 +73,7 @@ const Card = styled.div`
   margin: 20px;
 
   :hover{
-    border: 4px solid #ccc;
+    border: 4px solid #fdcb6e;
   }
 }
 `;

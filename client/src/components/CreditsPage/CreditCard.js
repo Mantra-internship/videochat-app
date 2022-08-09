@@ -66,7 +66,8 @@ function CreditCard({ credit }) {
         style={{
           padding: '10px 20px',
           margin: '5px 0',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          fontSize: '25px',
         }}
       >
         Buy
@@ -80,7 +81,7 @@ const Cards = styled.div`
   height: 300px;
   width: 300px;
   border: 2px solid #ccc;
-  border-radius: 5px;
+  border-radius: 15px;
   margin: 20px;
   transition: 500ms;
   font-size: 24px;
