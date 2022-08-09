@@ -81,6 +81,12 @@ const videoChat = (socket, io, socketList) => {
       .to(roomId)
       .emit("FE-toggle-camera", { userId: socket.id, switchTarget });
   });
+
+  socket.on("BE-toggle-both", ({ roomId }) => {
+    socketList[socket.id].video = false;
+    socketList[socket.id].audio = false;
+    socket.broadcast.to(roomId).emit("FE-toggle-camera", { userId: socket.id, switchTarget: "bothOff" });
+  })
 };
 
 module.exports = videoChat;

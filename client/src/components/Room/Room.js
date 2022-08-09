@@ -69,7 +69,32 @@ const Room = (props) => {
             if (currTime >= eTime) {
               setBottomBarButtonsEnabler(false);
               alert("Time Up : Credits Expired the camera and audio will stop withing 10 secs");
-              setTimeout(() => stopStreamingCameraAndAudio(stream), 5000);
+              setTimeout(() => stopStreamingCameraAndAudio(stream), 10000);
+              
+              setUserVideoAudio((preList) => {
+                  const userVideoTrack =
+                    userVideoRef.current.srcObject.getVideoTracks()[0];
+                  const userAudioTrack =
+                    userVideoRef.current.srcObject.getAudioTracks()[0];
+                  userVideoTrack.enabled = false;
+                  console.log("userVideoTrack : " , userVideoTrack);
+
+                  console.log( "userAudioTrack : ", userAudioTrack);
+          
+                  if (userAudioTrack) {
+                    userAudioTrack.enabled = false;
+                  } else {
+                    userStream.current.getAudioTracks()[0].enabled = false;
+                  }
+          
+                return {
+                  ...preList,
+                  localUser: { video: false, audio: false },
+                };
+              });
+          
+              socket.emit("BE-toggle-both", { roomId });
+
               return clearInterval(interval);
             }
           }, 5000);
@@ -163,6 +188,10 @@ const Room = (props) => {
         let audio = preList[peerIdx.userName].audio;
 
         if (switchTarget === "video") video = !video;
+        else if(switchTarget === "bothOff") {
+          video = false;
+          audio = false;
+        }
         else audio = !audio;
 
         return {
