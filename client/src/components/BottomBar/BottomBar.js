@@ -24,6 +24,10 @@ const BottomBar = ({
 
   return (
     <Bar>
+      {
+        enabled
+        ? 
+        <>
       <Left>        
             <CameraButton onClick={toggleCameraAudio} data-switch="video">
               <div>
@@ -73,15 +77,26 @@ const BottomBar = ({
           </div>
           Chat
         </ChatButton>
-        {/* <ScreenButton onClick={clickScreenSharing}>
+        <ScreenButton onClick={clickScreenSharing}>
           <div>
             <FaIcon
               className={`fas fa-desktop ${screenShare ? 'sharing' : ''}`}
             ></FaIcon>
           </div>
           Share Screen
-        </ScreenButton> */}
+        </ScreenButton> 
       </Center>
+      </>
+       : 
+       <Left>
+        <ChatButton onClick={clickChat}>
+          <div>
+            <FaIcon className='fas fa-comments'></FaIcon>
+          </div>
+          Chat
+        </ChatButton>
+       </Left>
+      }
       <Right>
         <PaymentButton onClick={goToBuyCredits}>Buy Credits</PaymentButton>
         <StopButton onClick={goToBack}>Stop</StopButton>

@@ -56,7 +56,7 @@ const Room = (props) => {
         // console.log("currTime : ", currTime);
         if (currTime >= eTime) {
           setBottomBarButtonsEnabler(false);
-          alert("Time Up : Credits Expired the camera and audio will stop withing 10 secs");
+          alert("Time Up : Credits Expired, Please Recharge to get camera and audio access");
           stopStreamingCameraAndAudio(stream);
         }
        else{
@@ -69,7 +69,7 @@ const Room = (props) => {
             if (currTime >= eTime) {
               setBottomBarButtonsEnabler(false);
               alert("Time Up : Credits Expired the camera and audio will stop withing 10 secs");
-              setTimeout(stopStreamingCameraAndAudio(stream), 5000);
+              setTimeout(() => stopStreamingCameraAndAudio(stream), 5000);
               return clearInterval(interval);
             }
           }, 5000);
