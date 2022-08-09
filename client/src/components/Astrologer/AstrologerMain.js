@@ -28,9 +28,9 @@ function AstrologerMain() {
   if (astrologersData.length === 0)
     return (
       <>
-        <Heading>Transaction history</Heading>
+        <Heading>Our Astrologers</Heading>
         <Container>
-          <div>No Transaction History</div>
+          <div>No Astrologers to show</div>
         </Container>
       </>
     );
