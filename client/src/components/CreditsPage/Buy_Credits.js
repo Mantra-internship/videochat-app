@@ -3,15 +3,40 @@ import CreditCard from './CreditCard';
 import styled from 'styled-components';
 
 function Buy_Credits() {
+  let data = [
+    {
+      credits: 100,
+      amount: 500,
+      messagesBalance: 25,
+      callsBalance: 10,
+    },
+    {
+      credits: 1000,
+      amount: 5000,
+      messagesBalance: 250,
+      callsBalance: 100,
+    },
+    {
+      credits: 50,
+      amount: 250,
+      messagesBalance: 12,
+      callsBalance: 5,
+    },
+    {
+      credits: 200,
+      amount: 1000,
+      messagesBalance: 50,
+      callsBalance: 20,
+    },
+  ];
+
   return (
     <Container>
       <Inner>
         <Heading>Buy Credits</Heading>
-        <CreditCard></CreditCard>
-        <CreditCard></CreditCard>
-        <CreditCard></CreditCard>
-        <CreditCard></CreditCard>
-        <CreditCard></CreditCard>
+        {data.map((credit) => {
+          return <CreditCard key={credit.credits + 1} credit={credit}></CreditCard>;
+        })}
       </Inner>
     </Container>
   );

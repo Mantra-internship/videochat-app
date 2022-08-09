@@ -123,9 +123,10 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   padding: 30px;
-  overflow-x: hidden;
+  overflow: hidden;
+  margin-top: 30px; 
 `;
 
 const Heading = styled.div`
@@ -143,11 +144,10 @@ const Card = styled.div`
   border: solid 1px #fff;
   border-radius: 10px;
   margin: 20px;
-  padding: 20px;
+  padding: 10px;
   font-size: 18px;
   height: 400px;
   width: 80vw;
-  overflow: hidden;
 
   @media (max-width: 800px) {
     width: 350px;

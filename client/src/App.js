@@ -42,7 +42,7 @@ function App(props) {
 
   const checkAuth = async () => {
     const jwtToken = document.cookie;
-    if (jwtToken == null) {
+    if (jwtToken == '') {
       setIsAuthenticated(false);
       return;
     }
@@ -58,7 +58,7 @@ function App(props) {
         }
       )
       .then((resObj) => {
-        console.log(resObj);
+        // console.log(resObj);
         if (resObj.data.isAuthenticated) {
           setIsAuthenticated(true);
         } else {
@@ -69,7 +69,7 @@ function App(props) {
         console.log(error);
         setIsAuthenticated(false);
       });
-    console.log('isAuthenticated', isAuthenticated);
+    // console.log('isAuthenticated', isAuthenticated);
   };
 
   return (
