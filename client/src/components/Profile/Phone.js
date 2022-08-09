@@ -84,15 +84,17 @@ function Phone({
           defaultValue={phone}
           onChange={(e) => setUserPhone(e.target.value)}
         />
+      </Row>
+      <Row2>
         {
           userPhone !== phone
           ?
-            <button onClick={otpSender}>Get OTP</button>
+            <Button onClick={otpSender}>Get OTP</Button>
           :
             <></> 
         }
         
-      </Row>
+      </Row2>
       {
         showFields
         ?
@@ -115,9 +117,9 @@ function Phone({
                 ref={newPhoneOtpRef}
               />
             </Row>
-            <Row>
-              <button onClick={otpVerifier}>Verify OTPs</button>
-            </Row>
+            <Row2>
+              <Button onClick={otpVerifier}>Verify OTPs</Button>
+            </Row2>
           </>
         :
           <></>
@@ -131,6 +133,14 @@ const Row = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 15px;
+  line-height: 35px;
+`;
+
+const Row2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   margin-top: 15px;
   line-height: 35px;
 `;
@@ -180,5 +190,22 @@ const Input = styled.input`
 //     width: 200px;
 //   }
 // `;
+
+const Button = styled.button`
+  height: 30px;
+  // margin-top: 35px;
+  outline: none;
+  border: none;
+  border-radius: 15px;
+  color: #d8e9ef;
+  background-color: #4ea1d3;
+  font-size: 20px;
+  font-weight: 500;
+
+  :hover {
+    background-color: #7bb1d1;
+    cursor: pointer;
+  }
+`;
 
 export default Phone;

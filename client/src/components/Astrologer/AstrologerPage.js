@@ -20,7 +20,7 @@ function AstrologersPage(props) {
         {}
       )
       .then((resObj) => {
-        // console.log(resObj.data);
+        console.log(resObj.data);
         setAstrologerData(resObj.data);
         // console.log(astrologerData);
       })
@@ -41,7 +41,7 @@ function AstrologersPage(props) {
                 width: '200px',
                 height: '200px',
                 borderRadius: '121px',
-                border: '3px solid red',
+                border: '3px solid green',
               }}
               alt="user"
               src={'https://freesvg.org/img/abstract-user-flat-4.png'}
@@ -57,7 +57,7 @@ function AstrologersPage(props) {
                 width: '30px',
                 height: '30px',
                 borderRadius: '121px',
-                border: '1px solid red',
+                border: '1px solid green',
                 marginLeft: '10px',
               }}
               src="https://d1gcna0o0ldu5v.cloudfront.net/fit-in/20x20/assets/images/astrologer_profile/verified.webp"
@@ -66,163 +66,174 @@ function AstrologersPage(props) {
           ) : (
             <></>
           )}
-          <br></br>
-          <img
-            src="https://d1gcna0o0ldu5v.cloudfront.net/fit-in/20x20/assets/images/astrologer_profile/chatoffline.png"
+          <div
             style={{
-              display: 'inline-block',
-              width: '50px',
-              height: '50px',
-              borderRadius: '121px',
-              border: '1px solid red',
-              marginTop: '0',
-            }}
-            alt="chatoffline"
-          />
-          <p
-            style={{
-              display: 'inline-block',
-              marginTop: '0',
-              marginLeft: '10px',
-              fontSize: '20px',
-            }}
-          >
-            <b>14k</b> mins
-          </p>
-          <img
-            src="https://d1gcna0o0ldu5v.cloudfront.net/fit-in/20x20/assets/images/astrologer_profile/calloffline.png"
-            style={{
-              display: 'inline-block',
-              width: '50px',
-              height: '50px',
-              borderRadius: '121px',
-              border: '1px solid red',
-              marginLeft: '35px',
-              marginTop: '0',
-            }}
-            alt="calloffline"
-          />
-          <p
-            style={{
-              display: 'inline-block',
-              marginLeft: '10px',
-              fontSize: '20px',
-              marginTop: 0,
-            }}
-          >
-            <b>14k</b> mins
-          </p>
-          <img
-            src="https://d1gcna0o0ldu5v.cloudfront.net/fit-in/20x20/assets/images/astrologer_profile/reports.webp
-    "
-            alt="reports"
-            style={{
-              display: 'inline-block',
-              width: '50px',
-              height: '50px',
-              borderRadius: '121px',
-              border: '1px solid red',
-              marginLeft: '35px',
-              marginTop: '0',
-            }}
-          />
-          <p
-            style={{
-              display: 'inline-block',
-              marginLeft: '10px',
-              fontSize: '20px',
-              marginTop: '0',
-            }}
-          >
-            <b>14k</b> mins
-          </p>
-          <br></br>
-          <p style={{ fontSize: '20px', marginTop: '0' }}>
-            <b>English</b>
-          </p>
-          <p style={{ fontSize: '20px', marginTop: '0' }}>
-            <b>4</b> years
-          </p>
-          {/* <p
-            style={{
-              fontSize: '20px',
-              marginTop: '0',
-              border: '1px solid #ccc',
-              borderRadius: '10px',
-              display: 'inline-block',
-              padding: '5px',
-            }}
-          >
-            Tarot
-          </p>
-          <br></br> */}
-          <button
-            style={{
-              border: '2px solid red',
-              borderRadius: '25px',
-              backgroundColor: 'white',
-              color: 'red',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              // marginTop: '15px',
             }}
           >
             <img
-              src="https://d1gcna0o0ldu5v.cloudfront.net/fit-in/20x20/assets/images/astrolger/busy-status-chat.png"
+              src="https://d1gcna0o0ldu5v.cloudfront.net/fit-in/20x20/assets/images/astrologer_profile/chatoffline.png"
               style={{
                 display: 'inline-block',
-                width: '50px',
-                height: '50px',
-                borderRadius: '121px',
-                border: '1px solid red',
+                width: '30px',
+                height: '30px',
+                marginTop: '0',
+              }}
+              alt="chatoffline"
+            />
+            <p
+              style={{
+                display: 'inline-block',
+                marginTop: '0',
+                marginLeft: '10px',
+                fontSize: '20px',
+              }}
+            >
+              <b>14k</b> mins
+            </p>
+            <img
+              src="https://d1gcna0o0ldu5v.cloudfront.net/fit-in/20x20/assets/images/astrologer_profile/calloffline.png"
+              style={{
+                display: 'inline-block',
+                width: '30px',
+                height: '30px',
                 marginLeft: '35px',
                 marginTop: '0',
               }}
-              alt="busy-status-chat"
+              alt="calloffline"
             />
             <p
               style={{
                 display: 'inline-block',
+                marginLeft: '10px',
                 fontSize: '20px',
-                margin: '0 30px',
+                marginTop: 0,
               }}
             >
-              Start chat
+              <b>14k</b> mins
             </p>
-            <p style={{ display: 'inline-block', fontSize: '20px' }}>
-              <b>$25</b> per min
+            <img
+              src="https://d1gcna0o0ldu5v.cloudfront.net/fit-in/20x20/assets/images/astrologer_profile/reports.webp
+    "
+              alt="reports"
+              style={{
+                display: 'inline-block',
+                width: '30px',
+                height: '30px',
+                marginLeft: '35px',
+                marginTop: '0',
+              }}
+            />
+            <p
+              style={{
+                display: 'inline-block',
+                marginLeft: '10px',
+                fontSize: '20px',
+                marginTop: '0',
+              }}
+            >
+              <b>14k</b> mins
             </p>
-          </button>
-          <button
+          </div>
+
+          <div
             style={{
-              border: '2px solid red',
-              borderRadius: '25px',
-              backgroundColor: 'white',
-              color: 'red',
-              marginLeft: '20px',
+              display: 'flex',
+              justifyContent: 'space-around',
+              alignItems: 'space-around',
+              marginTop: '15px',
             }}
           >
-            <img
-              src="https://d1gcna0o0ldu5v.cloudfront.net/fit-in/20x20/assets/images/astrolger/busy-status-call.png"
-              style={{
-                display: 'inline-block',
-                width: '50px',
-                height: '50px',
-                borderRadius: '121px',
-                border: '1px solid red',
-              }}
-              alt="busy-status-call"
-            />
+            <p style={{ fontSize: '20px', marginTop: '0' }}>
+              <b>Languages - </b> English
+            </p>
+            <p style={{ fontSize: '20px', marginTop: '0' }}>
+              <b>Experience - </b> 4 years
+            </p>
             <p
               style={{
-                display: 'inline-block',
                 fontSize: '20px',
-                margin: '0 30px',
+                marginTop: '0',
               }}
             >
-              Start call
+             <b>Speciality</b> - Kundli
             </p>
-            <p style={{ display: 'inline-block', fontSize: '20px' }}>
+          </div>
+
+          <div style={{ marginTop: '20px' }}>
+            <button
+              style={{
+                border: '2px solid red',
+                borderRadius: '25px',
+                backgroundColor: 'white',
+                color: 'red',
+                // display: 'flex',
+                // justifyContent: 'center'
+              }}
+            >
+              <img
+                src="https://d1gcna0o0ldu5v.cloudfront.net/fit-in/20x20/assets/images/astrolger/busy-status-chat.png"
+                style={{
+                  display: 'inline-flex',
+                  width: '50px',
+                  height: '50px',
+                  borderRadius: '121px',
+                  border: '1px solid red',
+                  // marginLeft: '35px',
+                  marginTop: '0',
+                }}
+                alt="busy-status-chat"
+              />
+              <p
+                style={{
+                  display: 'inline-block',
+                  fontSize: '20px',
+                  margin: '0 30px',
+                }}
+              >
+                Start chat
+              </p>
+              {/* <p style={{ display: 'inline-block', fontSize: '20px' }}>
               <b>$25</b> per min
-            </p>
-          </button>
+            </p> */}
+            </button>
+            <button
+              style={{
+                border: '2px solid red',
+                borderRadius: '25px',
+                backgroundColor: 'white',
+                color: 'red',
+                marginLeft: '20px',
+              }}
+            >
+              <img
+                src="https://d1gcna0o0ldu5v.cloudfront.net/fit-in/20x20/assets/images/astrolger/busy-status-call.png"
+                style={{
+                  display: 'inline-block',
+                  width: '50px',
+                  height: '50px',
+                  borderRadius: '121px',
+                  border: '1px solid red',
+                }}
+                alt="busy-status-call"
+              />
+              <p
+                style={{
+                  display: 'inline-block',
+                  fontSize: '20px',
+                  margin: '0 30px',
+                }}
+              >
+                Start call
+              </p>
+              {/* <p style={{ display: 'inline-block', fontSize: '20px' }}>
+              <b>$25</b> per min
+            </p> */}
+            </button>
+          </div>
         </div>
       </SectionLeft>
       <SectionRight>
@@ -248,6 +259,8 @@ const SectionLeft = styled.div`
   border: 2px solid #ccc;
   border-radius: 20px;
   padding: 20px;
+  color: #000;
+  background: white;
 `;
 
 const SectionRight = styled.div`
@@ -259,6 +272,8 @@ const SectionRight = styled.div`
   align-items: center;
   flex-direction: column;
   border-radius: 20px;
+  color: #000;
+  background: white;
 `;
 
 const IMG = styled.div`

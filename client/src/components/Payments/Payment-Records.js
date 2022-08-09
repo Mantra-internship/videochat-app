@@ -69,44 +69,44 @@ const Payment_records = (props) => {
               <p>Amount - {record.amount}</p>
               <p>Payment Request ID - {record.paymentRequestId}</p>
               {record.paymentRequestStatus === 'Pending' ? (
-                <button
-                  style={{
-                    padding: '5px 15px',
-                    margin: '5px 0',
-                  }}
+                <Button
+                  // style={{
+                  //   padding: '5px 15px',
+                  //   margin: '5px 0',
+                  // }}
                 >
                   <a
                     style={{
                       textDecoration: 'none',
-                      color: '#000',
+                      color: 'white',
                       fontSize: '15px',
                     }}
                     href={record.paymentLink}
                   >
                     Continue Payment
                   </a>
-                </button>
+                </Button>
               ) : (
                 <></>
               )}
               {record.paymentRequestStatus !== 'Pending' ? (
-                <button
-                  style={{
-                    padding: '5px 15px',
-                    margin: '5px 0',
-                  }}
+                <Button
+                  // style={{
+                  //   padding: '5px 15px',
+                  //   margin: '5px 0',
+                  // }}
                 >
                   <a
                     style={{
                       textDecoration: 'none',
-                      color: '#000',
+                      color: 'white',
                       fontSize: '15px',
                     }}
                     href={`/getPaymentInfo/${record.paymentId}`}
                   >
                     InVoice
                   </a>
-                </button>
+                </Button>
               ) : (
                 <></>
               )}
@@ -120,7 +120,8 @@ const Payment_records = (props) => {
 
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
@@ -146,8 +147,8 @@ const Card = styled.div`
   margin: 20px;
   padding: 10px;
   font-size: 18px;
-  height: 400px;
-  width: 80vw;
+  height: 350px;
+  width: 350px;
 
   @media (max-width: 800px) {
     width: 350px;
@@ -155,6 +156,24 @@ const Card = styled.div`
 
   > p {
     // padding: 10px;
+  }
+`;
+
+const Button = styled.button`
+  height: 50px;
+  // margin-top: 35px;
+  outline: none;
+  border: none;
+  border-radius: 15px;
+  padding: 10px 20px;
+  color: #d8e9ef;
+  background-color: #4ea1d3;
+  font-size: 20px;
+  font-weight: 500;
+
+  :hover {
+    background-color: #7bb1d1;
+    cursor: pointer;
   }
 `;
 

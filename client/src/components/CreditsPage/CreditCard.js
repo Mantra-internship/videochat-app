@@ -61,7 +61,7 @@ function CreditCard({ credit }) {
       <h3 style={{ textAlign: 'center', margin: '0' }}>
         {credit.callsBalance} Calls
       </h3>
-      <button
+      <Button
         onClick={createPayment}
         style={{
           padding: '10px 20px',
@@ -71,7 +71,7 @@ function CreditCard({ credit }) {
         }}
       >
         Buy
-      </button>
+      </Button>
     </Cards>
   );
 }
@@ -88,6 +88,24 @@ const Cards = styled.div`
 
   :hover {
     border-color: blanchedalmond;
+  }
+`;
+
+const Button = styled.button`
+  height: 50px;
+  // margin-top: 35px;
+  outline: none;
+  border: none;
+  border-radius: 15px;
+  padding: 10px 20px;
+  color: #d8e9ef;
+  background-color: #4ea1d3;
+  font-size: 20px;
+  font-weight: 500;
+
+  :hover {
+    background-color: #7bb1d1;
+    cursor: pointer;
   }
 `;
 

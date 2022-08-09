@@ -15,7 +15,7 @@ function AstrologerMain() {
     await axios
       .get('https://video-chat-backend99.herokuapp.com/api/user/astrologers')
       .then((resObj) => {
-        // console.log(resObj.data)
+        console.log(resObj.data)
         setAstrologersData(resObj.data);
         // console.log(astrologersData);
       })
