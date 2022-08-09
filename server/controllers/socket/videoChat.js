@@ -4,7 +4,8 @@ const videoChat = (socket, io, socketList) => {
   socket.on("BE-join-room", ({ roomId, userName }) => {
     // Socket Join RoomName
     socket.join(roomId);
-    socketList[socket.id] = { userName, video: true, audio: true };
+    //change this to false
+    socketList[socket.id] = { userName, video: false, audio: false };
 
     // Set User List
     io.sockets.in(roomId).clients((err, clients) => {
@@ -80,6 +81,12 @@ const videoChat = (socket, io, socketList) => {
       .to(roomId)
       .emit("FE-toggle-camera", { userId: socket.id, switchTarget });
   });
+
+  socket.on("BE-toggle-both", ({ roomId }) => {
+    socketList[socket.id].video = false;
+    socketList[socket.id].audio = false;
+    socket.broadcast.to(roomId).emit("FE-toggle-camera", { userId: socket.id, switchTarget: "bothOff" });
+  })
 };
 
 module.exports = videoChat;

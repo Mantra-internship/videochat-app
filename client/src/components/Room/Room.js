@@ -10,7 +10,7 @@ const Room = (props) => {
   const currentUser = sessionStorage.getItem("user");
   const [peers, setPeers] = useState([]);
   const [userVideoAudio, setUserVideoAudio] = useState({
-    localUser: { video: true, audio: true },
+    localUser: { video: false, audio: false },
   });
   const [videoDevices, setVideoDevices] = useState([]);
   const [displayChat, setDisplayChat] = useState(false);
@@ -21,12 +21,13 @@ const Room = (props) => {
   const screenTrackRef = useRef();
   const userStream = useRef();
   const roomId = props.match.params.roomId;
-
+  const [bottomBarButtonsEnabler, setBottomBarButtonsEnabler] = useState(true);
   useEffect(() => {
     // Get Video Devices
     navigator.mediaDevices.enumerateDevices().then((devices) => {
       const filtered = devices.filter((device) => device.kind === "videoinput");
       setVideoDevices(filtered);
+      console.log("filtered: ",filtered);
     });
 
     // Set Back Button Event
@@ -48,6 +49,58 @@ const Room = (props) => {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
+        console.log("stream.getVideoTrack() :", stream.getVideoTracks())
+        stream.getVideoTracks()[0].enabled = false
+        const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime);
+        let currTime = Math.ceil(Date.now() / 1000);
+        // console.log("currTime : ", currTime);
+        if (currTime >= eTime) {
+          setBottomBarButtonsEnabler(false);
+          alert("Time Up : Credits Expired, Please Recharge to get camera and audio access");
+          stopStreamingCameraAndAudio(stream);
+        }
+       else{
+          const interval = setInterval(() => {
+            const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime);
+            console.log("eTime : ", eTime);
+            console.log(Date.now() / 1000);
+            let currTime = Math.ceil(Date.now() / 1000);
+            console.log("currTime : ", currTime);
+            if (currTime >= eTime) {
+              setBottomBarButtonsEnabler(false);
+              alert("Time Up : Credits Expired the camera and audio will stop withing 10 secs");
+              setTimeout(() => stopStreamingCameraAndAudio(stream), 10000);
+              
+              setUserVideoAudio((preList) => {
+                  const userVideoTrack =
+                    userVideoRef.current.srcObject.getVideoTracks()[0];
+                  const userAudioTrack =
+                    userVideoRef.current.srcObject.getAudioTracks()[0];
+                  userVideoTrack.enabled = false;
+                  console.log("userVideoTrack : " , userVideoTrack);
+
+                  console.log( "userAudioTrack : ", userAudioTrack);
+          
+                  if (userAudioTrack) {
+                    userAudioTrack.enabled = false;
+                  } else {
+                    userStream.current.getAudioTracks()[0].enabled = false;
+                  }
+          
+                return {
+                  ...preList,
+                  localUser: { video: false, audio: false },
+                };
+              });
+          
+              socket.emit("BE-toggle-both", { roomId });
+
+              return clearInterval(interval);
+            }
+          }, 5000);
+        }
+    
+        console.log("stream", stream);
         userVideoRef.current.srcObject = stream;
         userStream.current = stream;
 
@@ -135,6 +188,10 @@ const Room = (props) => {
         let audio = preList[peerIdx.userName].audio;
 
         if (switchTarget === "video") video = !video;
+        else if(switchTarget === "bothOff") {
+          video = false;
+          audio = false;
+        }
         else audio = !audio;
 
         return {
@@ -143,24 +200,27 @@ const Room = (props) => {
         };
       });
     });
-    const interval = setInterval(() => {
-      const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime);
-      console.log("eTime : ", eTime);
-      console.log(Date.now() / 1000);
-      let currTime = Math.ceil(Date.now() / 1000);
-      console.log("currTime : ", currTime);
-      if (currTime >= eTime) {
-        alert("Time Up : Credits Expired");
-        return clearInterval(interval);
-      }
-    }, 5000);
+    // const interval = setInterval(() => {
+    //   const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime);
+    //   console.log("eTime : ", eTime);
+    //   console.log(Date.now() / 1000);
+    //   let currTime = Math.ceil(Date.now() / 1000);
+    //   console.log("currTime : ", currTime);
+    //   if (currTime >= eTime) {
+    //     alert("Time Up : Credits Expired");
+    //     return clearInterval(interval);
+    //   }
+    // }, 5000);
 
+    // testToggleCameraAudio(true);
     return () => {
-      clearInterval(interval);
+      // clearInterval(interval);
       socket.disconnect();
     };
     // eslint-disable-next-line
   }, []);
+
+  // function for connect camera and mic
 
   function createPeer(userId, caller, stream) {
     const peer = new Peer({
@@ -182,7 +242,13 @@ const Room = (props) => {
 
     return peer;
   }
-
+  function stopStreamingCameraAndAudio(stream){
+    stream.getTracks().forEach(function(track) {
+        if (track.readyState == 'live') {
+            track.stop();
+        }
+    });
+  }
   function addPeer(incomingSignal, callerId, stream) {
     const peer = new Peer({
       initiator: false,
@@ -244,7 +310,7 @@ const Room = (props) => {
 
   const toggleCameraAudio = (e) => {
     const target = e.target.getAttribute("data-switch");
-
+    console.log( "target: ", target);
     setUserVideoAudio((preList) => {
       let videoSwitch = preList["localUser"].video;
       let audioSwitch = preList["localUser"].audio;
@@ -254,10 +320,12 @@ const Room = (props) => {
           userVideoRef.current.srcObject.getVideoTracks()[0];
         videoSwitch = !videoSwitch;
         userVideoTrack.enabled = videoSwitch;
+        console.log("userVideoTrack : " , userVideoTrack);
       } else {
         const userAudioTrack =
           userVideoRef.current.srcObject.getAudioTracks()[0];
         audioSwitch = !audioSwitch;
+        console.log( "userAudioTrack : ", userAudioTrack);
 
         if (userAudioTrack) {
           userAudioTrack.enabled = audioSwitch;
@@ -274,6 +342,40 @@ const Room = (props) => {
 
     socket.emit("BE-toggle-camera-audio", { roomId, switchTarget: target });
   };
+  // const testToggleCameraAudio = (e) => {
+  //   // const target = e.target.getAttribute("data-switch");
+  //   // console.log( "target: ", target);
+  //   setUserVideoAudio((preList) => {
+  //     let videoSwitch = preList["localUser"].video;
+  //     let audioSwitch = preList["localUser"].audio;
+
+  //     // if (target === "video") {
+  //       const userVideoTrack =
+  //         userVideoRef.current.srcObject.getVideoTracks()[0];
+  //       videoSwitch = !videoSwitch;
+  //       userVideoTrack.enabled = videoSwitch;
+  //       console.log("userVideoTrack : " , userVideoTrack);
+  //     // } else {
+  //       const userAudioTrack =
+  //         userVideoRef.current.srcObject.getAudioTracks()[0];
+  //       audioSwitch = !audioSwitch;
+  //       console.log( "userAudioTrack : ", userAudioTrack);
+
+  //       if (userAudioTrack) {
+  //         userAudioTrack.enabled = audioSwitch;
+  //       } else {
+  //         userStream.current.getAudioTracks()[0].enabled = audioSwitch;
+  //       }
+  //     // }
+
+  //     return {
+  //       ...preList,
+  //       localUser: { video: videoSwitch, audio: audioSwitch },
+  //     };
+  //   });
+
+  //   // socket.emit("BE-toggle-camera-audio", { roomId, switchTarget: target });
+  // };
 
   const clickScreenSharing = () => {
     if (!screenShare) {
@@ -418,6 +520,7 @@ const Room = (props) => {
           showVideoDevices={showVideoDevices}
           setShowVideoDevices={setShowVideoDevices}
           goToBuyCredits={goToBuyCredits}
+          enabled={bottomBarButtonsEnabler}
         />
       </VideoAndBarContainer>
       <Chat display={displayChat} roomId={roomId} />

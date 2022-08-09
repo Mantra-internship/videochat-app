@@ -3,7 +3,7 @@ const roomChat = require("./roomChat");
 
 const socketFunc = (socket, io, socketList) => {
   console.log(`New User connected: ${socket.id}`);
-
+  // console.log(socket);
   socket.on("disconnect", () => {
     socket.disconnect();
     console.log("User disconnected!");
