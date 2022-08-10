@@ -49,7 +49,7 @@ function Phone({
       setLoader(true);
       await axios
         .post(
-          'http://localhost:5000/api/user/phone-update-verify',
+          'https://video-chat-backend99.herokuapp.com/api/user/phone-update-verify',
           {
             oldPhoneOtp,
             newPhoneOtp
