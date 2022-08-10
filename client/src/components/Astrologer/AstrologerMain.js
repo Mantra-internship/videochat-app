@@ -6,6 +6,7 @@ import styled from 'styled-components';
 
 function AstrologerMain() {
   const [astrologersData, setAstrologersData] = useState([{}]);
+  const [loader, setLoader] = useState(true);
 
   useEffect(() => {
     astrologersDataFetcher();
@@ -15,9 +16,10 @@ function AstrologerMain() {
     await axios
       .get('https://video-chat-backend99.herokuapp.com/api/user/astrologers')
       .then((resObj) => {
-        console.log(resObj.data)
+        console.log(resObj.data);
         setAstrologersData(resObj.data);
         // console.log(astrologersData);
+        setLoader(false);
       })
       .catch((error) => {
         console.log(error);
@@ -40,14 +42,22 @@ function AstrologerMain() {
     <>
       <Heading>Our Astrologers</Heading>
       <Container>
-        {astrologersData.map((astrologer) => {
-          return (
-            <AstrologerCard
-              key={astrologer.phone + 1}
-              astrologer={astrologer}
-            ></AstrologerCard>
-          );
-        })}
+        {loader ? (
+          <Inner>
+            <h3>Loading...</h3>
+          </Inner>
+        ) : (
+          <>
+            {astrologersData.map((astrologer) => {
+              return (
+                <AstrologerCard
+                  key={astrologer.phone + 1}
+                  astrologer={astrologer}
+                ></AstrologerCard>
+              );
+            })}
+          </>
+        )}
       </Container>
     </>
   );
@@ -77,6 +87,10 @@ const Heading = styled.div`
   text-align: center;
   font-size: 7vw;
   margin: 20px 0;
+`;
+
+const Inner = styled.div`
+  margin-top: 20px;
 `;
 
 export default AstrologerMain;
