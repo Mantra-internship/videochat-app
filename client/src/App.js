@@ -17,6 +17,8 @@ import Profile from './components/Profile/Profile';
 import PageNotFound from './components/PageNotFound/PageNotFound';
 
 import Navbar from './components/Navbar/Navbar';
+import Nav from './components/Navbar/Nav';
+import Navbar2 from './components/Navbar/Navbar2';
 import axios from 'axios';
 
 function App(props) {
@@ -78,6 +80,14 @@ function App(props) {
         isAuthenticated={isAuthenticated}
         setIsAuthenticated={setIsAuthenticated}
       />
+      {/* <Nav
+        isAuthenticated={isAuthenticated}
+        setIsAuthenticated={setIsAuthenticated}
+      /> */}
+      {/* <Navbar2
+        isAuthenticated={isAuthenticated}
+        setIsAuthenticated={setIsAuthenticated}
+      /> */}
       <AppContainer>
         <Switch>
           <Route exact path="/" render={(props) => <Main {...props} />} />
@@ -189,11 +199,15 @@ const AppContainer = styled.div`
   flex-direction: column;
   min-height: 100vh;
   align-items: center;
+  // margin-top: 100px;
   justify-content: center;
   font-size: calc(8px + 2vmin);
   color: white;
   background-color: #454552;
   text-align: center;
+  // @media(max-width: 768px) {
+  //   margin-top: 150px;
+  // }
 `;
 
 export default App;

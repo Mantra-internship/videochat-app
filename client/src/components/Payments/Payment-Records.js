@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 const Payment_records = (props) => {
   const [transactionData, setTransactionData] = useState([]);
+  const [loader, setLoader] = useState(true);
   // const [token, setToken] = useState("");
 
   useEffect(() => {
@@ -38,6 +39,7 @@ const Payment_records = (props) => {
       .then((resObj) => {
         // console.log(resObj.data);
         setTransactionData(resObj.data.paymentRecord);
+        setLoader(false);
         // console.log(transactionData);
       })
       .catch((error) => {
@@ -51,7 +53,16 @@ const Payment_records = (props) => {
       <>
         <Heading>Transaction history</Heading>
         <Container>
-          <div>No Transaction History</div>
+          {/* <div>No Transaction History</div> */}
+          {loader ? (
+            <Inner>
+              <h3>Loading...</h3>
+            </Inner>
+          ) : (
+            <>
+              <div>No Transaction History</div>
+            </>
+          )}
         </Container>
       </>
     );
@@ -60,59 +71,67 @@ const Payment_records = (props) => {
     <>
       <Heading>Transaction history</Heading>
       <Container>
-        {transactionData.map((record) => {
-          return (
-            <Card key={record.paymentRequestId}>
-              <p>Name - {record.name}</p>
-              <p>Phone - {record.phone}</p>
-              <p>Payment Request Status - {record.paymentRequestStatus}</p>
-              <p>Amount - {record.amount}</p>
-              <p>Payment Request ID - {record.paymentRequestId}</p>
-              {record.paymentRequestStatus === 'Pending' ? (
-                <Button
-                  // style={{
-                  //   padding: '5px 15px',
-                  //   margin: '5px 0',
-                  // }}
-                >
-                  <a
-                    style={{
-                      textDecoration: 'none',
-                      color: 'white',
-                      fontSize: '15px',
-                    }}
-                    href={record.paymentLink}
-                  >
-                    Continue Payment
-                  </a>
-                </Button>
-              ) : (
-                <></>
-              )}
-              {record.paymentRequestStatus !== 'Pending' ? (
-                <Button
-                  // style={{
-                  //   padding: '5px 15px',
-                  //   margin: '5px 0',
-                  // }}
-                >
-                  <a
-                    style={{
-                      textDecoration: 'none',
-                      color: 'white',
-                      fontSize: '15px',
-                    }}
-                    href={`/getPaymentInfo/${record.paymentId}`}
-                  >
-                    InVoice
-                  </a>
-                </Button>
-              ) : (
-                <></>
-              )}
-            </Card>
-          );
-        })}
+        {loader ? (
+          <Inner>
+            <h3>Loading...</h3>
+          </Inner>
+        ) : (
+          <>
+            {transactionData.map((record) => {
+              return (
+                <Card key={record.paymentRequestId}>
+                  <p>Name - {record.name}</p>
+                  <p>Phone - {record.phone}</p>
+                  <p>Payment Request Status - {record.paymentRequestStatus}</p>
+                  <p>Amount - {record.amount}</p>
+                  <p>Payment Request ID - {record.paymentRequestId}</p>
+                  {record.paymentRequestStatus === 'Pending' ? (
+                    <Button
+                    // style={{
+                    //   padding: '5px 15px',
+                    //   margin: '5px 0',
+                    // }}
+                    >
+                      <a
+                        style={{
+                          textDecoration: 'none',
+                          color: 'white',
+                          fontSize: '15px',
+                        }}
+                        href={record.paymentLink}
+                      >
+                        Continue Payment
+                      </a>
+                    </Button>
+                  ) : (
+                    <></>
+                  )}
+                  {record.paymentRequestStatus !== 'Pending' ? (
+                    <Button
+                    // style={{
+                    //   padding: '5px 15px',
+                    //   margin: '5px 0',
+                    // }}
+                    >
+                      <a
+                        style={{
+                          textDecoration: 'none',
+                          color: 'white',
+                          fontSize: '15px',
+                        }}
+                        href={`/getPaymentInfo/${record.paymentId}`}
+                      >
+                        InVoice
+                      </a>
+                    </Button>
+                  ) : (
+                    <></>
+                  )}
+                </Card>
+              );
+            })}
+          </>
+        )}
       </Container>
     </>
   );
@@ -127,7 +146,7 @@ const Container = styled.div`
   min-height: 100vh;
   padding: 30px;
   overflow: hidden;
-  margin-top: 30px; 
+  margin-top: 30px;
 `;
 
 const Heading = styled.div`
@@ -175,6 +194,10 @@ const Button = styled.button`
     background-color: #7bb1d1;
     cursor: pointer;
   }
+`;
+
+const Inner = styled.div`
+  margin-top: 20px;
 `;
 
 export default Payment_records;
