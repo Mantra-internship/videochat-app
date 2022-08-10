@@ -39,7 +39,7 @@ function Profile(props) {
   const getData = async () => {
     await axios
       .post(
-        'http://localhost:5000/api/user/get-user',
+        'https://video-chat-backend99.herokuapp.com/api/user/get-user',
         {},
         {
           headers: { authorization: `Bearer ` + getToken() },
