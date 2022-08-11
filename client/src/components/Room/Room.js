@@ -33,12 +33,21 @@ const Room = (props) => {
     // Set Back Button Event
     window.addEventListener("popstate", goToBack);
 
-    const userPhone = sessionStorage.getItem('uPhone');
-    socket.emit("BE-token-create", { userPhone });
+    // Handle close event when user presses cross or Alt + F4 / Ctrl + W
+    // To be fixed
+    // window.onbeforeunload = () => {
+    //   socket.emit("BE-leave-room", { roomId, leaver: currentUser });
+    //   props.history.push("/");
+    //   sessionStorage.removeItem("user");
+    //   return "...";
+    // }
+
+    const userID = sessionStorage.getItem('UID');
+    socket.emit("BE-token-create", { userID });
     socket.on("FE-token-saver", (error, tokenObj) => {
       // console.log(tokenObj);
       if (error && error.code && (error.code === 400 || error.code === 404)) {
-        props.history.push(`/getOTP`);
+        props.history.push(`/login`);
       } else {
         sessionStorage.setItem("userI", JSON.stringify(tokenObj));
         socket.emit("BE-join-room", { roomId, userName: currentUser });
@@ -200,19 +209,7 @@ const Room = (props) => {
         };
       });
     });
-    // const interval = setInterval(() => {
-    //   const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime);
-    //   console.log("eTime : ", eTime);
-    //   console.log(Date.now() / 1000);
-    //   let currTime = Math.ceil(Date.now() / 1000);
-    //   console.log("currTime : ", currTime);
-    //   if (currTime >= eTime) {
-    //     alert("Time Up : Credits Expired");
-    //     return clearInterval(interval);
-    //   }
-    // }, 5000);
 
-    // testToggleCameraAudio(true);
     return () => {
       // clearInterval(interval);
       socket.disconnect();
