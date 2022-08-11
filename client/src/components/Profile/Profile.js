@@ -52,8 +52,12 @@ function Profile(props) {
         setLoader(false);
       })
       .catch((err) => {
-        console.log(err);
-        alert('Something went wrong');
+        console.log(err.response.status);
+        if(err.response.status === 404){
+          alert('User not found');
+        }else{
+          alert('Something went wrong');
+        }
       });
   };
 

@@ -231,13 +231,19 @@ const user = {
       const userId = req.userId;
       const foundUser = await User.findOne({ _id: userId });
 
-      if (
-        foundUser.role === 'astrologer' &&
-        foundUser.astrologerInfo !== null
-      ) {
-        await foundUser.populate('astrologerInfo');
+      if(foundUser){
+        if (
+          foundUser.role === 'astrologer' &&
+          foundUser.astrologerInfo !== null
+        ) {
+          await foundUser.populate('astrologerInfo');
+        }
+      }else{
+        return res.status(404).json({
+          message: 'User not found',
+        });
       }
-
+      
       return res.status(200).json({
         foundUser,
       });

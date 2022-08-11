@@ -23,11 +23,11 @@ const videoChat = (socket, io, socketList) => {
     });
   });
 
-  socket.on("BE-token-create", ({ userPhone }) => {
-    if(!userPhone){
+  socket.on("BE-token-create", ({ userID }) => {
+    if(!userID){
       socket.emit("FE-token-saver", {code: 400}, {});
     }else{
-      User.findOne({ phone: userPhone }, (error, foundUser) => {
+      User.findOne({ _id: userID }, (error, foundUser) => {
         if(error){
           console.log(error);
           socket.emit("FE-token-saver", {code: 400}, {});
@@ -41,7 +41,7 @@ const videoChat = (socket, io, socketList) => {
           }
           socket.emit("FE-token-saver", {}, tokenObj);
         }else{
-          console.log(userPhone);
+          // console.log(userPhone);
           socket.emit("FE-token-saver", {code: 404}, {});
         }
       });
