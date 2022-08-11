@@ -10,7 +10,7 @@ function AstrologerCard({ astrologer }) {
           borderRadius: '20px',
           margin: '0 31% 0 33%',
         }}
-        src="https://freesvg.org/img/abstract-user-flat-4.png"
+        src={astrologer.profilePic}
         alt="user"
       />
       <h3
@@ -28,23 +28,26 @@ function AstrologerCard({ astrologer }) {
       >
         Phone - {astrologer.phone}
       </p>
-      <button
+      <p
         style={{
-          padding: '10px 20px',
-          margin: '5px 0',
+          margin: '5px 0 20px 0',
         }}
+      >
+        E-Mail - {astrologer.email}
+      </p>
+      <Button
       >
         <a
           style={{
             textDecoration: 'none',
-            color: '#000',
+            color: 'white',
             fontSize: '20px',
           }}
           href={`/astrologer/${astrologer.phone}`}
         >
-          Connect
+          See Profile
         </a>
-      </button>
+      </Button>
     </Card>
   );
 }
@@ -69,13 +72,31 @@ const Card = styled.div`
   border-radius: 15%;
   padding: 15px;
   width: 300px;
-  height: 300px;
+  height: 350px;
   margin: 20px;
 
   :hover{
     border: 4px solid #fdcb6e;
   }
 }
+`;
+
+const Button = styled.button`
+  height: 50px;
+  // margin-top: 35px;
+  outline: none;
+  border: none;
+  border-radius: 15px;
+  padding: 10px 20px;
+  color: #d8e9ef;
+  background-color: #4ea1d3;
+  font-size: 20px;
+  font-weight: 500;
+
+  :hover {
+    background-color: #7bb1d1;
+    cursor: pointer;
+  }
 `;
 
 export default AstrologerCard;

@@ -146,7 +146,7 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: space-between;
-  height: 100vh;
+  min-height: 100vh;
   width: 50vw;
   padding: 0 5vw;
   padding-bottom: 20px;
