@@ -112,11 +112,11 @@ const user = {
       const { phone, otp } = req.body;
 
       const user = await User.findOne({ phone });
-      const approved = user.approved;
-
+      
       let action = '';
-
+      
       if (user) {
+        const approved = user.approved;
         if (user.otp === otp) {
           user.otp = null;
           user.approved = true;
@@ -540,6 +540,36 @@ const user = {
       }
     } catch (error) {
       console.log(error);
+      return res.status(500).json({
+        message: 'Something went wrong',
+      });
+    }
+  },
+
+  getTimer: async (req, res) => {
+    try {
+      const userId = req.userId;
+      const foundUser = await User.findById({ _id: userId });
+      
+      // Just incase to check if object is malformed
+      if(foundUser && foundUser.name && foundUser.credits >= 0){
+
+        const tokenObj = {
+          name: foundUser.name,
+          id: userId,
+          credits: foundUser.credits,
+          eTime: (new Date().getTime() / 1000) + (foundUser.credits * 60) + 5,
+          phone: foundUser.phone,
+        };
+
+        return res.status(200).json({tokenObj});
+      }else{
+        return res.status(404).json({
+          message: 'User not found',
+        });
+      }
+
+    } catch (error) {
       return res.status(500).json({
         message: 'Something went wrong',
       });

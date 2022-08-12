@@ -11,10 +11,11 @@ const Main = (props) => {
   const [loader, setLoader] = useState(false);
 
   useEffect(() => {
-    socket.on('FE-error-user-exist', ({ error, userName, roomId, userID }) => {
+    socket.on('FE-error-user-exist', ({ error, userName, roomId, userID, tokenObj }) => {
       if (!error) {
         sessionStorage.setItem('user', userName);
-        sessionStorage.setItem('UID', userID)
+        sessionStorage.setItem('UID', userID);
+        sessionStorage.setItem("userI", JSON.stringify(tokenObj));
         props.history.push(`/room/${roomId}`);
       } else {
         setErr(error);
@@ -43,15 +44,25 @@ const Main = (props) => {
     const roomName = roomRef.current.value;
     let userName = "";
     let userID = "";
+    let tokenObj = "";
 
-    await axios.post("http://localhost:5000/api/user/get-user", {},{
+    await axios.post("http://localhost:5000/api/user/get-token", {},{
       headers: { authorization: `Bearer ` + getToken() },
     })
     .then((response) => {
-      console.log(response.data.foundUser);
-      userName = response.data.foundUser.name;
-      userID = response.data.foundUser._id
+      // console.log(response.data.tokenObj);
+      userName = response.data.tokenObj.name;
+      userID = response.data.tokenObj.id;
+      tokenObj = response.data.tokenObj;
+      // sessionStorage.setItem("userI", response.data.tokenObj);
       setLoader(false);
+
+      if (!roomName || !userName || !userID) {
+        setErr(true);
+        setErrMsg('Enter Room Name or User Name');
+      } else {
+        socket.emit('BE-check-user', { roomId: roomName, userName, userID, tokenObj });
+      }
     })
     .catch((err) => {
       console.log(err);
@@ -59,12 +70,7 @@ const Main = (props) => {
       alert('Something went wrong');
     });
 
-    if (!roomName || !userName || !userID) {
-      setErr(true);
-      setErrMsg('Enter Room Name or User Name');
-    } else {
-      socket.emit('BE-check-user', { roomId: roomName, userName, userID });
-    }
+    
   }
 
   return (
