@@ -22,7 +22,13 @@ const Room = (props) => {
   const userStream = useRef();
   const roomId = props.match.params.roomId;
   const [bottomBarButtonsEnabler, setBottomBarButtonsEnabler] = useState(true);
+
   useEffect(() => {
+    // console.log(JSON.parse(sessionStorage.getItem("userI")).eTime);
+    if(JSON.parse(sessionStorage.getItem("userI")) === null || JSON.parse(sessionStorage.getItem("userI")).eTime === undefined){
+      return window.location.href = "/";
+    }
+
     // Get Video Devices
     navigator.mediaDevices.enumerateDevices().then((devices) => {
       const filtered = devices.filter((device) => device.kind === "videoinput");
@@ -42,17 +48,19 @@ const Room = (props) => {
     //   return "...";
     // }
 
-    const userID = sessionStorage.getItem('UID');
-    socket.emit("BE-token-create", { userID });
-    socket.on("FE-token-saver", (error, tokenObj) => {
-      // console.log(tokenObj);
-      if (error && error.code && (error.code === 400 || error.code === 404)) {
-        props.history.push(`/login`);
-      } else {
-        sessionStorage.setItem("userI", JSON.stringify(tokenObj));
-        socket.emit("BE-join-room", { roomId, userName: currentUser });
-      }
-    })
+    // const userID = sessionStorage.getItem('UID');
+    // socket.emit("BE-token-create", { userID });
+    // socket.on("FE-token-saver", (error, tokenObj) => {
+    //   // console.log(tokenObj);
+    //   if (error && error.code && (error.code === 400 || error.code === 404)) {
+    //     props.history.push(`/login`);
+    //     // window.location.href = "/login";
+    //   } else {
+    //     // sessionStorage.setItem("userI", JSON.stringify(tokenObj));
+    //     socket.emit("BE-join-room", { roomId, userName: currentUser });
+    //   }
+    // })
+    socket.emit("BE-join-room", { roomId, userName: currentUser });
 
     // Connect Camera & Mic
     navigator.mediaDevices
@@ -60,7 +68,8 @@ const Room = (props) => {
       .then((stream) => {
         console.log("stream.getVideoTrack() :", stream.getVideoTracks())
         stream.getVideoTracks()[0].enabled = false
-        const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime);
+        const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime); 
+        // console.log(sessionStorage.getItem("userI"));
         let currTime = Math.ceil(Date.now() / 1000);
         // console.log("currTime : ", currTime);
         if (currTime >= eTime) {
@@ -68,7 +77,7 @@ const Room = (props) => {
           alert("Time Up : Credits Expired, Please Recharge to get camera and audio access");
           stopStreamingCameraAndAudio(stream);
         }
-       else{
+        else{
           const interval = setInterval(() => {
             const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime);
             console.log("eTime : ", eTime);
