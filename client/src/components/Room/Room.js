@@ -25,9 +25,9 @@ const Room = (props) => {
 
   useEffect(() => {
     // console.log(JSON.parse(sessionStorage.getItem("userI")).eTime);
-    if(JSON.parse(sessionStorage.getItem("userI")) === null || JSON.parse(sessionStorage.getItem("userI")).eTime === undefined){
-      return window.location.href = "/";
-    }
+//     if(JSON.parse(sessionStorage.getItem("userI")) === null || JSON.parse(sessionStorage.getItem("userI")).eTime === undefined){
+//       return window.location.href = "/";
+//     }
 
     // Get Video Devices
     navigator.mediaDevices.enumerateDevices().then((devices) => {
