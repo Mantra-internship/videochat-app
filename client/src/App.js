@@ -76,14 +76,14 @@ function App(props) {
 
   return (
     <BrowserRouter>
-      <Navbar
-        isAuthenticated={isAuthenticated}
-        setIsAuthenticated={setIsAuthenticated}
-      />
-      {/* <Nav
+      {/* <Navbar
         isAuthenticated={isAuthenticated}
         setIsAuthenticated={setIsAuthenticated}
       /> */}
+      <Nav
+        isAuthenticated={isAuthenticated}
+        setIsAuthenticated={setIsAuthenticated}
+      />
       {/* <Navbar2
         isAuthenticated={isAuthenticated}
         setIsAuthenticated={setIsAuthenticated}
