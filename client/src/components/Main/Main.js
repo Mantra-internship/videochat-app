@@ -1,38 +1,76 @@
 import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import socket from '../../socket';
+import axios from 'axios';
 
 const Main = (props) => {
   const roomRef = useRef();
-  const userRef = useRef();
+  // const userRef = useRef();
   const [err, setErr] = useState(false);
   const [errMsg, setErrMsg] = useState('');
+  const [loader, setLoader] = useState(false);
 
   useEffect(() => {
-    socket.on('FE-error-user-exist', ({ error }) => {
+    socket.on('FE-error-user-exist', ({ error, userName, roomId, userID, tokenObj }) => {
       if (!error) {
-        const roomName = roomRef.current.value;
-        const userName = userRef.current.value;
-
         sessionStorage.setItem('user', userName);
-        props.history.push(`/room/${roomName}`);
+        sessionStorage.setItem('UID', userID);
+        sessionStorage.setItem("userI", JSON.stringify(tokenObj));
+        props.history.push(`/room/${roomId}`);
       } else {
         setErr(error);
-        setErrMsg('User name already exist');
+        setErrMsg('User is already in the room');
       }
     });
   }, [props.history]);
 
-  function clickJoin() {
-    const roomName = roomRef.current.value;
-    const userName = userRef.current.value;
+  const getToken = () => {
+    const cArray = document.cookie.split(' ');
+    let jwtToken ='';
+    cArray.map((string) => {
+      let sArray = string.split('=');
+      if (sArray[0] === 'user') {
+        jwtToken = sArray[1];
+        if (jwtToken[jwtToken.length - 1] === ';') {
+          jwtToken = jwtToken.slice(0, -1);
+        }
+      }
+    });
+    return jwtToken;
+  };
 
-    if (!roomName || !userName) {
-      setErr(true);
-      setErrMsg('Enter Room Name or User Name');
-    } else {
-      socket.emit('BE-check-user', { roomId: roomName, userName });
-    }
+  const clickJoin = async () => {
+    setLoader(true);
+    const roomName = roomRef.current.value;
+    let userName = "";
+    let userID = "";
+    let tokenObj = "";
+
+    await axios.post("http://localhost:5000/api/user/get-token", {},{
+      headers: { authorization: `Bearer ` + getToken() },
+    })
+    .then((response) => {
+      // console.log(response.data.tokenObj);
+      userName = response.data.tokenObj.name;
+      userID = response.data.tokenObj.id;
+      tokenObj = response.data.tokenObj;
+      // sessionStorage.setItem("userI", response.data.tokenObj);
+      setLoader(false);
+
+      if (!roomName || !userName || !userID) {
+        setErr(true);
+        setErrMsg('Enter Room Name or User Name');
+      } else {
+        socket.emit('BE-check-user', { roomId: roomName, userName, userID, tokenObj });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      setLoader(false);
+      alert('Something went wrong');
+    });
+
+    
   }
 
   return (
@@ -40,10 +78,6 @@ const Main = (props) => {
       <Row>
         <Label htmlFor="roomName">Room Name</Label>
         <Input type="text" id="roomName" ref={roomRef} />
-      </Row>
-      <Row>
-        <Label htmlFor="userName">User Name</Label>
-        <Input type="text" id="userName" ref={userRef} />
       </Row>
       <JoinButton onClick={clickJoin}> Join </JoinButton>
       {err ? <Error>{errMsg}</Error> : null}

@@ -9,7 +9,7 @@ const socketFunc = (socket, io, socketList) => {
     console.log("User disconnected!");
   });
 
-  socket.on("BE-check-user", ({ roomId, userName }) => {
+  socket.on("BE-check-user", ({ roomId, userName, userID, tokenObj }) => {
     let error = false;
 
     io.sockets.in(roomId).clients((err, clients) => {
@@ -18,7 +18,7 @@ const socketFunc = (socket, io, socketList) => {
           error = true;
         }
       });
-      socket.emit("FE-error-user-exist", { error });
+      socket.emit("FE-error-user-exist", { error, userName, roomId, userID, tokenObj });
     });
   });
 

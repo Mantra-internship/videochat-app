@@ -36,6 +36,10 @@ router
     .post(userMid.authenticate, userCont.getUser);
 
 router
+    .route("/get-token")
+    .post(userMid.authenticate, userCont.getTimer);
+
+router
     .route("/user/update")
     .post(userMid.authenticate , userCont.updateUser);
 
