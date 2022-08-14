@@ -575,6 +575,39 @@ const user = {
       });
     }
   },
+  creditSaver: async (req, res) => {
+    const { eTime, leaveTime, currentUser } = req.body;
+
+    console.log({ eTime, leaveTime, currentUser });
+
+    try {
+      if (leaveTime && currentUser) {
+        console.log('inside if');
+        const leavingUser = await User.findOne({ name: currentUser });
+        console.log('leavingUser : ' + leavingUser);
+
+        // ! error handling yet to be implemented
+        if (leavingUser) {
+          let credits = leavingUser.credits;
+          if (eTime - leaveTime <= 0) credits = 0;
+          else {
+            credits = Math.ceil((eTime - leaveTime) / 60);
+          }
+          if (credits != leavingUser.credits) {
+            leavingUser.credits = credits;
+            await leavingUser.save();
+          }
+          return res
+            .status(200)
+            .json({ message: 'user credits successfully saved' });
+        }
+        return req.status(404).json({ message: 'User not found' });
+      }
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ message: 'Error saving user credits' });
+    }
+  },
 };
 
 module.exports = user;

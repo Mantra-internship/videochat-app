@@ -5,6 +5,7 @@ import socket from "../../socket";
 import VideoCard from "../Video/VideoCard";
 import BottomBar from "../BottomBar/BottomBar";
 import Chat from "../Chat/Chat";
+import axios from 'axios'
 
 const Room = (props) => {
   const currentUser = sessionStorage.getItem("user");
@@ -87,6 +88,19 @@ const Room = (props) => {
             if (currTime >= eTime) {
               setBottomBarButtonsEnabler(false);
               alert("Time Up : Credits Expired the camera and audio will stop withing 10 secs");
+              const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
+              const leaveTime = Math.ceil(Date.now() / 1000);
+              axios
+                .post('http://localhost:5000/api/user/credit-saver', {
+                  eTime,
+                  leaveTime,
+                  currentUser,
+                })
+                .catch((err) => {
+                  console.log(err);
+                  alert('Unable to leave meet');
+                });
+              
               setTimeout(() => stopStreamingCameraAndAudio(stream), 10000);
               
               setUserVideoAudio((preList) => {
@@ -309,9 +323,24 @@ const Room = (props) => {
   // BackButton
   const goToBack = (e) => {
     e.preventDefault();
-    socket.emit("BE-leave-room", { roomId, leaver: currentUser });
-    sessionStorage.removeItem("user");
-    window.location.href = "/";
+    const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
+    const leaveTime = Math.ceil(Date.now() / 1000);
+    await axios
+      .post('http://localhost:5000/api/user/credit-saver', {
+        eTime,
+        leaveTime,
+        currentUser,
+      })
+      .then((response) => {
+        console.log(response);
+        socket.emit('BE-leave-room', { roomId, leaver: currentUser });
+        sessionStorage.removeItem('user');
+        window.location.href = '/';
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('Unable to leave meet');
+      });
   };
 
   const toggleCameraAudio = (e) => {
@@ -348,40 +377,6 @@ const Room = (props) => {
 
     socket.emit("BE-toggle-camera-audio", { roomId, switchTarget: target });
   };
-  // const testToggleCameraAudio = (e) => {
-  //   // const target = e.target.getAttribute("data-switch");
-  //   // console.log( "target: ", target);
-  //   setUserVideoAudio((preList) => {
-  //     let videoSwitch = preList["localUser"].video;
-  //     let audioSwitch = preList["localUser"].audio;
-
-  //     // if (target === "video") {
-  //       const userVideoTrack =
-  //         userVideoRef.current.srcObject.getVideoTracks()[0];
-  //       videoSwitch = !videoSwitch;
-  //       userVideoTrack.enabled = videoSwitch;
-  //       console.log("userVideoTrack : " , userVideoTrack);
-  //     // } else {
-  //       const userAudioTrack =
-  //         userVideoRef.current.srcObject.getAudioTracks()[0];
-  //       audioSwitch = !audioSwitch;
-  //       console.log( "userAudioTrack : ", userAudioTrack);
-
-  //       if (userAudioTrack) {
-  //         userAudioTrack.enabled = audioSwitch;
-  //       } else {
-  //         userStream.current.getAudioTracks()[0].enabled = audioSwitch;
-  //       }
-  //     // }
-
-  //     return {
-  //       ...preList,
-  //       localUser: { video: videoSwitch, audio: audioSwitch },
-  //     };
-  //   });
-
-  //   // socket.emit("BE-toggle-camera-audio", { roomId, switchTarget: target });
-  // };
 
   const clickScreenSharing = () => {
     if (!screenShare) {

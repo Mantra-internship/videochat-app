@@ -1,4 +1,5 @@
 const User = require("../../models/user");
+const axios = require('axios')
 
 const videoChat = (socket, io, socketList) => {
   socket.on("BE-join-room", ({ roomId, userName }) => {
@@ -64,12 +65,35 @@ const videoChat = (socket, io, socketList) => {
   });
 
   socket.on("BE-leave-room", ({ roomId, leaver }) => {
+    
     delete socketList[socket.id];
     socket.broadcast
       .to(roomId)
       .emit("FE-user-leave", { userId: socket.id, userName: [socket.id] });
     io.sockets.sockets[socket.id].leave(roomId);
   });
+
+  // console.log(leaver)
+  // console.log("Etime : ", eTime);
+  // console.log("leavetime : ", leaveTime);
+  //   if(leaveTime){
+  //   console.log("inside if");
+  //   const leavingUser =  User.findOne({ name : leaver});
+  //   console.log("leavingUser : " + leavingUser);
+  //   // ! error handling yet to be implemented
+  //   if(leavingUser){
+  //     let credits = leavingUser.credits;
+  //     if((eTime - leaveTime <= 0))
+  //       credits = 0;
+  //     else{
+  //       credits = Math.ceil((eTime - leaveTime)/60);
+  //     }
+  //     if(credits != leavingUser.credits){
+  //       leavingUser.credits = credits;
+  //       leavingUser.save();
+  //     }
+  //   }
+  // }
 
   socket.on("BE-toggle-camera-audio", ({ roomId, switchTarget }) => {
     if (switchTarget === "video") {
