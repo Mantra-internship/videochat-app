@@ -24,6 +24,8 @@ const Room = (props) => {
   const roomId = props.match.params.roomId;
   const [bottomBarButtonsEnabler, setBottomBarButtonsEnabler] = useState(true);
 
+  document.title = `Room - ${roomId}`
+
   useEffect(() => {
     // console.log(JSON.parse(sessionStorage.getItem("userI")).eTime);
     if(JSON.parse(sessionStorage.getItem("userI")) === null || JSON.parse(sessionStorage.getItem("userI")).eTime === undefined){
@@ -321,7 +323,7 @@ const Room = (props) => {
   };
 
   // BackButton
-  const goToBack = (e) => {
+  const goToBack = async (e) => {
     e.preventDefault();
     const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
     const leaveTime = Math.ceil(Date.now() / 1000);
