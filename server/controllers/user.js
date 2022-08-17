@@ -552,16 +552,23 @@ const user = {
   getTimer: async (req, res) => {
     try {
       const userId = req.userId;
+      const { roomId } = req.body;
       const foundUser = await User.findById({ _id: userId });
 
       // Just incase to check if object is malformed
       if (foundUser && foundUser.name && foundUser.credits >= 0) {
+
+        const eTime = roomId === userId && foundUser.role === 'astrologer' ? 
+          (new Date().getTime() / 1000 + 72000)
+          :
+          (new Date().getTime() / 1000 + foundUser.credits * 60 + 5)
+        
         const tokenObj = {
           name: foundUser.name,
           role: foundUser.role,
           id: userId,
           credits: foundUser.credits,
-          eTime: new Date().getTime() / 1000 + foundUser.credits * 60 + 5,
+          eTime,
           phone: foundUser.phone,
         };
 

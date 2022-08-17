@@ -62,7 +62,7 @@ const Chat = ({ display, roomId, chatEnabled, isHost, chatToggleForAll }) => {
       {
         isHost
         ?
-          <button onClick={chatToggleForAll}>
+          <DisableButton onClick={chatToggleForAll}>
             {
               chatEnabled 
               ? 
@@ -70,7 +70,7 @@ const Chat = ({ display, roomId, chatEnabled, isHost, chatToggleForAll }) => {
               :
                 'Enable Chat'
             }
-          </button>
+          </DisableButton>
         :
           <></>
       }
@@ -181,6 +181,22 @@ const BottomInput = styled.input`
   border-top: 1px solid rgb(69, 69, 82, 0.25);
   box-sizing: border-box;
   opacity: 0.7;
+
+  :focus {
+    outline: none;
+  }
+`;
+
+const DisableButton = styled.button`
+  bottom: 0;
+  width: 100%;
+  height: 6%;
+  padding: 15px;
+  background-color: #4ea1d3;
+  color: white;
+  box-sizing: border-box;
+  outline: none;
+  cursor: pointer;
 
   :focus {
     outline: none;

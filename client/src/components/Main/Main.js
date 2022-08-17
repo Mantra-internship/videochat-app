@@ -51,7 +51,9 @@ const Main = (props) => {
     let tokenObj = "";
     let userRole = "";
 
-    await axios.post("http://localhost:5000/api/user/get-token", {},{
+    await axios.post("http://localhost:5000/api/user/get-token", {
+      roomId: roomName
+    },{
       headers: { authorization: `Bearer ` + getToken() },
     })
     .then((response) => {
