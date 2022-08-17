@@ -23,13 +23,15 @@ const Room = (props) => {
   const userStream = useRef();
   const roomId = props.match.params.roomId;
   const [bottomBarButtonsEnabler, setBottomBarButtonsEnabler] = useState(true);
+  const [isHost, setIsHost] = useState(false);
 
   useEffect(() => {
     // console.log(JSON.parse(sessionStorage.getItem("userI")).eTime);
     if(JSON.parse(sessionStorage.getItem("userI")) === null || JSON.parse(sessionStorage.getItem("userI")).eTime === undefined){
       return window.location.href = "/";
     }
-
+    if(JSON.parse(sessionStorage.getItem("userI")).id == roomId)
+      setIsHost(true);
     // Get Video Devices
     navigator.mediaDevices.enumerateDevices().then((devices) => {
       const filtered = devices.filter((device) => device.kind === "videoinput");
@@ -522,6 +524,7 @@ const Room = (props) => {
           setShowVideoDevices={setShowVideoDevices}
           goToBuyCredits={goToBuyCredits}
           enabled={bottomBarButtonsEnabler}
+          isHost={isHost}
         />
       </VideoAndBarContainer>
       <Chat display={displayChat} roomId={roomId} />

@@ -13,7 +13,8 @@ const BottomBar = ({
   showVideoDevices,
   setShowVideoDevices,
   goToBuyCredits,
-  enabled
+  enabled,
+  isHost
 }) => {
   const handleToggle = useCallback(
     (e) => {
@@ -77,6 +78,7 @@ const BottomBar = ({
           </div>
           Chat
         </ChatButton>
+        { isHost ?
         <ScreenButton onClick={clickScreenSharing}>
           <div>
             <FaIcon
@@ -84,7 +86,10 @@ const BottomBar = ({
             ></FaIcon>
           </div>
           Share Screen
-        </ScreenButton> 
+        </ScreenButton>
+        :
+        <></>
+        } 
       </Center>
       </>
        : 
