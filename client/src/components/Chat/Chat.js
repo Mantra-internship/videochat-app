@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import socket from '../../socket';
 
-const Chat = ({ display, roomId }) => {
+const Chat = ({ display, roomId, chatEnabled, isHost, chatToggleForAll }) => {
   const currentUser = sessionStorage.getItem('user');
   const [msg, setMsg] = useState([]);
   const messagesEndRef = useRef(null);
@@ -58,10 +58,28 @@ const Chat = ({ display, roomId }) => {
             <div style={{float:'left', clear: 'both'}} ref={messagesEndRef} />
         </MessageList>
       </ChatArea>
+
+      {
+        isHost
+        ?
+          <button onClick={chatToggleForAll}>
+            {
+              chatEnabled 
+              ? 
+                'Disable Chat'
+              :
+                'Enable Chat'
+            }
+          </button>
+        :
+          <></>
+      }
       <BottomInput
         ref={inputRef}
         onKeyUp={sendMessage}
-        placeholder="Enter your message"
+        placeholder={ isHost || chatEnabled ? "Enter your message" : "Chat has been disabled by the Host"}
+        // { chatEnabled ? "" : disabled }
+        disabled={ !(isHost || chatEnabled) }
       />
     </ChatContainer>
   );

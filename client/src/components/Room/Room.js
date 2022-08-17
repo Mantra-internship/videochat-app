@@ -24,8 +24,7 @@ const Room = (props) => {
   const roomId = props.match.params.roomId;
   const [bottomBarButtonsEnabler, setBottomBarButtonsEnabler] = useState(true);
   const [isHost, setIsHost] = useState(false);
-
-  document.title = `Room - ${roomId}`
+  const [chatEnabled, setChatEnabled] = useState(true);
 
   document.title = `Room - ${roomId}`
 
@@ -238,9 +237,15 @@ const Room = (props) => {
         };
       });
     });
+
     socket.on('FE-end-meet-all', () => {
       goToBack();
     });
+
+    socket.on("FE-chat-toggler", ({ enableChat }) => {
+      setChatEnabled(enableChat);
+    })
+
     return () => {
       // clearInterval(interval);
       socket.disconnect();
@@ -309,6 +314,7 @@ const Room = (props) => {
       >
         {writeUserName(peer.userName)}
         <FaIcon className="fas fa-expand" />
+        <MicIcon className={ userVideoAudio[peer.userName].audio ? 'fas fa-microphone' : 'fas fa-microphone-slash'} />
         <VideoCard key={index} peer={peer} number={arr.length} />
       </VideoBox>
     );
@@ -357,6 +363,12 @@ const Room = (props) => {
     socket.emit("BE-meet-end", { roomId });
     goToBack();
   }
+
+  const chatToggleForAll = () => {
+    socket.emit("BE-chat-toggler", { roomId, chatEnabled: !chatEnabled });
+    setChatEnabled(!chatEnabled);
+  }
+
   const toggleCameraAudio = (e) => {
     const target = e.target.getAttribute("data-switch");
     console.log( "target: ", target);
@@ -510,6 +522,7 @@ const Room = (props) => {
             {userVideoAudio['localUser'].video ? null : (
               <UserName>{currentUser}</UserName>
             )}
+            <MicIcon className={ userVideoAudio['localUser'].audio ? 'fas fa-microphone' : 'fas fa-microphone-slash'} />
             <FaIcon className="fas fa-expand" />
             <MyVideo
               onClick={expandScreen}
@@ -540,7 +553,7 @@ const Room = (props) => {
           endMeetForAll={endMeetForAll}
         />
       </VideoAndBarContainer>
-      <Chat display={displayChat} roomId={roomId} />
+      <Chat display={displayChat} roomId={roomId} chatEnabled={chatEnabled} chatToggleForAll={chatToggleForAll} isHost={isHost} />
     </RoomContainer>
   );
 };
@@ -602,6 +615,13 @@ const FaIcon = styled.i`
   display: none;
   position: absolute;
   right: 15px;
+  top: 15px;
+`;
+
+const MicIcon = styled.i`
+  display: none;
+  position: absolute;
+  right: 50px;
   top: 15px;
 `;
 
