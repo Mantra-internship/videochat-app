@@ -238,7 +238,9 @@ const Room = (props) => {
         };
       });
     });
-
+    socket.on('FE-end-meet-all', () => {
+      goToBack();
+    });
     return () => {
       // clearInterval(interval);
       socket.disconnect();
@@ -328,7 +330,9 @@ const Room = (props) => {
 
   // BackButton
   const goToBack = async (e) => {
-    e.preventDefault();
+    if(e){
+      e.preventDefault();
+    }
     const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
     const leaveTime = Math.ceil(Date.now() / 1000);
     await axios
@@ -348,7 +352,11 @@ const Room = (props) => {
         alert('Unable to leave meet');
       });
   };
-
+  const endMeetForAll = (e) => {
+    e.preventDefault();
+    socket.emit("BE-meet-end", { roomId });
+    goToBack();
+  }
   const toggleCameraAudio = (e) => {
     const target = e.target.getAttribute("data-switch");
     console.log( "target: ", target);
@@ -529,6 +537,7 @@ const Room = (props) => {
           goToBuyCredits={goToBuyCredits}
           enabled={bottomBarButtonsEnabler}
           isHost={isHost}
+          endMeetForAll={endMeetForAll}
         />
       </VideoAndBarContainer>
       <Chat display={displayChat} roomId={roomId} />

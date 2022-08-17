@@ -14,7 +14,8 @@ const BottomBar = ({
   setShowVideoDevices,
   goToBuyCredits,
   enabled,
-  isHost
+  isHost,
+  endMeetForAll
 }) => {
   const handleToggle = useCallback(
     (e) => {
@@ -105,6 +106,12 @@ const BottomBar = ({
       <Right>
         <PaymentButton onClick={goToBuyCredits}>Buy Credits</PaymentButton>
         <StopButton onClick={goToBack}>Stop</StopButton>
+      { isHost 
+        ?
+          <StopButton onClick={endMeetForAll}>End meet</StopButton>
+        : 
+          <></>
+      }
       </Right>
     </Bar>
   );

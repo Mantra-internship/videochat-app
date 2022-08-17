@@ -73,6 +73,9 @@ const videoChat = (socket, io, socketList) => {
       .emit('FE-user-leave', { userId: socket.id, userName: [socket.id] });
     io.sockets.sockets[socket.id].leave(roomId);
   });
+  socket.on('BE-meet-end', ({ roomId }) => {
+    socket.broadcast.to(roomId).emit('FE-end-meet-all', {});
+  });
 
   // console.log(leaver)
   // console.log("Etime : ", eTime);
