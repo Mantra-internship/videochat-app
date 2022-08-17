@@ -6,6 +6,8 @@ import styled from 'styled-components';
 function AstrologersPage(props) {
   const [astrologerData, setAstrologerData] = useState([]);
 
+  document.title = 'All Astrologers';
+
   // make a call for a particular astrolger with a unique phone number.
   useEffect(() => {
     // console.log(props.match.params.uphone);
@@ -159,7 +161,7 @@ function AstrologersPage(props) {
                 marginTop: '0',
               }}
             >
-             <b>Speciality</b> - Kundli
+              <b>Speciality</b> - Kundli
             </p>
           </div>
 

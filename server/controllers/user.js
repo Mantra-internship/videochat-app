@@ -112,9 +112,9 @@ const user = {
       const { phone, otp } = req.body;
 
       const user = await User.findOne({ phone });
-      
+
       let action = '';
-      
+
       if (user) {
         const approved = user.approved;
         if (user.otp === otp) {
@@ -167,6 +167,8 @@ const user = {
         });
       }
 
+      const roomId = foundUser._id;
+
       const { description, languages, specialities, experience } = req.body;
 
       const newAstrologerInfo = new AstrologerInfo({
@@ -174,7 +176,8 @@ const user = {
         languages,
         specialities,
         experience,
-        userId: userId,
+        userId,
+        roomId,
       });
 
       const savedInfo = await newAstrologerInfo.save();
@@ -231,19 +234,19 @@ const user = {
       const userId = req.userId;
       const foundUser = await User.findOne({ _id: userId });
 
-      if(foundUser){
+      if (foundUser) {
         if (
           foundUser.role === 'astrologer' &&
           foundUser.astrologerInfo !== null
         ) {
           await foundUser.populate('astrologerInfo');
         }
-      }else{
+      } else {
         return res.status(404).json({
           message: 'User not found',
         });
       }
-      
+
       return res.status(200).json({
         foundUser,
       });
@@ -550,25 +553,24 @@ const user = {
     try {
       const userId = req.userId;
       const foundUser = await User.findById({ _id: userId });
-      
-      // Just incase to check if object is malformed
-      if(foundUser && foundUser.name && foundUser.credits >= 0){
 
+      // Just incase to check if object is malformed
+      if (foundUser && foundUser.name && foundUser.credits >= 0) {
         const tokenObj = {
           name: foundUser.name,
+          role: foundUser.role,
           id: userId,
           credits: foundUser.credits,
-          eTime: (new Date().getTime() / 1000) + (foundUser.credits * 60) + 5,
+          eTime: new Date().getTime() / 1000 + foundUser.credits * 60 + 5,
           phone: foundUser.phone,
         };
 
-        return res.status(200).json({tokenObj});
-      }else{
+        return res.status(200).json({ tokenObj });
+      } else {
         return res.status(404).json({
           message: 'User not found',
         });
       }
-
     } catch (error) {
       return res.status(500).json({
         message: 'Something went wrong',

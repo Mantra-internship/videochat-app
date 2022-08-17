@@ -7,6 +7,7 @@ const Payment_records = (props) => {
   const [transactionData, setTransactionData] = useState([]);
   const [loader, setLoader] = useState(true);
   // const [token, setToken] = useState("");
+  document.title = 'Payment Records';
 
   useEffect(() => {
     transactionDataFetcher();

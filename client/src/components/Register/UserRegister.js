@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -10,6 +10,8 @@ function UserRegister(props) {
   const [email, setEmail] = useState('NULL');
   const [phone, setPhone] = useState();
   const [role, setRole] = useState();
+
+  document.title = 'User Register';
 
   const history = useHistory();
 
@@ -35,7 +37,7 @@ function UserRegister(props) {
       .post('http://localhost:5000/api/user/register/get-otp', data)
       .then((response) => {
         // console.log(response.data);
-        alert('OTP send Successfully')
+        alert('OTP send Successfully');
         sessionStorage.setItem('phone', phone);
         sessionStorage.setItem('role', role);
         history.push('/verify-otp');

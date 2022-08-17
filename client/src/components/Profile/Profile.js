@@ -5,8 +5,8 @@ import UserProfile from './UserProfile';
 import AstroProfile from './AstroProfile';
 
 function Profile(props) {
-
-  const [role, setRole] = useState('')
+  document.title = 'Profile';
+  const [role, setRole] = useState('');
   const [loader, setLoader] = useState(true);
   const [user, setUser] = useState();
 
@@ -53,9 +53,9 @@ function Profile(props) {
       })
       .catch((err) => {
         console.log(err.response.status);
-        if(err.response.status === 404){
+        if (err.response.status === 404) {
           alert('User not found');
-        }else{
+        } else {
           alert('Something went wrong');
         }
       });
@@ -66,34 +66,35 @@ function Profile(props) {
     let newData = {
       name: nameRef.current.value,
       email: emailRef.current.value,
-      role
-    }
-    
-    if(role === "astrologer"){
-      const specialitiesArray = await specialitiesRef.current.value.split(",").map((speciality) => {
-        return speciality.trim();
-      });
+      role,
+    };
 
-      const languagesArray = await languagesRef.current.value.split(",").map((speciality) => {
-        return speciality.trim();
-      });
+    if (role === 'astrologer') {
+      const specialitiesArray = await specialitiesRef.current.value
+        .split(',')
+        .map((speciality) => {
+          return speciality.trim();
+        });
+
+      const languagesArray = await languagesRef.current.value
+        .split(',')
+        .map((speciality) => {
+          return speciality.trim();
+        });
 
       newData = {
         ...newData,
         specialities: specialitiesArray,
         languages: languagesArray,
         description: descriptionRef.current.value,
-        experience: experienceRef.current.value
-      }
+        experience: experienceRef.current.value,
+      };
     }
     console.log(newData);
     await axios
-      .post(
-        'http://localhost:5000/api/user/user/update', newData,
-        {
-          headers: { authorization: `Bearer ` + getToken() },
-        }
-      )
+      .post('http://localhost:5000/api/user/user/update', newData, {
+        headers: { authorization: `Bearer ` + getToken() },
+      })
       .then((response) => {
         // console.log(response);
         alert('Updated Successfully');
@@ -108,34 +109,32 @@ function Profile(props) {
     <>
       <MainContainer>
         <Heading>Profile</Heading>
-        {
-          loader ? 
-            <Inner>
-              <h3>Loading...</h3>
-            </Inner>
-          :
-            <Inner>
-              <UserProfile 
-                data={user}
-                nameRef={nameRef}
-                emailRef={emailRef}
-                setRole={setRole}
-                getToken={getToken}
+        {loader ? (
+          <Inner>
+            <h3>Loading...</h3>
+          </Inner>
+        ) : (
+          <Inner>
+            <UserProfile
+              data={user}
+              nameRef={nameRef}
+              emailRef={emailRef}
+              setRole={setRole}
+              getToken={getToken}
+            />
+            {role === 'astrologer' ? (
+              <AstroProfile
+                data={user.astrologerInfo}
+                specialitiesRef={specialitiesRef}
+                languagesRef={languagesRef}
+                descriptionRef={descriptionRef}
+                experienceRef={experienceRef}
               />
-              {
-                role === "astrologer" ?
-                  <AstroProfile 
-                    data={user.astrologerInfo}
-                    specialitiesRef={specialitiesRef}
-                    languagesRef={languagesRef}
-                    descriptionRef={descriptionRef}
-                    experienceRef={experienceRef}
-                  />
-                :
-                  <></>
-              }
-            </Inner>
-        }
+            ) : (
+              <></>
+            )}
+          </Inner>
+        )}
         <SendButton onClick={postData}>Update Data</SendButton>
       </MainContainer>
     </>

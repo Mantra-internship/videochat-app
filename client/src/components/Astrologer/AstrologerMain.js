@@ -8,6 +8,8 @@ function AstrologerMain() {
   const [astrologersData, setAstrologersData] = useState([{}]);
   const [loader, setLoader] = useState(true);
 
+  document.title = 'All Astrologers';
+
   useEffect(() => {
     astrologersDataFetcher();
   }, []);
