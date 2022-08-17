@@ -27,6 +27,8 @@ const Room = (props) => {
 
   document.title = `Room - ${roomId}`
 
+  document.title = `Room - ${roomId}`
+
   useEffect(() => {
     // console.log(JSON.parse(sessionStorage.getItem("userI")).eTime);
     if(JSON.parse(sessionStorage.getItem("userI")) === null || JSON.parse(sessionStorage.getItem("userI")).eTime === undefined){
