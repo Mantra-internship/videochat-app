@@ -51,9 +51,7 @@ const Main = (props) => {
     let tokenObj = "";
     let userRole = "";
 
-    await axios.post("http://localhost:5000/api/user/get-token", {
-      roomId: roomName
-    },{
+    await axios.post("https://video-chat-backend99.herokuapp.com/api/user/get-token", {},{
       headers: { authorization: `Bearer ` + getToken() },
     })
     .then((response) => {
