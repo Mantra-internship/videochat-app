@@ -5,6 +5,7 @@ import socket from "../../socket";
 import VideoCard from "../Video/VideoCard";
 import BottomBar from "../BottomBar/BottomBar";
 import Chat from "../Chat/Chat";
+import axios from 'axios'
 
 const Room = (props) => {
   const currentUser = sessionStorage.getItem("user");
@@ -22,13 +23,18 @@ const Room = (props) => {
   const userStream = useRef();
   const roomId = props.match.params.roomId;
   const [bottomBarButtonsEnabler, setBottomBarButtonsEnabler] = useState(true);
+  const [isHost, setIsHost] = useState(false);
+  const [chatEnabled, setChatEnabled] = useState(true);
+
+  document.title = `Room - ${roomId}`
 
   useEffect(() => {
     // console.log(JSON.parse(sessionStorage.getItem("userI")).eTime);
     if(JSON.parse(sessionStorage.getItem("userI")) === null || JSON.parse(sessionStorage.getItem("userI")).eTime === undefined){
       return window.location.href = "/";
     }
-
+    if(JSON.parse(sessionStorage.getItem("userI")).id == roomId)
+      setIsHost(true);
     // Get Video Devices
     navigator.mediaDevices.enumerateDevices().then((devices) => {
       const filtered = devices.filter((device) => device.kind === "videoinput");
@@ -87,6 +93,19 @@ const Room = (props) => {
             if (currTime >= eTime) {
               setBottomBarButtonsEnabler(false);
               alert("Time Up : Credits Expired the camera and audio will stop withing 10 secs");
+              const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
+              const leaveTime = Math.ceil(Date.now() / 1000);
+              axios
+                .post('http://localhost:5000/api/user/credit-saver', {
+                  eTime,
+                  leaveTime,
+                  currentUser,
+                })
+                .catch((err) => {
+                  console.log(err);
+                  alert('Unable to leave meet');
+                });
+              
               setTimeout(() => stopStreamingCameraAndAudio(stream), 10000);
               
               setUserVideoAudio((preList) => {
@@ -219,6 +238,14 @@ const Room = (props) => {
       });
     });
 
+    socket.on('FE-end-meet-all', () => {
+      goToBack();
+    });
+
+    socket.on("FE-chat-toggler", ({ enableChat }) => {
+      setChatEnabled(enableChat);
+    })
+
     return () => {
       // clearInterval(interval);
       socket.disconnect();
@@ -287,6 +314,7 @@ const Room = (props) => {
       >
         {writeUserName(peer.userName)}
         <FaIcon className="fas fa-expand" />
+        <MicIcon className={ userVideoAudio[peer.userName].audio ? 'fas fa-microphone' : 'fas fa-microphone-slash'} />
         <VideoCard key={index} peer={peer} number={arr.length} />
       </VideoBox>
     );
@@ -307,12 +335,39 @@ const Room = (props) => {
   };
 
   // BackButton
-  const goToBack = (e) => {
-    e.preventDefault();
-    socket.emit("BE-leave-room", { roomId, leaver: currentUser });
-    sessionStorage.removeItem("user");
-    window.location.href = "/";
+  const goToBack = async (e) => {
+    if(e){
+      e.preventDefault();
+    }
+    const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
+    const leaveTime = Math.ceil(Date.now() / 1000);
+    await axios
+      .post('http://localhost:5000/api/user/credit-saver', {
+        eTime,
+        leaveTime,
+        currentUser,
+      })
+      .then((response) => {
+        console.log(response);
+        socket.emit('BE-leave-room', { roomId, leaver: currentUser });
+        sessionStorage.removeItem('user');
+        window.location.href = '/';
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('Unable to leave meet');
+      });
   };
+  const endMeetForAll = (e) => {
+    e.preventDefault();
+    socket.emit("BE-meet-end", { roomId });
+    goToBack();
+  }
+
+  const chatToggleForAll = () => {
+    socket.emit("BE-chat-toggler", { roomId, chatEnabled: !chatEnabled });
+    setChatEnabled(!chatEnabled);
+  }
 
   const toggleCameraAudio = (e) => {
     const target = e.target.getAttribute("data-switch");
@@ -348,40 +403,6 @@ const Room = (props) => {
 
     socket.emit("BE-toggle-camera-audio", { roomId, switchTarget: target });
   };
-  // const testToggleCameraAudio = (e) => {
-  //   // const target = e.target.getAttribute("data-switch");
-  //   // console.log( "target: ", target);
-  //   setUserVideoAudio((preList) => {
-  //     let videoSwitch = preList["localUser"].video;
-  //     let audioSwitch = preList["localUser"].audio;
-
-  //     // if (target === "video") {
-  //       const userVideoTrack =
-  //         userVideoRef.current.srcObject.getVideoTracks()[0];
-  //       videoSwitch = !videoSwitch;
-  //       userVideoTrack.enabled = videoSwitch;
-  //       console.log("userVideoTrack : " , userVideoTrack);
-  //     // } else {
-  //       const userAudioTrack =
-  //         userVideoRef.current.srcObject.getAudioTracks()[0];
-  //       audioSwitch = !audioSwitch;
-  //       console.log( "userAudioTrack : ", userAudioTrack);
-
-  //       if (userAudioTrack) {
-  //         userAudioTrack.enabled = audioSwitch;
-  //       } else {
-  //         userStream.current.getAudioTracks()[0].enabled = audioSwitch;
-  //       }
-  //     // }
-
-  //     return {
-  //       ...preList,
-  //       localUser: { video: videoSwitch, audio: audioSwitch },
-  //     };
-  //   });
-
-  //   // socket.emit("BE-toggle-camera-audio", { roomId, switchTarget: target });
-  // };
 
   const clickScreenSharing = () => {
     if (!screenShare) {
@@ -501,6 +522,7 @@ const Room = (props) => {
             {userVideoAudio['localUser'].video ? null : (
               <UserName>{currentUser}</UserName>
             )}
+            <MicIcon className={ userVideoAudio['localUser'].audio ? 'fas fa-microphone' : 'fas fa-microphone-slash'} />
             <FaIcon className="fas fa-expand" />
             <MyVideo
               onClick={expandScreen}
@@ -527,9 +549,11 @@ const Room = (props) => {
           setShowVideoDevices={setShowVideoDevices}
           goToBuyCredits={goToBuyCredits}
           enabled={bottomBarButtonsEnabler}
+          isHost={isHost}
+          endMeetForAll={endMeetForAll}
         />
       </VideoAndBarContainer>
-      <Chat display={displayChat} roomId={roomId} />
+      <Chat display={displayChat} roomId={roomId} chatEnabled={chatEnabled} chatToggleForAll={chatToggleForAll} isHost={isHost} />
     </RoomContainer>
   );
 };
@@ -591,6 +615,13 @@ const FaIcon = styled.i`
   display: none;
   position: absolute;
   right: 15px;
+  top: 15px;
+`;
+
+const MicIcon = styled.i`
+  display: none;
+  position: absolute;
+  right: 50px;
   top: 15px;
 `;
 

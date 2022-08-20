@@ -8,6 +8,7 @@ import Invoice from './Invoice';
 function Invoice_Main() {
   const [invoiceData, setInvoiceData] = useState(false);
   // const [token, setToken] = useState('');
+  document.title = 'Invoice';
 
   useEffect(() => {
     getJwtToken();

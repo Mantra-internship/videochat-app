@@ -6,6 +6,8 @@ import axios from 'axios';
 function VerifyOtp(props) {
   const [otp, setOtp] = useState();
 
+  document.title = 'Verify OTP';
+
   let history = useHistory();
 
   let role = sessionStorage.getItem('role');

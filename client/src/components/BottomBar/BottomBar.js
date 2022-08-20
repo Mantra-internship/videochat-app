@@ -13,7 +13,9 @@ const BottomBar = ({
   showVideoDevices,
   setShowVideoDevices,
   goToBuyCredits,
-  enabled
+  enabled,
+  isHost,
+  endMeetForAll
 }) => {
   const handleToggle = useCallback(
     (e) => {
@@ -77,6 +79,7 @@ const BottomBar = ({
           </div>
           Chat
         </ChatButton>
+        { isHost ?
         <ScreenButton onClick={clickScreenSharing}>
           <div>
             <FaIcon
@@ -84,7 +87,10 @@ const BottomBar = ({
             ></FaIcon>
           </div>
           Share Screen
-        </ScreenButton> 
+        </ScreenButton>
+        :
+        <></>
+        } 
       </Center>
       </>
        : 
@@ -99,7 +105,13 @@ const BottomBar = ({
       }
       <Right>
         <PaymentButton onClick={goToBuyCredits}>Buy Credits</PaymentButton>
-        <StopButton onClick={goToBack}>Stop</StopButton>
+        <StopButton onClick={goToBack}>Leave</StopButton>
+      { isHost 
+        ?
+          <StopButton onClick={endMeetForAll}>End</StopButton>
+        : 
+          <></>
+      }
       </Right>
     </Bar>
   );
@@ -132,7 +144,7 @@ const Center = styled.div`
 
 const Right = styled.div`
   display: inline-flex;
-  width: 200px;
+  width: 300px;
   justify-content: space-between;
 `;
 

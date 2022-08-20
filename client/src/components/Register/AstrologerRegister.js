@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
@@ -7,6 +7,8 @@ function AstrologerRegister(props) {
   const [languages, setLanguages] = useState();
   const [description, setDescription] = useState();
   const [experience, setExperience] = useState();
+
+  document.title = 'Astrologer Register';
 
   // axios request to sava a new astrologer or user depending on the role.
   let data = {
