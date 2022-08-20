@@ -92,7 +92,9 @@ function Nav(props) {
               <NavbarLinkExtended to="/">
                 <Button onClick={() => setExtendNavbar(false)}>Home</Button>
               </NavbarLinkExtended>
-              <NavbarLinkExtended to="/login"> Login</NavbarLinkExtended>
+                <NavbarLinkExtended to="/login">
+                  <Button onClick={() => setExtendNavbar(false)}>Login</Button>
+                </NavbarLinkExtended>
               <NavbarLinkExtended to="/astrologers">
                 <Button onClick={() => setExtendNavbar(false)}>
                   Astrologers
@@ -100,7 +102,7 @@ function Nav(props) {
               </NavbarLinkExtended>
               <NavbarLinkExtended to="/register">
                 <Button onClick={() => setExtendNavbar(false)}>
-                  Astrologers
+                  Register
                 </Button>
               </NavbarLinkExtended>
             </>
