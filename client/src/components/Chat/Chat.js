@@ -33,7 +33,7 @@ const Chat = ({ display, roomId, chatEnabled, isHost, chatToggleForAll }) => {
   };
 
   return (
-    <ChatContainer className={display ? '' : 'width0'}>
+    <ChatContainer className={display === 1 ? '' : 'width0'}>
       <TopHeader>Group Chat Room</TopHeader>
       <ChatArea>
         <MessageList>

@@ -70,12 +70,20 @@ const videoChat = (socket, io, socketList) => {
     delete socketList[socket.id];
     socket.broadcast
       .to(roomId)
-      .emit('FE-user-leave', { userId: socket.id, userName: [socket.id] });
+      .emit('FE-user-leave', { userId: socket.id, userName: leaver });
     io.sockets.sockets[socket.id].leave(roomId);
   });
 
-  socket.on('BE-meet-end', ({ roomId }) => {
-    socket.broadcast.to(roomId).emit('FE-end-meet-all', {});
+  socket.on('BE-remove-user', ({ roomId, target, }) => {
+    try{
+      if(target === 'all'){
+        socket.broadcast.to(roomId).emit('FE-end-meet', {});
+      }else{
+        io.to(target).emit('FE-end-meet', {});
+      }
+    }catch(error){
+      console.log(error);
+    }
   });
 
   socket.on("BE-chat-toggler", ({ roomId, chatEnabled }) => {

@@ -15,7 +15,8 @@ const BottomBar = ({
   goToBuyCredits,
   enabled,
   isHost,
-  endMeetForAll
+  endMeetForAll,
+  clickUserList
 }) => {
   const handleToggle = useCallback(
     (e) => {
@@ -73,6 +74,12 @@ const BottomBar = ({
             </CameraButton>
       </Left>
       <Center>
+        <UserListButton onClick={clickUserList}>
+          <div>
+            <FaIcon className="fas fa-users"></FaIcon>
+          </div>
+          Participants
+        </UserListButton>
         <ChatButton onClick={clickChat}>
           <div>
             <FaIcon className="fas fa-comments"></FaIcon>
@@ -149,6 +156,22 @@ const Right = styled.div`
 `;
 
 const ChatButton = styled.div`
+  width: 75px;
+  border: none;
+  font-size: 0.9375rem;
+  padding: 5px;
+
+  :hover {
+    background-color: #77b7dd;
+    cursor: pointer;
+    border-radius: 15px;
+  }
+
+  * {
+    pointer-events: none;
+  }
+`;
+const UserListButton = styled.div`
   width: 75px;
   border: none;
   font-size: 0.9375rem;
