@@ -5,16 +5,17 @@ import socket from "../../socket";
 import VideoCard from "../Video/VideoCard";
 import BottomBar from "../BottomBar/BottomBar";
 import Chat from "../Chat/Chat";
+import UserList from "../UserList/UserList";
 import axios from 'axios'
 
 const Room = (props) => {
   const currentUser = sessionStorage.getItem("user");
   const [peers, setPeers] = useState([]);
   const [userVideoAudio, setUserVideoAudio] = useState({
-    localUser: { video: false, audio: false },
+    localUser: { video: false, audio: false, userId: 'localUser' },
   });
   const [videoDevices, setVideoDevices] = useState([]);
-  const [displayChat, setDisplayChat] = useState(false);
+  const [displayChatOrList, setDisplayChatOrList] = useState(0);    // 0 => None, 1 => chat, 2 => list
   const [screenShare, setScreenShare] = useState(false);
   const [showVideoDevices, setShowVideoDevices] = useState(false);
   const peersRef = useRef([]);
@@ -126,7 +127,7 @@ const Room = (props) => {
           
                 return {
                   ...preList,
-                  localUser: { video: false, audio: false },
+                  localUser: { video: false, audio: false, userId: 'localUser' },
                 };
               });
           
@@ -159,12 +160,15 @@ const Room = (props) => {
                 peer,
                 userName,
               });
+              console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+              console.log(peers);
               peers.push(peer);
+              console.log(peers);
 
               setUserVideoAudio((preList) => {
                 return {
                   ...preList,
-                  [peer.userName]: { video, audio },
+                  [peer.userName]: { video, audio, userId },
                 };
               });
             }
@@ -193,7 +197,7 @@ const Room = (props) => {
             setUserVideoAudio((preList) => {
               return {
                 ...preList,
-                [peer.userName]: { video, audio },
+                [peer.userName]: { video, audio, userId: from },
               };
             });
           }
@@ -214,6 +218,24 @@ const Room = (props) => {
           peersRef.current = peersRef.current.filter(
             ({ peerID }) => peerID !== userId
           );
+
+          // below code is yet to be fully tested
+          console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+          setUserVideoAudio((preList) => {
+            console.log(preList);
+            delete preList[userName];
+            console.log(preList);
+            return {
+              ...preList
+            };
+          });
+          // let tempUserVideoAudio = JSON.parse(JSON.stringify(userVideoAudio));
+          // console.log(`user object - ${JSON.stringify(userVideoAudio)}`);
+          // console.log(`user object - ${JSON.stringify(tempUserVideoAudio)}`);
+          // console.log(`user id - ${userId}`);
+          // console.log(`user name - ${userName}`);
+          // delete tempUserVideoAudio.userName;
+          // setUserVideoAudio({...tempUserVideoAudio});
         });
       });
 
@@ -233,12 +255,12 @@ const Room = (props) => {
 
         return {
           ...preList,
-          [peerIdx.userName]: { video, audio },
+          [peerIdx.userName]: { video, audio, userId },
         };
       });
     });
 
-    socket.on('FE-end-meet-all', () => {
+    socket.on('FE-end-meet', () => {
       goToBack();
     });
 
@@ -314,7 +336,7 @@ const Room = (props) => {
       >
         {writeUserName(peer.userName)}
         <FaIcon className="fas fa-expand" />
-        <MicIcon className={ userVideoAudio[peer.userName].audio ? 'fas fa-microphone' : 'fas fa-microphone-slash'} />
+        <MicIcon className={ userVideoAudio[peer.userName] && userVideoAudio[peer.userName].audio ? 'fas fa-microphone' : 'fas fa-microphone-slash'} />
         <VideoCard key={index} peer={peer} number={arr.length} />
       </VideoBox>
     );
@@ -331,8 +353,22 @@ const Room = (props) => {
   // Open Chat
   const clickChat = (e) => {
     e.stopPropagation();
-    setDisplayChat(!displayChat);
+    if(displayChatOrList != 1){
+      setDisplayChatOrList(1);
+    }else{
+      setDisplayChatOrList(0);
+    }
   };
+
+  // Open participants list
+  const clickUserList = (e) => {
+    e.stopPropagation();
+    if(displayChatOrList != 2){
+      setDisplayChatOrList(2);
+    }else{
+      setDisplayChatOrList(0);
+    }
+  }
 
   // BackButton
   const goToBack = async (e) => {
@@ -358,9 +394,10 @@ const Room = (props) => {
         alert('Unable to leave meet');
       });
   };
+
   const endMeetForAll = (e) => {
     e.preventDefault();
-    socket.emit("BE-meet-end", { roomId });
+    socket.emit("BE-remove-user", { roomId, target: 'all' });
     goToBack();
   }
 
@@ -397,7 +434,7 @@ const Room = (props) => {
 
       return {
         ...preList,
-        localUser: { video: videoSwitch, audio: audioSwitch },
+        localUser: { video: videoSwitch, audio: audioSwitch, userId: 'localUser' },
       };
     });
 
@@ -539,6 +576,7 @@ const Room = (props) => {
         <BottomBar
           clickScreenSharing={clickScreenSharing}
           clickChat={clickChat}
+          clickUserList={clickUserList}
           clickCameraDevice={clickCameraDevice}
           goToBack={goToBack}
           toggleCameraAudio={toggleCameraAudio}
@@ -553,7 +591,8 @@ const Room = (props) => {
           endMeetForAll={endMeetForAll}
         />
       </VideoAndBarContainer>
-      <Chat display={displayChat} roomId={roomId} chatEnabled={chatEnabled} chatToggleForAll={chatToggleForAll} isHost={isHost} />
+      <Chat display={displayChatOrList} roomId={roomId} chatEnabled={chatEnabled} chatToggleForAll={chatToggleForAll} isHost={isHost} />
+      <UserList display={displayChatOrList} roomId={roomId} isHost={isHost} userList={userVideoAudio} />
     </RoomContainer>
   );
 };
