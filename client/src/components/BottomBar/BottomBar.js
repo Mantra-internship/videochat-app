@@ -13,7 +13,10 @@ const BottomBar = ({
   showVideoDevices,
   setShowVideoDevices,
   goToBuyCredits,
-  enabled
+  enabled,
+  isHost,
+  endMeetForAll,
+  clickUserList
 }) => {
   const handleToggle = useCallback(
     (e) => {
@@ -71,12 +74,19 @@ const BottomBar = ({
             </CameraButton>
       </Left>
       <Center>
+        <UserListButton onClick={clickUserList}>
+          <div>
+            <FaIcon className="fas fa-users"></FaIcon>
+          </div>
+          Participants
+        </UserListButton>
         <ChatButton onClick={clickChat}>
           <div>
             <FaIcon className="fas fa-comments"></FaIcon>
           </div>
           Chat
         </ChatButton>
+        { isHost ?
         <ScreenButton onClick={clickScreenSharing}>
           <div>
             <FaIcon
@@ -84,7 +94,10 @@ const BottomBar = ({
             ></FaIcon>
           </div>
           Share Screen
-        </ScreenButton> 
+        </ScreenButton>
+        :
+        <></>
+        } 
       </Center>
       </>
        : 
@@ -99,7 +112,13 @@ const BottomBar = ({
       }
       <Right>
         <PaymentButton onClick={goToBuyCredits}>Buy Credits</PaymentButton>
-        <StopButton onClick={goToBack}>Stop</StopButton>
+        <StopButton onClick={goToBack}>Leave</StopButton>
+      { isHost 
+        ?
+          <StopButton onClick={endMeetForAll}>End</StopButton>
+        : 
+          <></>
+      }
       </Right>
     </Bar>
   );
@@ -132,11 +151,27 @@ const Center = styled.div`
 
 const Right = styled.div`
   display: inline-flex;
-  width: 200px;
+  width: 300px;
   justify-content: space-between;
 `;
 
 const ChatButton = styled.div`
+  width: 75px;
+  border: none;
+  font-size: 0.9375rem;
+  padding: 5px;
+
+  :hover {
+    background-color: #77b7dd;
+    cursor: pointer;
+    border-radius: 15px;
+  }
+
+  * {
+    pointer-events: none;
+  }
+`;
+const UserListButton = styled.div`
   width: 75px;
   border: none;
   font-size: 0.9375rem;

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import socket from '../../socket';
 
-const Chat = ({ display, roomId }) => {
+const Chat = ({ display, roomId, chatEnabled, isHost, chatToggleForAll }) => {
   const currentUser = sessionStorage.getItem('user');
   const [msg, setMsg] = useState([]);
   const messagesEndRef = useRef(null);
@@ -33,7 +33,7 @@ const Chat = ({ display, roomId }) => {
   };
 
   return (
-    <ChatContainer className={display ? '' : 'width0'}>
+    <ChatContainer className={display === 1 ? '' : 'width0'}>
       <TopHeader>Group Chat Room</TopHeader>
       <ChatArea>
         <MessageList>
@@ -58,10 +58,28 @@ const Chat = ({ display, roomId }) => {
             <div style={{float:'left', clear: 'both'}} ref={messagesEndRef} />
         </MessageList>
       </ChatArea>
+
+      {
+        isHost
+        ?
+          <DisableButton onClick={chatToggleForAll}>
+            {
+              chatEnabled 
+              ? 
+                'Disable Chat'
+              :
+                'Enable Chat'
+            }
+          </DisableButton>
+        :
+          <></>
+      }
       <BottomInput
         ref={inputRef}
         onKeyUp={sendMessage}
-        placeholder="Enter your message"
+        placeholder={ isHost || chatEnabled ? "Enter your message" : "Chat has been disabled by the Host"}
+        // { chatEnabled ? "" : disabled }
+        disabled={ !(isHost || chatEnabled) }
       />
     </ChatContainer>
   );
@@ -163,6 +181,22 @@ const BottomInput = styled.input`
   border-top: 1px solid rgb(69, 69, 82, 0.25);
   box-sizing: border-box;
   opacity: 0.7;
+
+  :focus {
+    outline: none;
+  }
+`;
+
+const DisableButton = styled.button`
+  bottom: 0;
+  width: 100%;
+  height: 6%;
+  padding: 15px;
+  background-color: #4ea1d3;
+  color: white;
+  box-sizing: border-box;
+  outline: none;
+  cursor: pointer;
 
   :focus {
     outline: none;

@@ -3,6 +3,7 @@ import CreditCard from './CreditCard';
 import styled from 'styled-components';
 
 function Buy_Credits() {
+  document.title = 'Buy Credits';
   let data = [
     {
       credits: 100,

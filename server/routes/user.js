@@ -39,6 +39,10 @@ router
     .route("/get-token")
     .post(userMid.authenticate, userCont.getTimer);
 
+    router
+    .route('/credit-saver') 
+    .post(userCont.creditSaver)   
+
 router
     .route("/user/update")
     .post(userMid.authenticate , userCont.updateUser);

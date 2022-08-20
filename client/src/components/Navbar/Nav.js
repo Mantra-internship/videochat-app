@@ -32,6 +32,12 @@ function Nav(props) {
                 <NavbarLink to="/astrologers"> Astrologers</NavbarLink>
                 <NavbarLink to="/payment-records"> Payment Records</NavbarLink>
                 <NavbarLink to="/buy-credits"> Buy-credits</NavbarLink>
+                <Button2
+                  style={{ fontSize: 'large', padding: '0' }}
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button2>
               </>
             ) : (
               <>
@@ -51,15 +57,54 @@ function Nav(props) {
           </NavbarLinkContainer>
         </LeftContainer>
         <RightContainer>
-          <NavbarLink to="/">Logo</NavbarLink>
+          <NavbarLink to="/">VideoChat App</NavbarLink>
         </RightContainer>
       </NavbarInnerContainer>
       {extendNavbar && (
         <NavbarExtendedContainer>
-          <NavbarLinkExtended to="/"> Home</NavbarLinkExtended>
-          <NavbarLinkExtended to="/astrologers">Astrologers</NavbarLinkExtended>
-          <NavbarLinkExtended to="/contact"> Contact Us</NavbarLinkExtended>
-          <NavbarLinkExtended to="/about"> About Us</NavbarLinkExtended>
+          {isAuthenticated ? (
+            <>
+              <NavbarLinkExtended to="/">
+                <Button onClick={() => setExtendNavbar(false)}>Home</Button>
+              </NavbarLinkExtended>
+              <NavbarLinkExtended to="/Profile">
+                <Button onClick={() => setExtendNavbar(false)}>Profile</Button>
+              </NavbarLinkExtended>
+              <NavbarLinkExtended to="/astrologers">
+                <Button onClick={() => setExtendNavbar(false)}>
+                  Astrologers
+                </Button>
+              </NavbarLinkExtended>
+              <NavbarLinkExtended to="/payment-records">
+                <Button onClick={() => setExtendNavbar(false)}>
+                  Payment Records
+                </Button>
+              </NavbarLinkExtended>
+              <NavbarLinkExtended to="/buy-credits">
+                <Button onClick={() => setExtendNavbar(false)}>
+                  Buy Credits
+                </Button>
+              </NavbarLinkExtended>
+              <Button onClick={handleLogout}>Logout</Button>
+            </>
+          ) : (
+            <>
+              <NavbarLinkExtended to="/">
+                <Button onClick={() => setExtendNavbar(false)}>Home</Button>
+              </NavbarLinkExtended>
+              <NavbarLinkExtended to="/login"> Login</NavbarLinkExtended>
+              <NavbarLinkExtended to="/astrologers">
+                <Button onClick={() => setExtendNavbar(false)}>
+                  Astrologers
+                </Button>
+              </NavbarLinkExtended>
+              <NavbarLinkExtended to="/register">
+                <Button onClick={() => setExtendNavbar(false)}>
+                  Astrologers
+                </Button>
+              </NavbarLinkExtended>
+            </>
+          )}
         </NavbarExtendedContainer>
       )}
     </NavbarContainer>
@@ -74,8 +119,11 @@ const NavbarContainer = styled.nav`
   background-color: #454552;
   color: white;
   display: flex;
+  align-items: center;
   flex-direction: column;
-  @media (min-width: 700px) {
+  // position: absolute;
+  z-index: 100;
+  @media (min-width: 900px) {
     height: 80px;
   }
 `;
@@ -111,7 +159,7 @@ const NavbarLink = styled(Link)`
   font-family: Arial, Helvetica, sans-serif;
   text-decoration: none;
   margin: 10px;
-  @media (max-width: 700px) {
+  @media (max-width: 900px) {
     display: none;
   }
 `;
@@ -122,6 +170,31 @@ const NavbarLinkExtended = styled(Link)`
   font-family: Arial, Helvetica, sans-serif;
   text-decoration: none;
   margin: 10px;
+`;
+
+const Button = styled.button`
+  color: white;
+  background: #454552;
+  font-size: x-large;
+  font-family: Arial, Helvetica, sans-serif;
+  text-decoration: none;
+  margin: 10px;
+  border: none;
+  outline: none;
+`;
+
+const Button2 = styled.button`
+  color: white;
+  background: #454552;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 10px;
+  border: none;
+  outline: none;
+  font-size: large;
+  padding: 0;
+  @media (max-width: 900px) {
+    display: none;
+  }
 `;
 
 // const Logo = styled.img`
@@ -138,16 +211,18 @@ const OpenLinksButton = styled.button`
   color: white;
   font-size: 45px;
   cursor: pointer;
-  @media (min-width: 700px) {
+  @media (min-width: 900px) {
     display: none;
   }
 `;
 
 const NavbarExtendedContainer = styled.div`
+  postion: absolute;
+  z-index: 1000;
   display: flex;
   flex-direction: column;
   align-items: center;
-  @media (min-width: 700px) {
+  @media (min-width: 900px) {
     display: none;
   }
 `;

@@ -4,6 +4,7 @@ import socket from '../../socket';
 import axios from 'axios';
 
 const Main = (props) => {
+  document.title = 'Home - VideoChat App';
   const roomRef = useRef();
   // const userRef = useRef();
   const [err, setErr] = useState(false);
@@ -11,14 +12,17 @@ const Main = (props) => {
   const [loader, setLoader] = useState(false);
 
   useEffect(() => {
-    socket.on('FE-error-user-exist', ({ error, userName, roomId, userID, tokenObj }) => {
-      if (!error) {
+    socket.on('FE-error-user-exist', ({ errorCode, userName, roomId, userID, tokenObj }) => {
+      if (errorCode == 200) {
         sessionStorage.setItem('user', userName);
         sessionStorage.setItem('UID', userID);
         sessionStorage.setItem("userI", JSON.stringify(tokenObj));
         props.history.push(`/room/${roomId}`);
+      } else if(errorCode == 401) {
+        setErr(true);
+        setErrMsg("The Meet hasn't been started yet");
       } else {
-        setErr(error);
+        setErr(true);
         setErrMsg('User is already in the room');
       }
     });
@@ -45,8 +49,11 @@ const Main = (props) => {
     let userName = "";
     let userID = "";
     let tokenObj = "";
+    let userRole = "";
 
-    await axios.post("https://video-chat-backend99.herokuapp.com/api/user/get-token", {}, {
+    await axios.post("https://video-chat-backend99.herokuapp.com/api/user/get-token", {
+      roomId: roomName
+    },{
       headers: { authorization: `Bearer ` + getToken() },
     })
     .then((response) => {
@@ -54,6 +61,7 @@ const Main = (props) => {
       userName = response.data.tokenObj.name;
       userID = response.data.tokenObj.id;
       tokenObj = response.data.tokenObj;
+      userRole = response.data.tokenObj.role;
       // sessionStorage.setItem("userI", response.data.tokenObj);
       setLoader(false);
 
@@ -61,7 +69,7 @@ const Main = (props) => {
         setErr(true);
         setErrMsg('Enter Room Name or User Name');
       } else {
-        socket.emit('BE-check-user', { roomId: roomName, userName, userID, tokenObj });
+        socket.emit('BE-check-user', { roomId: roomName, userName, userID, tokenObj, userRole });
       }
     })
     .catch((err) => {

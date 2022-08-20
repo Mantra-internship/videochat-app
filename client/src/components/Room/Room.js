@@ -5,15 +5,17 @@ import socket from "../../socket";
 import VideoCard from "../Video/VideoCard";
 import BottomBar from "../BottomBar/BottomBar";
 import Chat from "../Chat/Chat";
+import UserList from "../UserList/UserList";
+import axios from 'axios'
 
 const Room = (props) => {
   const currentUser = sessionStorage.getItem("user");
   const [peers, setPeers] = useState([]);
   const [userVideoAudio, setUserVideoAudio] = useState({
-    localUser: { video: false, audio: false },
+    localUser: { video: false, audio: false, userId: 'localUser' },
   });
   const [videoDevices, setVideoDevices] = useState([]);
-  const [displayChat, setDisplayChat] = useState(false);
+  const [displayChatOrList, setDisplayChatOrList] = useState(0);    // 0 => None, 1 => chat, 2 => list
   const [screenShare, setScreenShare] = useState(false);
   const [showVideoDevices, setShowVideoDevices] = useState(false);
   const peersRef = useRef([]);
@@ -22,13 +24,18 @@ const Room = (props) => {
   const userStream = useRef();
   const roomId = props.match.params.roomId;
   const [bottomBarButtonsEnabler, setBottomBarButtonsEnabler] = useState(true);
+  const [isHost, setIsHost] = useState(false);
+  const [chatEnabled, setChatEnabled] = useState(true);
+
+  document.title = `Room - ${roomId}`
 
   useEffect(() => {
     // console.log(JSON.parse(sessionStorage.getItem("userI")).eTime);
     if(JSON.parse(sessionStorage.getItem("userI")) === null || JSON.parse(sessionStorage.getItem("userI")).eTime === undefined){
       return window.location.href = "/";
     }
-
+    if(JSON.parse(sessionStorage.getItem("userI")).id == roomId)
+      setIsHost(true);
     // Get Video Devices
     navigator.mediaDevices.enumerateDevices().then((devices) => {
       const filtered = devices.filter((device) => device.kind === "videoinput");
@@ -87,6 +94,19 @@ const Room = (props) => {
             if (currTime >= eTime) {
               setBottomBarButtonsEnabler(false);
               alert("Time Up : Credits Expired the camera and audio will stop withing 10 secs");
+              const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
+              const leaveTime = Math.ceil(Date.now() / 1000);
+              axios
+                .post('http://localhost:5000/api/user/credit-saver', {
+                  eTime,
+                  leaveTime,
+                  currentUser,
+                })
+                .catch((err) => {
+                  console.log(err);
+                  alert('Unable to leave meet');
+                });
+              
               setTimeout(() => stopStreamingCameraAndAudio(stream), 10000);
               
               setUserVideoAudio((preList) => {
@@ -107,7 +127,7 @@ const Room = (props) => {
           
                 return {
                   ...preList,
-                  localUser: { video: false, audio: false },
+                  localUser: { video: false, audio: false, userId: 'localUser' },
                 };
               });
           
@@ -140,12 +160,15 @@ const Room = (props) => {
                 peer,
                 userName,
               });
+              console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+              console.log(peers);
               peers.push(peer);
+              console.log(peers);
 
               setUserVideoAudio((preList) => {
                 return {
                   ...preList,
-                  [peer.userName]: { video, audio },
+                  [peer.userName]: { video, audio, userId },
                 };
               });
             }
@@ -174,7 +197,7 @@ const Room = (props) => {
             setUserVideoAudio((preList) => {
               return {
                 ...preList,
-                [peer.userName]: { video, audio },
+                [peer.userName]: { video, audio, userId: from },
               };
             });
           }
@@ -195,6 +218,24 @@ const Room = (props) => {
           peersRef.current = peersRef.current.filter(
             ({ peerID }) => peerID !== userId
           );
+
+          // below code is yet to be fully tested
+          console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+          setUserVideoAudio((preList) => {
+            console.log(preList);
+            delete preList[userName];
+            console.log(preList);
+            return {
+              ...preList
+            };
+          });
+          // let tempUserVideoAudio = JSON.parse(JSON.stringify(userVideoAudio));
+          // console.log(`user object - ${JSON.stringify(userVideoAudio)}`);
+          // console.log(`user object - ${JSON.stringify(tempUserVideoAudio)}`);
+          // console.log(`user id - ${userId}`);
+          // console.log(`user name - ${userName}`);
+          // delete tempUserVideoAudio.userName;
+          // setUserVideoAudio({...tempUserVideoAudio});
         });
       });
 
@@ -214,10 +255,18 @@ const Room = (props) => {
 
         return {
           ...preList,
-          [peerIdx.userName]: { video, audio },
+          [peerIdx.userName]: { video, audio, userId },
         };
       });
     });
+
+    socket.on('FE-end-meet', () => {
+      goToBack();
+    });
+
+    socket.on("FE-chat-toggler", ({ enableChat }) => {
+      setChatEnabled(enableChat);
+    })
 
     return () => {
       // clearInterval(interval);
@@ -287,6 +336,7 @@ const Room = (props) => {
       >
         {writeUserName(peer.userName)}
         <FaIcon className="fas fa-expand" />
+        <MicIcon className={ userVideoAudio[peer.userName] && userVideoAudio[peer.userName].audio ? 'fas fa-microphone' : 'fas fa-microphone-slash'} />
         <VideoCard key={index} peer={peer} number={arr.length} />
       </VideoBox>
     );
@@ -303,16 +353,58 @@ const Room = (props) => {
   // Open Chat
   const clickChat = (e) => {
     e.stopPropagation();
-    setDisplayChat(!displayChat);
+    if(displayChatOrList != 1){
+      setDisplayChatOrList(1);
+    }else{
+      setDisplayChatOrList(0);
+    }
   };
 
+  // Open participants list
+  const clickUserList = (e) => {
+    e.stopPropagation();
+    if(displayChatOrList != 2){
+      setDisplayChatOrList(2);
+    }else{
+      setDisplayChatOrList(0);
+    }
+  }
+
   // BackButton
-  const goToBack = (e) => {
-    e.preventDefault();
-    socket.emit("BE-leave-room", { roomId, leaver: currentUser });
-    sessionStorage.removeItem("user");
-    window.location.href = "/";
+  const goToBack = async (e) => {
+    if(e){
+      e.preventDefault();
+    }
+    const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
+    const leaveTime = Math.ceil(Date.now() / 1000);
+    await axios
+      .post('http://localhost:5000/api/user/credit-saver', {
+        eTime,
+        leaveTime,
+        currentUser,
+      })
+      .then((response) => {
+        console.log(response);
+        socket.emit('BE-leave-room', { roomId, leaver: currentUser });
+        sessionStorage.removeItem('user');
+        window.location.href = '/';
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('Unable to leave meet');
+      });
   };
+
+  const endMeetForAll = (e) => {
+    e.preventDefault();
+    socket.emit("BE-remove-user", { roomId, target: 'all' });
+    goToBack();
+  }
+
+  const chatToggleForAll = () => {
+    socket.emit("BE-chat-toggler", { roomId, chatEnabled: !chatEnabled });
+    setChatEnabled(!chatEnabled);
+  }
 
   const toggleCameraAudio = (e) => {
     const target = e.target.getAttribute("data-switch");
@@ -342,46 +434,12 @@ const Room = (props) => {
 
       return {
         ...preList,
-        localUser: { video: videoSwitch, audio: audioSwitch },
+        localUser: { video: videoSwitch, audio: audioSwitch, userId: 'localUser' },
       };
     });
 
     socket.emit("BE-toggle-camera-audio", { roomId, switchTarget: target });
   };
-  // const testToggleCameraAudio = (e) => {
-  //   // const target = e.target.getAttribute("data-switch");
-  //   // console.log( "target: ", target);
-  //   setUserVideoAudio((preList) => {
-  //     let videoSwitch = preList["localUser"].video;
-  //     let audioSwitch = preList["localUser"].audio;
-
-  //     // if (target === "video") {
-  //       const userVideoTrack =
-  //         userVideoRef.current.srcObject.getVideoTracks()[0];
-  //       videoSwitch = !videoSwitch;
-  //       userVideoTrack.enabled = videoSwitch;
-  //       console.log("userVideoTrack : " , userVideoTrack);
-  //     // } else {
-  //       const userAudioTrack =
-  //         userVideoRef.current.srcObject.getAudioTracks()[0];
-  //       audioSwitch = !audioSwitch;
-  //       console.log( "userAudioTrack : ", userAudioTrack);
-
-  //       if (userAudioTrack) {
-  //         userAudioTrack.enabled = audioSwitch;
-  //       } else {
-  //         userStream.current.getAudioTracks()[0].enabled = audioSwitch;
-  //       }
-  //     // }
-
-  //     return {
-  //       ...preList,
-  //       localUser: { video: videoSwitch, audio: audioSwitch },
-  //     };
-  //   });
-
-  //   // socket.emit("BE-toggle-camera-audio", { roomId, switchTarget: target });
-  // };
 
   const clickScreenSharing = () => {
     if (!screenShare) {
@@ -501,6 +559,7 @@ const Room = (props) => {
             {userVideoAudio['localUser'].video ? null : (
               <UserName>{currentUser}</UserName>
             )}
+            <MicIcon className={ userVideoAudio['localUser'].audio ? 'fas fa-microphone' : 'fas fa-microphone-slash'} />
             <FaIcon className="fas fa-expand" />
             <MyVideo
               onClick={expandScreen}
@@ -517,6 +576,7 @@ const Room = (props) => {
         <BottomBar
           clickScreenSharing={clickScreenSharing}
           clickChat={clickChat}
+          clickUserList={clickUserList}
           clickCameraDevice={clickCameraDevice}
           goToBack={goToBack}
           toggleCameraAudio={toggleCameraAudio}
@@ -527,9 +587,12 @@ const Room = (props) => {
           setShowVideoDevices={setShowVideoDevices}
           goToBuyCredits={goToBuyCredits}
           enabled={bottomBarButtonsEnabler}
+          isHost={isHost}
+          endMeetForAll={endMeetForAll}
         />
       </VideoAndBarContainer>
-      <Chat display={displayChat} roomId={roomId} />
+      <Chat display={displayChatOrList} roomId={roomId} chatEnabled={chatEnabled} chatToggleForAll={chatToggleForAll} isHost={isHost} />
+      <UserList display={displayChatOrList} roomId={roomId} isHost={isHost} userList={userVideoAudio} />
     </RoomContainer>
   );
 };
@@ -591,6 +654,13 @@ const FaIcon = styled.i`
   display: none;
   position: absolute;
   right: 15px;
+  top: 15px;
+`;
+
+const MicIcon = styled.i`
+  display: none;
+  position: absolute;
+  right: 50px;
   top: 15px;
 `;
 

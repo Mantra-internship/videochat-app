@@ -4,6 +4,7 @@ import axios from 'axios';
 
 function Login(props) {
   const [phone, setPhone] = useState();
+  document.title = 'Login Page';
 
   let data = {
     phone,

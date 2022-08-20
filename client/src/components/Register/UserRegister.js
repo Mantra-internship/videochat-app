@@ -11,6 +11,8 @@ function UserRegister(props) {
   const [phone, setPhone] = useState();
   const [role, setRole] = useState();
 
+  document.title = 'User Register';
+
   const history = useHistory();
 
   const handleChange = (event) => {
