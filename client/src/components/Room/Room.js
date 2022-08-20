@@ -96,7 +96,7 @@ const Room = (props) => {
               const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
               const leaveTime = Math.ceil(Date.now() / 1000);
               axios
-                .post('http://localhost:5000/api/user/credit-saver', {
+                .post('https://video-chat-backend99.herokuapp.com/api/user/credit-saver', {
                   eTime,
                   leaveTime,
                   currentUser,
@@ -342,7 +342,7 @@ const Room = (props) => {
     const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
     const leaveTime = Math.ceil(Date.now() / 1000);
     await axios
-      .post('http://localhost:5000/api/user/credit-saver', {
+      .post('https://video-chat-backend99.herokuapp.com/api/user/credit-saver', {
         eTime,
         leaveTime,
         currentUser,
