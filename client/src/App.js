@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import Main from './components/Main/Main';
 import Room from './components/Room/Room';
@@ -23,6 +23,7 @@ import axios from 'axios';
 
 function App(props) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const stream = useRef(false);
   useEffect(() => {
     checkAuth();
   }, []);
@@ -90,7 +91,7 @@ function App(props) {
       /> */}
       <AppContainer>
         <Switch>
-          <Route exact path="/" render={(props) => <Main {...props} />} />
+          <Route exact path="/" render={(props) => <Main {...props} stream={stream} />} />
 
           {/* {PUBLIC ROUTES} */}
           <Route exact path="/astrologers" component={AstrologerMain} />
@@ -141,7 +142,7 @@ function App(props) {
             exact
             path="/room/:roomId"
             render={(props) =>
-              isAuthenticated ? <Room {...props} /> : <Redirect to="/login" />
+              !isAuthenticated ? <Redirect to="/login"/> : (stream.current ? <Room {...props} stream={stream.current} /> : <Redirect to="/" />)
             }
           />
           <Route

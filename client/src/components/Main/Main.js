@@ -45,39 +45,50 @@ const Main = (props) => {
 
   const clickJoin = async () => {
     setLoader(true);
-    const roomName = roomRef.current.value;
-    let userName = "";
-    let userID = "";
-    let tokenObj = "";
-    let userRole = "";
 
-    await axios.post("http://localhost:5000/api/user/get-token", {
-      roomId: roomName
-    },{
-      headers: { authorization: `Bearer ` + getToken() },
+    await navigator.mediaDevices
+    .getUserMedia({ video: true, audio: true })
+    .then( async (userStream) => {
+      props.stream.current = userStream;
+
+      const roomName = roomRef.current.value;
+      let userName = "";
+      let userID = "";
+      let tokenObj = "";
+      let userRole = "";
+
+      await axios.post("http://localhost:5000/api/user/get-token", {
+        roomId: roomName
+      },{
+        headers: { authorization: `Bearer ` + getToken() },
+      })
+      .then((response) => {
+        // console.log(response.data.tokenObj);
+        userName = response.data.tokenObj.name;
+        userID = response.data.tokenObj.id;
+        tokenObj = response.data.tokenObj;
+        userRole = response.data.tokenObj.role;
+        // sessionStorage.setItem("userI", response.data.tokenObj);
+        setLoader(false);
+
+        if (!roomName || !userName || !userID) {
+          setErr(true);
+          setErrMsg('Enter Room Name or User Name');
+        } else {
+          socket.emit('BE-check-user', { roomId: roomName, userName, userID, tokenObj, userRole });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoader(false);
+        alert('Something went wrong');
+      });
+
     })
-    .then((response) => {
-      // console.log(response.data.tokenObj);
-      userName = response.data.tokenObj.name;
-      userID = response.data.tokenObj.id;
-      tokenObj = response.data.tokenObj;
-      userRole = response.data.tokenObj.role;
-      // sessionStorage.setItem("userI", response.data.tokenObj);
-      setLoader(false);
-
-      if (!roomName || !userName || !userID) {
-        setErr(true);
-        setErrMsg('Enter Room Name or User Name');
-      } else {
-        socket.emit('BE-check-user', { roomId: roomName, userName, userID, tokenObj, userRole });
-      }
+    .catch((error) => {
+      alert('Please allow camera and mic usage to enter the meet');
+      console.log(error);
     })
-    .catch((err) => {
-      console.log(err);
-      setLoader(false);
-      alert('Something went wrong');
-    });
-
     
   }
 
@@ -87,7 +98,7 @@ const Main = (props) => {
         <Label htmlFor="roomName">Room Name</Label>
         <Input type="text" id="roomName" ref={roomRef} />
       </Row>
-      <JoinButton onClick={clickJoin}> Join </JoinButton>
+      <JoinButton onClick={clickJoin}> { loader ? "Loading" : "Join" } </JoinButton>
       {err ? <Error>{errMsg}</Error> : null}
     </MainContainer>
   );

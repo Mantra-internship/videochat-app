@@ -9,6 +9,8 @@ import UserList from "../UserList/UserList";
 import axios from 'axios'
 
 const Room = (props) => {
+  const stream = props.stream;
+  console.log(`userStream -${stream}`);
   const currentUser = sessionStorage.getItem("user");
   const [peers, setPeers] = useState([]);
   const [userVideoAudio, setUserVideoAudio] = useState({
@@ -70,9 +72,10 @@ const Room = (props) => {
     socket.emit("BE-join-room", { roomId, userName: currentUser });
 
     // Connect Camera & Mic
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then((stream) => {
+
+      if(stream){
+
+    
         console.log("stream.getVideoTrack() :", stream.getVideoTracks())
         stream.getVideoTracks()[0].enabled = false
         const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime); 
@@ -137,7 +140,7 @@ const Room = (props) => {
             }
           }, 5000);
         }
-    
+      }
         console.log("stream", stream);
         userVideoRef.current.srcObject = stream;
         userStream.current = stream;
@@ -237,7 +240,6 @@ const Room = (props) => {
           // delete tempUserVideoAudio.userName;
           // setUserVideoAudio({...tempUserVideoAudio});
         });
-      });
 
     socket.on("FE-toggle-camera", ({ userId, switchTarget }) => {
       const peerIdx = findPeer(userId);
