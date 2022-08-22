@@ -42,7 +42,7 @@ const UserList = ({ display, roomId, isHost, userList }) => {
           Object.entries(userList).length > 0
             ?
               Object.entries(userList).map((user) => (
-                <User> 
+                <User key={user.id + 1}> 
                   {user[0] === "localUser" ? "You" : user[0]}
                   <div>
                     <VideoIcon className={user[1] && user[1].video ? 'fas fa-video' : 'fas fa-video-slash'} style={{ color:  user[1] && user[1].video ? 'green' : 'red'}} onClick={() => { toggleVideo(user[1].userId) }}/>

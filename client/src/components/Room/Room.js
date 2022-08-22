@@ -280,7 +280,7 @@ const Room = (props) => {
   function createPeer(userId, caller, stream) {
     const peer = new Peer({
       initiator: true,
-      trickle: false,
+      trickle: true,
       stream,
     });
 
