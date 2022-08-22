@@ -73,8 +73,12 @@ const Room = (props) => {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
+          stream.getAudioTracks()[0].enabled = false;
+        stopStreamingCameraAndAudio(stream)
         console.log("stream.getVideoTrack() :", stream.getVideoTracks())
-        stream.getVideoTracks()[0].enabled = false
+        console.log("stream.audioTrack() :", stream.getAudioTracks())
+        stream.getVideoTracks()[0].enabled = false;
+        console.log(stream.getAudioTracks()[0].enabled)
         const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime); 
         // console.log(sessionStorage.getItem("userI"));
         let currTime = Math.ceil(Date.now() / 1000);
