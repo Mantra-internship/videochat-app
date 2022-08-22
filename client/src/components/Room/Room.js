@@ -114,7 +114,8 @@ const Room = (props) => {
                     userVideoRef.current.srcObject.getVideoTracks()[0];
                   const userAudioTrack =
                     userVideoRef.current.srcObject.getAudioTracks()[0];
-                  userVideoTrack.enabled = false;
+                userVideoTrack.enabled = false;
+                userAudioTrack.enabled = false;
                   console.log("userVideoTrack : " , userVideoTrack);
 
                   console.log( "userAudioTrack : ", userAudioTrack);
@@ -168,7 +169,7 @@ const Room = (props) => {
               setUserVideoAudio((preList) => {
                 return {
                   ...preList,
-                  [peer.userName]: { video, audio, userId },
+                  [peer.userName]: { video, audio: false, userId },
                 };
               });
             }
