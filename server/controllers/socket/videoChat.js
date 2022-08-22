@@ -74,7 +74,7 @@ const videoChat = (socket, io, socketList) => {
     io.sockets.sockets[socket.id].leave(roomId);
   });
 
-  socket.on('BE-remove-user', ({ roomId, target, }) => {
+  socket.on('BE-remove-user', ({ roomId, target }) => {
     try{
       if(target === 'all'){
         socket.broadcast.to(roomId).emit('FE-end-meet', {});
@@ -111,6 +111,12 @@ const videoChat = (socket, io, socketList) => {
   //     }
   //   }
   // }
+
+  socket.on('BE-media-close', ({ userId, targetType }) => {
+    if( userId && (targetType === 'video' || targetType === 'audio') ){
+      io.to(userId).emit('FE-media-close', { targetType });
+    }
+  });
 
   socket.on('BE-toggle-camera-audio', ({ roomId, switchTarget }) => {
     console.log({ socketList });

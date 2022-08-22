@@ -264,6 +264,10 @@ const Room = (props) => {
       });
     });
 
+    socket.on('FE-media-close', ({ targetType }) => {
+      toggleCameraAudio(targetType);
+    });
+
     socket.on('FE-end-meet', () => {
       goToBack();
     });
@@ -411,7 +415,12 @@ const Room = (props) => {
   }
 
   const toggleCameraAudio = (e) => {
-    const target = e.target.getAttribute("data-switch");
+    let target;
+    if(e === 'video' || e === 'audio'){
+      target = e;
+    }else{
+      target = e.target.getAttribute("data-switch");
+    }
     console.log( "target: ", target);
     setUserVideoAudio((preList) => {
       let videoSwitch = preList["localUser"].video;
