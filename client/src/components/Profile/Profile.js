@@ -95,7 +95,7 @@ function Profile(props) {
     setUpdateLoader(true);
     await axios
       .post(
-        'http://localhost:5000/api/user/user/update', newData,
+        'https://video-chat-backend99.herokuapp.com/api/user/user/update', newData,
         {
           headers: { authorization: `Bearer ` + getToken() },
         }
