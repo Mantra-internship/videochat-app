@@ -7,9 +7,10 @@ import AstroProfile from './AstroProfile';
 function Profile(props) {
   document.title = 'Profile';
   const [role, setRole] = useState('');
-  const [loader, setLoader] = useState(true);
   const [user, setUser] = useState();
-
+  const [loader, setLoader] = useState(true);
+  const [updateLoader, setUpdateLoader] = useState(false);
+  
   const nameRef = useRef('');
   const emailRef = useRef('');
   const specialitiesRef = useRef('');
@@ -91,16 +92,19 @@ function Profile(props) {
       };
     }
     console.log(newData);
+    setUpdateLoader(true);
     await axios
       .post('http://localhost:5000/api/user/user/update', newData, {
         headers: { authorization: `Bearer ` + getToken() },
       })
       .then((response) => {
         // console.log(response);
+        setUpdateLoader(false)
         alert('Updated Successfully');
       })
       .catch((err) => {
         console.log(err);
+        setUpdateLoader(false)
         alert('Something went wrong');
       });
   };
@@ -135,7 +139,7 @@ function Profile(props) {
             )}
           </Inner>
         )}
-        <SendButton onClick={postData}>Update Data</SendButton>
+        <SendButton onClick={postData}>{updateLoader ? "Updating Data": "Update Data"}</SendButton>
       </MainContainer>
     </>
   );

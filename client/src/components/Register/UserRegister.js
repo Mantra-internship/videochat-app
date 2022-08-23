@@ -10,6 +10,7 @@ function UserRegister(props) {
   const [email, setEmail] = useState('NULL');
   const [phone, setPhone] = useState();
   const [role, setRole] = useState();
+  const [Loader, setLoader] = useState(false);
 
   document.title = 'User Register';
 
@@ -33,17 +34,19 @@ function UserRegister(props) {
   };
 
   const postData = async () => {
+    setLoader(true);
     await axios
       .post('http://localhost:5000/api/user/register/get-otp', data)
       .then((response) => {
         // console.log(response.data);
-        alert('OTP send Successfully');
         sessionStorage.setItem('phone', phone);
         sessionStorage.setItem('role', role);
         history.push('/verify-otp');
+        setLoader(false);
       })
       .catch((err) => {
         console.log(err);
+        setLoader(false);
         alert('Something went wrong');
       });
   };
@@ -96,7 +99,7 @@ function UserRegister(props) {
             </Select>
           </Row>
         </Inner>
-        <SendButton onClick={postData}>Send OTP</SendButton>
+        <SendButton onClick={postData}>{Loader ? "Saving Data and sending OTP": "Get OTP"}</SendButton>
       </MainContainer>
     </>
   );

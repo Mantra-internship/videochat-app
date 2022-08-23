@@ -5,6 +5,7 @@ import axios from 'axios';
 
 function VerifyOtp(props) {
   const [otp, setOtp] = useState();
+  const [Loader, setLoader] = useState(false);
 
   document.title = 'Verify OTP';
 
@@ -27,6 +28,7 @@ function VerifyOtp(props) {
   };
 
   const otpValidater = async () => {
+    setLoader(true);
     await axios
       .post('http://localhost:5000/api/user/verify-otp', data)
       .then((response) => {
@@ -45,10 +47,12 @@ function VerifyOtp(props) {
         } else if (response.data.action === 'login') {
           history.push('/');
         }
+        setLoader(false);
       })
       .catch((err) => {
         console.log(err);
         props.checker(false);
+        setLoader(false);
         alert('Something went wrong');
       });
   };
@@ -68,7 +72,7 @@ function VerifyOtp(props) {
             />
           </Row>
         </Inner>
-        <SendButton onClick={otpValidater}>Verify OTP</SendButton>
+        <SendButton onClick={otpValidater}>{Loader ? "Verify OTP": "Verify OTP"}</SendButton>
       </MainContainer>
     </>
   );

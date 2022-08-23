@@ -4,6 +4,7 @@ import axios from 'axios';
 
 function Login(props) {
   const [phone, setPhone] = useState();
+  const [Loader, setLoader] = useState(false);
   document.title = 'Login Page';
 
   let data = {
@@ -12,6 +13,7 @@ function Login(props) {
 
   // send phone to backend for login
   const postData = async () => {
+    setLoader(true);
     await axios
       .post('http://localhost:5000/api/user/get-otp', data)
       .then((response) => {
@@ -19,9 +21,11 @@ function Login(props) {
         sessionStorage.setItem('phone', phone);
         sessionStorage.setItem('role', '');
         props.history.push('/verify-otp');
+        setLoader(false);
       })
       .catch((err) => {
         console.log(err);
+        setLoader(false);
         alert('Something went wrong');
       });
   };
@@ -56,7 +60,7 @@ function Login(props) {
             /> */}
           </Row>
         </Inner>
-        <SendButton onClick={postData}>Get OTP</SendButton>
+        <SendButton onClick={postData}>{Loader ? "OTP Sent Successfully!": "Get OTP"}</SendButton>
       </MainContainer>
     </>
   );
