@@ -3,31 +3,37 @@ import styled from 'styled-components';
 import socket from '../../socket';
 
 const UserList = ({ display, roomId, isHost, userList }) => {
+
+  // useEffect(() => {
+  //   // console.log(userList);
+  //   // socket.on('FE-receive-message', ({ msg, sender }) => {
+  //   //   setMsg((msgs) => [...msgs, { sender, msg }]);
+  //   // });
+  // }, []);
+
   const currentUser = sessionStorage.getItem('user');
 
-  const toggleVideo = (userId) => {
-    if(userId != 'localUser'){
+  const closeVideo = (user) => {   // can only switch off
+    const { userId, video } = user;
+    if(userId != 'localUser' && isHost && video){
       console.log(`toggle video - ${userId}`)
+      socket.emit('BE-media-close', { userId, targetType: 'video' });
     }
   }
-  const toggleAudio = (userId) => {
-    if(userId != 'localUser'){
+  const closeAudio = (user) => {   // can only switch off
+    const { userId, audio } = user;
+    if(userId != 'localUser' && isHost && audio){
       console.log(`toggle audio - ${userId}`)
+      socket.emit('BE-media-close', { userId, targetType: 'audio' });
     }
   }
   const removeUser = (userId) => {
-    if(userId != 'localUser'){
+    if(userId != 'localUser' && isHost){
       console.log(`remove user - ${userId}`)
       socket.emit('BE-remove-user', { roomId, target: userId });
     }
   }
 
-  useEffect(() => {
-    // console.log(userList);
-    // socket.on('FE-receive-message', ({ msg, sender }) => {
-    //   setMsg((msgs) => [...msgs, { sender, msg }]);
-    // });
-  }, []);
 
   const printer = (e) => {
     // console.log(Object.entries(userList));
@@ -42,12 +48,12 @@ const UserList = ({ display, roomId, isHost, userList }) => {
           Object.entries(userList).length > 0
             ?
               Object.entries(userList).map((user) => (
-                <User> 
+                <User key={user.id + 1}> 
                   {user[0] === "localUser" ? "You" : user[0]}
                   <div>
-                    <VideoIcon className={user[1] && user[1].video ? 'fas fa-video' : 'fas fa-video-slash'} style={{ color:  user[1] && user[1].video ? 'green' : 'red'}} onClick={() => { toggleVideo(user[1].userId) }}/>
-                    <MicIcon className={ user[1] && user[1].audio ? 'fas fa-microphone' : 'fas fa-microphone-slash'} style={{ color:  user[1] && user[1].audio ? 'green' : 'red'}} onClick={() => { toggleAudio(user[1].userId) }}/>
-                    <RemoveIcon className={'fas fa-minus-circle'} onClick={() => { removeUser(user[1].userId) }}/>
+                    <VideoIcon className={user[1] && user[1].video ? 'fas fa-video' : 'fas fa-video-slash'} style={{ color:  user[1] && user[1].video ? 'green' : 'red'}} onClick={() => { closeVideo(user[1]) }}/>
+                    <MicIcon className={ user[1] && user[1].audio ? 'fas fa-microphone' : 'fas fa-microphone-slash'} style={{ color:  user[1] && user[1].audio ? 'green' : 'red'}} onClick={() => {closeAudio(user[1]) }}/>
+                    { isHost && user[1].userId != 'localUser' ? <RemoveIcon className={'fas fa-minus-circle'} onClick={() => { removeUser(user[1].userId) }}/> : <></>}
                   </div>
                   <div>{user[1].userId}</div>
                 </User>

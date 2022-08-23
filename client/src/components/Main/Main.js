@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components';
 import socket from '../../socket';
 import axios from 'axios';
@@ -10,6 +11,8 @@ const Main = (props) => {
   const [err, setErr] = useState(false);
   const [errMsg, setErrMsg] = useState('');
   const [loader, setLoader] = useState(false);
+
+  const history = useHistory();
 
   useEffect(() => {
     socket.on('FE-error-user-exist', ({ errorCode, userName, roomId, userID, tokenObj }) => {
@@ -75,7 +78,8 @@ const Main = (props) => {
     .catch((err) => {
       console.log(err);
       setLoader(false);
-      alert('Something went wrong');
+      alert('Please login to join the meet');
+      history.push('/login')
     });
 
     

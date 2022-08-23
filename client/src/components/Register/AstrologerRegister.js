@@ -6,7 +6,8 @@ function AstrologerRegister(props) {
   const [speciality, setSpeciality] = useState();
   const [languages, setLanguages] = useState();
   const [description, setDescription] = useState();
-  const [experience, setExperience] = useState();
+  const [experience, setExperience] = useState()
+  const [Loader, setLoader] = useState(false);
 
   document.title = 'Astrologer Register';
 
@@ -34,6 +35,7 @@ function AstrologerRegister(props) {
   };
 
   const saveAstrologerData = async () => {
+    setLoader(true);
     await axios
       .post(
         'https://video-chat-backend99.herokuapp.com/api/user/add-astrologer-info',
@@ -46,9 +48,11 @@ function AstrologerRegister(props) {
       .then((response) => {
         // console.log(response.data);
         props.history.push('/profile');
+        setLoader(false);
       })
       .catch((err) => {
         console.log(err);
+        setLoader(false);
         alert('Something went wrong');
       });
   };
@@ -98,7 +102,7 @@ function AstrologerRegister(props) {
             />
           </Row>
         </Inner>
-        <Button onClick={saveAstrologerData}>Save Data</Button>
+        <Button onClick={saveAstrologerData}>{Loader ? "Saving Data": "Save Data"}</Button>
       </MainContainer>
     </>
   );
