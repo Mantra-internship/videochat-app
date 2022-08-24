@@ -11,10 +11,14 @@ const Main = (props) => {
   const [err, setErr] = useState(false);
   const [errMsg, setErrMsg] = useState('');
   const [loader, setLoader] = useState(false);
+  const [roomHost, setRoomHost] = useState({});
    
-  const roomID = sessionStorage.getItem('roomID');
-  const user = JSON.parse(sessionStorage.getItem('currentuser'));
-
+  const Host = JSON.parse(sessionStorage.getItem("roomHost"));
+  if (!(Host && Object.keys(Host).length === 0 && Object.getPrototypeOf(Host) === Object.prototype)) {
+    setRoomHost(Host)
+    const roomID = roomHost._id;
+    const user = JSON.parse(sessionStorage.getItem('currentuser'));
+  }
   const history = useHistory();
 
   useEffect(() => {
@@ -103,8 +107,8 @@ const Main = (props) => {
           disabled={user?.role == 'astrologer' ? false : true}
           ref={roomRef}
         /> */}
-        {(roomID != '') ? (
-          <Heading>{`You are about to join room of ${user.name}`}</Heading>
+        {!(Host && Object.keys(Host).length === 0 && Object.getPrototypeOf(Host) === Object.prototype) ? (
+          <Heading>{`You are about to join room of ${roomHost.name}`}</Heading>
         ) : (
             <Heading>Select a room to join <Link to="/astrologers">here</Link></Heading>
         )}

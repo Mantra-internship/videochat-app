@@ -32,6 +32,11 @@ function AstrologersPage(props) {
       });
   };
 
+   const getRoomHost = () => {
+    console.log(astrologerData);
+    sessionStorage.setItem('roomHost', JSON.stringify(astrologerData));
+  }
+
   return (
     <Container>
       <SectionLeft>
@@ -49,10 +54,22 @@ function AstrologersPage(props) {
               src={astrologerData.profilePic}
             />
           </div>
-          <Button>Join Room</Button>
+          <a
+          style={{
+            textDecoration: 'none',
+            color: 'white',
+            fontSize: '20px',
+          }}
+          href={`/`}
+        >
+        <Button
+            onClick={getRoomHost}>
+            Join room
+          </Button>
+        </a>
         </div>
         <div style={{ }}>
-          <h2 style={{ display: 'inline-block' }}>{astrologerData.name}</h2>
+          <p style={{ display: 'inline-block', fontSize: '30px', textDecoration: 'bold', margin: '10px 0' }}>{astrologerData.name}</p>
           {astrologerData.approved ? (
             <img
               style={{
@@ -69,6 +86,8 @@ function AstrologersPage(props) {
           ) : (
             <></>
           )}
+          <br></br>
+          <div style={{ display: 'inline-block', margin: '10px 0' }}>{'Email - ' + astrologerData.email }</div>
           <div
             style={{
               display: 'flex',

@@ -3,9 +3,9 @@ import styled from 'styled-components';
 
 function AstrologerCard({ astrologer }) {
   const [roomID, setRoomID] = useState('');
-  const getRoomId = () => {
-    console.log(astrologer._id);
-    sessionStorage.setItem('roomID', astrologer._id);
+  const getRoomHost = () => {
+    console.log(astrologer);
+    sessionStorage.setItem('roomHost', JSON.stringify(astrologer));
   }
   return (
     <Card>
@@ -63,7 +63,7 @@ function AstrologerCard({ astrologer }) {
           href={`/`}
         >
         <Button
-            onClick={getRoomId}>
+            onClick={getRoomHost}>
             Join room
           </Button>
         </a>
