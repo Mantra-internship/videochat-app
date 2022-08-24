@@ -16,6 +16,7 @@ function Nav(props) {
     // document.cookie = 'user=';
     deleteCookie('user', '', 1);
     props.setIsAuthenticated(false);
+    sessionStorage.removeItem('user');
     window.location.reload();
   };
 
@@ -183,6 +184,7 @@ const Button = styled.button`
   margin: 10px;
   border: none;
   outline: none;
+  cursor: pointer;
 `;
 
 const Button2 = styled.button`
@@ -193,6 +195,7 @@ const Button2 = styled.button`
   border: none;
   outline: none;
   font-size: large;
+  cursor: pointer;
   padding: 0;
   @media (max-width: 900px) {
     display: none;

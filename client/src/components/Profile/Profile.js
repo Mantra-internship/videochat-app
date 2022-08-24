@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import {useHistory} from 'react-router-dom'
 import styled from 'styled-components';
 import axios from 'axios';
 import UserProfile from './UserProfile';
@@ -10,6 +11,8 @@ function Profile(props) {
   const [user, setUser] = useState();
   const [loader, setLoader] = useState(true);
   const [updateLoader, setUpdateLoader] = useState(false);
+
+  let history = useHistory();
   
   const nameRef = useRef('');
   const emailRef = useRef('');
@@ -47,7 +50,7 @@ function Profile(props) {
         }
       )
       .then((response) => {
-        // console.log(response.data.foundUser);
+        console.log(response.data.foundUser);
         setUser(response.data.foundUser);
         setRole(response.data.foundUser.role);
         setLoader(false);
@@ -109,6 +112,11 @@ function Profile(props) {
       });
   };
 
+  const handleCreateMeet = () => {
+    history.push('/');
+    sessionStorage.setItem('roomID', user._id);
+  }
+
   return (
     <>
       <MainContainer>
@@ -139,6 +147,7 @@ function Profile(props) {
             )}
           </Inner>
         )}
+        <CreateMeetButton onClick={handleCreateMeet}>Start Meet</CreateMeetButton>
         <SendButton onClick={postData}>{updateLoader ? "Updating Data": "Update Data"}</SendButton>
       </MainContainer>
     </>
@@ -170,6 +179,22 @@ const Heading = styled.div`
 const Inner = styled.div`
   margin-top: 20px;
 `;
+
+const CreateMeetButton = styled.button`
+  height: 40px;
+  margin-top: 35px;
+  outline: none;
+  border: none;
+  border-radius: 15px;
+  color: #d8e9ef;
+  background-color: #4ea1d3;
+  font-size: 25px;
+  font-weight: 500;
+
+  :hover {
+    background-color: #7bb1d1;
+    cursor: pointer;
+  }`;
 
 const SendButton = styled.button`
   height: 40px;

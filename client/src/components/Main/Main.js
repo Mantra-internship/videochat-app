@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import styled from 'styled-components';
 import socket from '../../socket';
 import axios from 'axios';
@@ -11,10 +11,16 @@ const Main = (props) => {
   const [err, setErr] = useState(false);
   const [errMsg, setErrMsg] = useState('');
   const [loader, setLoader] = useState(false);
+   
+  const roomID = sessionStorage.getItem('roomID');
+  const user = JSON.parse(sessionStorage.getItem('currentuser'));
 
   const history = useHistory();
 
   useEffect(() => {
+    if (roomID) roomRef.current = roomID
+    else roomRef.current = '';
+    
     socket.on('FE-error-user-exist', ({ errorCode, userName, roomId, userID, tokenObj }) => {
       if (errorCode == 200) {
         sessionStorage.setItem('user', userName);
@@ -48,11 +54,13 @@ const Main = (props) => {
 
   const clickJoin = async () => {
     setLoader(true);
-    const roomName = roomRef.current.value;
+    const roomName = roomRef.current;
     let userName = "";
     let userID = "";
     let tokenObj = "";
     let userRole = "";
+
+    sessionStorage.setItem('roomID', '')
 
     await axios.post("http://localhost:5000/api/user/get-token", {
       roomId: roomName
@@ -65,12 +73,13 @@ const Main = (props) => {
       userID = response.data.tokenObj.id;
       tokenObj = response.data.tokenObj;
       userRole = response.data.tokenObj.role;
+     
       // sessionStorage.setItem("userI", response.data.tokenObj);
       setLoader(false);
 
       if (!roomName || !userName || !userID) {
         setErr(true);
-        setErrMsg('Enter Room Name or User Name');
+        setErrMsg('Enter Valid Room Address');
       } else {
         socket.emit('BE-check-user', { roomId: roomName, userName, userID, tokenObj, userRole });
       }
@@ -81,17 +90,26 @@ const Main = (props) => {
       alert('Please login to join the meet');
       history.push('/login')
     });
-
-    
   }
 
   return (
     <MainContainer>
       <Row>
-        <Label htmlFor="roomName">Room Name</Label>
-        <Input type="text" id="roomName" ref={roomRef} />
-      </Row>
-      <JoinButton onClick={clickJoin}> Join </JoinButton>
+        {/* <Label htmlFor="roomName">Room Address</Label> */}
+        {/* <Input
+          type="text"
+          id="roomName"
+          value={roomID}
+          disabled={user?.role == 'astrologer' ? false : true}
+          ref={roomRef}
+        /> */}
+        {(roomID != '') ? (
+          <Heading>{`You are about to join room of ${user.name}`}</Heading>
+        ) : (
+            <Heading>Select a room to join <Link to="/astrologers">here</Link></Heading>
+        )}
+      </Row>    
+      {roomID && <JoinButton onClick={clickJoin}> Click to Join </JoinButton>}
       {err ? <Error>{errMsg}</Error> : null}
     </MainContainer>
   );
@@ -108,6 +126,15 @@ const Row = styled.div`
   justify-content: flex-end;
   margin-top: 15px;
   line-height: 35px;
+`;
+
+const Heading = styled.h5`
+  font-size: 25px;
+
+  > a {
+    text-decoration: none;
+    color: gold;
+  }
 `;
 
 const Label = styled.label``;
@@ -130,7 +157,7 @@ const Error = styled.div`
 
 const JoinButton = styled.button`
   height: 40px;
-  margin-top: 35px;
+  margin-top: 20px;
   outline: none;
   border: none;
   border-radius: 15px;

@@ -60,7 +60,8 @@ function App(props) {
         }
       )
       .then((resObj) => {
-        // console.log(resObj);
+        console.log(resObj.data.user);
+        sessionStorage.setItem('currentuser', JSON.stringify(resObj.data.user));
         if (resObj.data.isAuthenticated) {
           setIsAuthenticated(true);
         } else {
