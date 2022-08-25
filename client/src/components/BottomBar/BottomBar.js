@@ -16,7 +16,9 @@ const BottomBar = ({
   enabled,
   isHost,
   endMeetForAll,
-  clickUserList
+  clickUserList,
+  toggleRaiseHand,
+  userList
 }) => {
   const handleToggle = useCallback(
     (e) => {
@@ -87,16 +89,21 @@ const BottomBar = ({
           Chat
         </ChatButton>
         { isHost ?
-        <ScreenButton onClick={clickScreenSharing}>
-          <div>
-            <FaIcon
-              className={`fas fa-desktop ${screenShare ? 'sharing' : ''}`}
-            ></FaIcon>
-          </div>
-          Share Screen
-        </ScreenButton>
-        :
-        <></>
+          <ScreenButton onClick={clickScreenSharing}>
+            <div>
+              <FaIcon
+                className={`fas fa-desktop ${screenShare ? 'sharing' : ''}`}
+              ></FaIcon>
+            </div>
+            Share Screen
+          </ScreenButton>
+          :
+          <RaiseHandButton style={{ color:  userList['localUser'].handRaised ? 'green' : 'white' }} onClick={() => {toggleRaiseHand( !(userList['localUser'].handRaised) )}}>
+            <div>
+              <FaIcon className='far fa-hand-paper'/>
+            </div>
+            Raise Hand
+          </RaiseHandButton>
         } 
       </Center>
       </>
@@ -172,6 +179,23 @@ const ChatButton = styled.div`
   }
 `;
 const UserListButton = styled.div`
+  width: 75px;
+  border: none;
+  font-size: 0.9375rem;
+  padding: 5px;
+
+  :hover {
+    background-color: #77b7dd;
+    cursor: pointer;
+    border-radius: 15px;
+  }
+
+  * {
+    pointer-events: none;
+  }
+`;
+
+const RaiseHandButton = styled.div`
   width: 75px;
   border: none;
   font-size: 0.9375rem;
