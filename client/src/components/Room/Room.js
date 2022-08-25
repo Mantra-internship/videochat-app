@@ -69,7 +69,6 @@ const Room = (props) => {
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
         stream.getAudioTracks()[0].enabled = false;
-        stopStreamingCameraAndAudio(stream)
         console.log("stream.getVideoTrack() :", stream.getVideoTracks())
         console.log("stream.audioTrack() :", stream.getAudioTracks())
         stream.getVideoTracks()[0].enabled = false;

@@ -1,10 +1,15 @@
+const User = require('../models/user');
 
 const auth = {
   idReturner: async (req, res) => {
-    try{
+    try {
+      console.log(req.userId)
+      const userId = req.userId;
+      const user = await User.findOne({ _id: userId })
       return res.status(200).json({
         isAuthenticated: true,
-        userId: req.userId
+        userId: userId,
+        user: user
       });
     }catch(error){
       console.log(error);

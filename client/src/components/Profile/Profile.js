@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import {useHistory} from 'react-router-dom'
 import styled from 'styled-components';
 import axios from 'axios';
 import UserProfile from './UserProfile';
@@ -10,6 +11,8 @@ function Profile(props) {
   const [user, setUser] = useState();
   const [loader, setLoader] = useState(true);
   const [updateLoader, setUpdateLoader] = useState(false);
+
+  let history = useHistory();
   
   const nameRef = useRef('');
   const emailRef = useRef('');
@@ -53,7 +56,7 @@ function Profile(props) {
         setLoader(false);
       })
       .catch((err) => {
-        console.log(err.response.status);
+        // console.log(err.response.status);
         if (err.response.status === 404) {
           alert('User not found');
         } else {
@@ -91,7 +94,8 @@ function Profile(props) {
         experience: experienceRef.current.value,
       };
     }
-    console.log(newData);
+    // console.log(newData);
+
     setUpdateLoader(true);
     await axios
       .post('http://localhost:5000/api/user/user/update', newData, {
@@ -108,6 +112,11 @@ function Profile(props) {
         alert('Something went wrong');
       });
   };
+
+  const handleCreateMeet = () => {
+    history.push('/');
+    sessionStorage.setItem('roomHost', JSON.stringify(user));
+  }
 
   return (
     <>
@@ -140,6 +149,7 @@ function Profile(props) {
           </Inner>
         )}
         <SendButton onClick={postData}>{updateLoader ? "Updating Data": "Update Data"}</SendButton>
+        {role === 'astrologer' && <CreateMeetButton onClick={handleCreateMeet}>Start Meet</CreateMeetButton>}
       </MainContainer>
     </>
   );
@@ -170,6 +180,22 @@ const Heading = styled.div`
 const Inner = styled.div`
   margin-top: 20px;
 `;
+
+const CreateMeetButton = styled.button`
+  height: 40px;
+  margin-top: 35px;
+  outline: none;
+  border: none;
+  border-radius: 15px;
+  color: #d8e9ef;
+  background-color: #4ea1d3;
+  font-size: 25px;
+  font-weight: 500;
+
+  :hover {
+    background-color: #7bb1d1;
+    cursor: pointer;
+  }`;
 
 const SendButton = styled.button`
   height: 40px;
