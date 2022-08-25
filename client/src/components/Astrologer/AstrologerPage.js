@@ -6,7 +6,7 @@ import styled from 'styled-components';
 function AstrologersPage(props) {
   const [astrologerData, setAstrologerData] = useState([]);
 
-  document.title = 'All Astrologers';
+  document.title = 'Astrologer - ' + props.match.params.uphone;
 
   // make a call for a particular astrolger with a unique phone number.
   useEffect(() => {
@@ -32,26 +32,44 @@ function AstrologersPage(props) {
       });
   };
 
+   const getRoomHost = () => {
+    console.log(astrologerData);
+    sessionStorage.setItem('roomHost', JSON.stringify(astrologerData));
+  }
+
   return (
-    <>
+    <Container>
       <SectionLeft>
-        <div style={{ flex: '1' }}>
-          <div style={{ marginLeft: '50px' }}>
+        <div>
+          <div style={{ }}>
             <img
               style={{
                 display: 'inline-block',
-                width: '200px',
-                height: '200px',
+                width: '150px',
+                height: '150px',
                 borderRadius: '121px',
                 border: '3px solid green',
               }}
               alt="user"
-              src={'https://freesvg.org/img/abstract-user-flat-4.png'}
+              src={astrologerData.profilePic}
             />
           </div>
+          <a
+          style={{
+            textDecoration: 'none',
+            color: 'white',
+            fontSize: '20px',
+          }}
+          href={`/`}
+        >
+        <Button
+            onClick={getRoomHost}>
+            Join room
+          </Button>
+        </a>
         </div>
-        <div style={{ flex: '2' }}>
-          <h2 style={{ display: 'inline-block' }}>{astrologerData.name}</h2>
+        <div style={{ }}>
+          <p style={{ display: 'inline-block', fontSize: '30px', textDecoration: 'bold', margin: '10px 0' }}>{astrologerData.name}</p>
           {astrologerData.approved ? (
             <img
               style={{
@@ -68,11 +86,13 @@ function AstrologersPage(props) {
           ) : (
             <></>
           )}
+          <br></br>
+          <div style={{ display: 'inline-block', margin: '10px 0' }}>{'Email - ' + astrologerData.email }</div>
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
+              justifyContent: 'space-around',
               // marginTop: '15px',
             }}
           >
@@ -144,15 +164,16 @@ function AstrologersPage(props) {
           <div
             style={{
               display: 'flex',
-              justifyContent: 'space-around',
+              width: '100%',
+              justifyContent: 'space-between',
               alignItems: 'space-around',
               marginTop: '15px',
             }}
           >
-            <p style={{ fontSize: '20px', marginTop: '0' }}>
+            <p style={{ fontSize: '20px', marginTop: '0', marginRight: '10px' }}>
               <b>Languages - </b> English
             </p>
-            <p style={{ fontSize: '20px', marginTop: '0' }}>
+            <p style={{ fontSize: '20px', marginTop: '0', marginRight: '10px' }}>
               <b>Experience - </b> 4 years
             </p>
             <p
@@ -163,78 +184,6 @@ function AstrologersPage(props) {
             >
               <b>Speciality</b> - Kundli
             </p>
-          </div>
-
-          <div style={{ marginTop: '20px' }}>
-            <button
-              style={{
-                border: '2px solid red',
-                borderRadius: '25px',
-                backgroundColor: 'white',
-                color: 'red',
-                // display: 'flex',
-                // justifyContent: 'center'
-              }}
-            >
-              <img
-                src="https://d1gcna0o0ldu5v.cloudfront.net/fit-in/20x20/assets/images/astrolger/busy-status-chat.png"
-                style={{
-                  display: 'inline-flex',
-                  width: '50px',
-                  height: '50px',
-                  borderRadius: '121px',
-                  border: '1px solid red',
-                  // marginLeft: '35px',
-                  marginTop: '0',
-                }}
-                alt="busy-status-chat"
-              />
-              <p
-                style={{
-                  display: 'inline-block',
-                  fontSize: '20px',
-                  margin: '0 30px',
-                }}
-              >
-                Start chat
-              </p>
-              {/* <p style={{ display: 'inline-block', fontSize: '20px' }}>
-              <b>$25</b> per min
-            </p> */}
-            </button>
-            <button
-              style={{
-                border: '2px solid red',
-                borderRadius: '25px',
-                backgroundColor: 'white',
-                color: 'red',
-                marginLeft: '20px',
-              }}
-            >
-              <img
-                src="https://d1gcna0o0ldu5v.cloudfront.net/fit-in/20x20/assets/images/astrolger/busy-status-call.png"
-                style={{
-                  display: 'inline-block',
-                  width: '50px',
-                  height: '50px',
-                  borderRadius: '121px',
-                  border: '1px solid red',
-                }}
-                alt="busy-status-call"
-              />
-              <p
-                style={{
-                  display: 'inline-block',
-                  fontSize: '20px',
-                  margin: '0 30px',
-                }}
-              >
-                Start call
-              </p>
-              {/* <p style={{ display: 'inline-block', fontSize: '20px' }}>
-              <b>$25</b> per min
-            </p> */}
-            </button>
           </div>
         </div>
       </SectionLeft>
@@ -250,25 +199,38 @@ function AstrologersPage(props) {
           deserunt mollit anim id est laborum.
         </p>
       </SectionRight>
-    </>
+    </Container>
   );
 }
 
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: space-around;
+  flex-direction: column;
+`;
+
 const SectionLeft = styled.div`
   display: flex;
-  width: 80%;
-  margin: 20px 115px;
+  justify-content: space-around;
+  align-items: center;
+  margin: 0 90px;
   border: 2px solid #ccc;
   border-radius: 20px;
   padding: 20px;
   color: #000;
   background: white;
+  flex-wrap: wrap;
+
+   @media(max-width: 900px){
+    margin: 30px 30px;
+  }
 `;
 
 const SectionRight = styled.div`
   display: flex;
-  width: 80%;
-  margin: 20px 115px;
+   margin: 30px 90px;
+   margin-bottom: 0px;
   border: 2px solid #ccc;
   padding: 20px;
   align-items: center;
@@ -276,6 +238,10 @@ const SectionRight = styled.div`
   border-radius: 20px;
   color: #000;
   background: white;
+
+  @media(max-width: 900px){
+    margin: 30px 30px;
+  }
 `;
 
 const IMG = styled.div`
@@ -284,6 +250,24 @@ const IMG = styled.div`
   height: 200px;
   border-radius: 121px;
   border: 3px solid red;
+`;
+
+const Button = styled.button`
+  height: 50px;
+  margin-top: 15px;
+  outline: none;
+  border: none;
+  border-radius: 15px;
+  padding: 10px 20px;
+  color: #d8e9ef;
+  background-color: #4ea1d3;
+  font-size: 20px;
+  font-weight: 500;
+
+  :hover {
+    background-color: #7bb1d1;
+    cursor: pointer;
+  }
 `;
 
 // const outerDiv = styled.div`

@@ -1,7 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 
 function AstrologerCard({ astrologer }) {
+  const [roomID, setRoomID] = useState('');
+  const getRoomHost = () => {
+    console.log(astrologer);
+    sessionStorage.setItem('roomHost', JSON.stringify(astrologer));
+  }
   return (
     <Card>
       <img
@@ -35,19 +40,34 @@ function AstrologerCard({ astrologer }) {
       >
         E-Mail - {astrologer.email}
       </p>
-      <Button
-      >
+      <ButtonContainer>
+        <Button
+        >
+          <a
+            style={{
+              textDecoration: 'none',
+              color: 'white',
+              fontSize: '20px',
+            }}
+            href={`/astrologer/${astrologer.phone}`}
+          >
+            See Profile
+          </a>
+        </Button>
         <a
           style={{
             textDecoration: 'none',
             color: 'white',
             fontSize: '20px',
           }}
-          href={`/astrologer/${astrologer.phone}`}
+          href={`/`}
         >
-          See Profile
+        <Button
+            onClick={getRoomHost}>
+            Join room
+          </Button>
         </a>
-      </Button>
+        </ButtonContainer>
     </Card>
   );
 }
@@ -72,7 +92,7 @@ const Card = styled.div`
   border-radius: 15%;
   padding: 15px;
   width: 300px;
-  height: 350px;
+  height: 400px;
   margin: 20px;
 
   :hover{
@@ -81,9 +101,20 @@ const Card = styled.div`
 }
 `;
 
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-direction: column;
+  height: 50px;
+  padding: 20px 0; 
+`;
+
 const Button = styled.button`
   height: 50px;
   // margin-top: 35px;
+  width: 200px;
   outline: none;
   border: none;
   border-radius: 15px;
@@ -92,10 +123,16 @@ const Button = styled.button`
   background-color: #4ea1d3;
   font-size: 20px;
   font-weight: 500;
+  margin-top: 20px;
 
   :hover {
     background-color: #7bb1d1;
     cursor: pointer;
+  }
+
+  > a {
+    width: 100%;
+    height: 100%;
   }
 `;
 

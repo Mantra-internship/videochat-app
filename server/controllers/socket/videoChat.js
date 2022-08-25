@@ -2,12 +2,14 @@ const User = require('../../models/user');
 const axios = require('axios');
 
 const videoChat = (socket, io, socketList) => {
-  socket.on('BE-join-room', ({ roomId, userName }) => {
+  socket.on('BE-join-room', ({ roomId, userName, userId }) => {
     // Socket Join RoomName
     socket.join(roomId);
     //change this to false
-    socketList[socket.id] = { userName, video: false, audio: false };
-
+    if(userId === roomId)
+      socketList[socket.id] = { userName, video: false, audio: false, isHost: true, enabled: true };    
+    else
+      socketList[socket.id] = { userName, video: false, audio: false, isHost: false, enabled: false };
     // Set User List
     io.sockets.in(roomId).clients((err, clients) => {
       try {
@@ -88,7 +90,15 @@ const videoChat = (socket, io, socketList) => {
 
   socket.on("BE-chat-toggler", ({ roomId, chatEnabled }) => {
     socket.broadcast.to(roomId).emit("FE-chat-toggler", { enableChat: chatEnabled });
-  })
+  });
+  socket.on("BE-toggle-enabled", ({ roomId, target, newState, targetName }) => {
+    // socket.broadcast.to(roomId).emit("FE-toggle-enabled", { target, newState, targetName });
+    io.to(target).emit("FE-toggle-enabled", { target, newState, targetName, roomId });
+  });
+
+  socket.on("BE-list-updator", ({roomId, newState, target, targetName}) => {
+    socket.broadcast.to(roomId).emit("FE-list-updator", { target, newState, targetName });
+  });
 
   // console.log(leaver)
   // console.log("Etime : ", eTime);
@@ -113,16 +123,16 @@ const videoChat = (socket, io, socketList) => {
   // }
 
   socket.on('BE-media-close', ({ userId, targetType }) => {
-    if( userId && (targetType === 'video' || targetType === 'audio') ){
+    if( userId && (targetType === 'videoH' || targetType === 'audioH') ){
       io.to(userId).emit('FE-media-close', { targetType });
     }
   });
 
   socket.on('BE-toggle-camera-audio', ({ roomId, switchTarget }) => {
     console.log({ socketList });
-    if (switchTarget === 'video') {
+    if (switchTarget === 'video' || switchTarget === 'both') {
       socketList[socket.id].video = !socketList[socket.id].video;
-    } else {
+    } if (switchTarget === 'audio' || switchTarget === 'both') {
       socketList[socket.id].audio = !socketList[socket.id].audio;
     }
     socket.broadcast
@@ -135,7 +145,7 @@ const videoChat = (socket, io, socketList) => {
     socketList[socket.id].audio = false;
     socket.broadcast
       .to(roomId)
-      .emit('FE-toggle-camera', { userId: socket.id, switchTarget: 'bothOff' });
+      .emit('FE-toggle-camera', { userId: socket.id, switchTarget: 'both' });
   });
 };
 

@@ -12,7 +12,7 @@ const Room = (props) => {
   const currentUser = sessionStorage.getItem("user");
   const [peers, setPeers] = useState([]);
   const [userVideoAudio, setUserVideoAudio] = useState({
-    localUser: { video: false, audio: false, userId: 'localUser' },
+    localUser: { video: false, audio: false, userId: 'localUser', isHost: false, enabled: false },
   });
   const [videoDevices, setVideoDevices] = useState([]);
   const [displayChatOrList, setDisplayChatOrList] = useState(0);    // 0 => None, 1 => chat, 2 => list
@@ -34,8 +34,15 @@ const Room = (props) => {
     if(JSON.parse(sessionStorage.getItem("userI")) === null || JSON.parse(sessionStorage.getItem("userI")).eTime === undefined){
       return window.location.href = "/";
     }
-    if(JSON.parse(sessionStorage.getItem("userI")).id == roomId)
+    if(JSON.parse(sessionStorage.getItem("userI")).id == roomId){
       setIsHost(true);
+      setUserVideoAudio((preList) => {
+        return {
+          ...preList,
+          localUser: { video: false, audio: false, userId: 'localUser', isHost: true, enabled: true }
+        }
+      });
+    }
     // Get Video Devices
     navigator.mediaDevices.enumerateDevices().then((devices) => {
       const filtered = devices.filter((device) => device.kind === "videoinput");
@@ -67,7 +74,7 @@ const Room = (props) => {
     //     socket.emit("BE-join-room", { roomId, userName: currentUser });
     //   }
     // })
-    socket.emit("BE-join-room", { roomId, userName: currentUser });
+    socket.emit("BE-join-room", { roomId, userName: currentUser, userId: JSON.parse(sessionStorage.getItem("userI")).id });
 
     // Connect Camera & Mic
     navigator.mediaDevices
@@ -126,7 +133,7 @@ const Room = (props) => {
           
                 return {
                   ...preList,
-                  localUser: { video: false, audio: false, userId: 'localUser' },
+                  localUser: { video: false, audio: false, userId: 'localUser', isHost: isHost, enabled: false },
                 };
               });
           
@@ -146,7 +153,7 @@ const Room = (props) => {
           // all users
           const peers = [];
           users.forEach(({ userId, info }) => {
-            let { userName, video, audio } = info;
+            let { userName, video, audio, isHost, enabled } = info;
 
             if (userName !== currentUser) {
               const peer = createPeer(userId, socket.id, stream);
@@ -159,7 +166,6 @@ const Room = (props) => {
                 peer,
                 userName,
               });
-              console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
               console.log(peers);
               peers.push(peer);
               console.log(peers);
@@ -167,7 +173,7 @@ const Room = (props) => {
               setUserVideoAudio((preList) => {
                 return {
                   ...preList,
-                  [peer.userName]: { video, audio: false, userId },
+                  [peer.userName]: { video, audio: false, userId, isHost, enabled },
                 };
               });
             }
@@ -177,7 +183,7 @@ const Room = (props) => {
         });
 
         socket.on("FE-receive-call", ({ signal, from, info }) => {
-          let { userName, video, audio } = info;
+          let { userName, video, audio, isHost, enabled } = info;
           const peerIdx = findPeer(from);
 
           if (!peerIdx) {
@@ -196,7 +202,7 @@ const Room = (props) => {
             setUserVideoAudio((preList) => {
               return {
                 ...preList,
-                [peer.userName]: { video, audio, userId: from },
+                [peer.userName]: { video, audio, userId: from, isHost, enabled },
               };
             });
           }
@@ -219,7 +225,7 @@ const Room = (props) => {
           );
 
           // below code is yet to be fully tested
-          console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+          // console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
           setUserVideoAudio((preList) => {
             console.log(preList);
             delete preList[userName];
@@ -242,23 +248,23 @@ const Room = (props) => {
       const peerIdx = findPeer(userId);
 
       setUserVideoAudio((preList) => {
-        let video = preList[peerIdx.userName].video;
-        let audio = preList[peerIdx.userName].audio;
+        let {video, audio, isHost, enabled} = preList[peerIdx.userName];
 
         if (switchTarget === "video") video = !video;
-        else if(switchTarget === "bothOff") {
+        else if(switchTarget === "both") { 
           video = false;
           audio = false;
+          enabled = false;
         }
         else audio = !audio;
 
         return {
           ...preList,
-          [peerIdx.userName]: { video, audio, userId },
+          [peerIdx.userName]: { video, audio, userId, isHost, enabled },
         };
       });
     });
-
+    
     socket.on('FE-media-close', ({ targetType }) => {
       toggleCameraAudio(targetType);
     });
@@ -269,7 +275,36 @@ const Room = (props) => {
 
     socket.on("FE-chat-toggler", ({ enableChat }) => {
       setChatEnabled(enableChat);
-    })
+    });
+
+    socket.on("FE-toggle-enabled", ({ target, newState, targetName }) => {
+      try{
+        if(newState){
+          setUserVideoAudio((preList) => {
+            let {video, audio, userId, isHost} = userVideoAudio['localUser'];
+            return {
+              ...preList,
+              localUser: {video, audio, userId, isHost, enabled: true},
+            }
+          });
+          socket.emit("BE-list-updator", {roomId, newState, target, targetName});
+        }else{
+          toggleCameraAudio('both');
+        }
+      }catch(error){
+        console.log(error);
+      }
+    });
+
+    socket.on("FE-list-updator", ({ target, newState, targetName }) => {
+      setUserVideoAudio((preList) => {
+        let {video, audio, userId, isHost} = preList[targetName];
+        return {
+          ...preList,
+          [targetName]: { video, audio, userId, isHost, enabled: newState}
+        }
+      });
+    });
 
     return () => {
       // clearInterval(interval);
@@ -410,43 +445,77 @@ const Room = (props) => {
   }
 
   const toggleCameraAudio = (e) => {
-    let target;
-    if(e === 'video' || e === 'audio'){
-      target = e;
-    }else{
-      target = e.target.getAttribute("data-switch");
-    }
-    console.log( "target: ", target);
-    setUserVideoAudio((preList) => {
-      let videoSwitch = preList["localUser"].video;
-      let audioSwitch = preList["localUser"].audio;
-
-      if (target === "video") {
-        const userVideoTrack =
-          userVideoRef.current.srcObject.getVideoTracks()[0];
-        videoSwitch = !videoSwitch;
-        userVideoTrack.enabled = videoSwitch;
-        console.log("userVideoTrack : " , userVideoTrack);
-      } else {
-        const userAudioTrack =
-          userVideoRef.current.srcObject.getAudioTracks()[0];
-        audioSwitch = !audioSwitch;
-        console.log( "userAudioTrack : ", userAudioTrack);
-
-        if (userAudioTrack) {
-          userAudioTrack.enabled = audioSwitch;
-        } else {
-          userStream.current.getAudioTracks()[0].enabled = audioSwitch;
-        }
+    console.log(e, " and enabled - ", userVideoAudio['localUser'].enabled);
+    if( userVideoAudio['localUser'].enabled || e == 'both' || e == 'videoH' || e == 'audioH' ){
+      console.log("Toggle the media, (enabled)");
+      let target;
+      if(e == 'videoH' || e == 'audioH'){
+        target = e.slice(0, -1);
+      }else if(e === 'video' || e === 'audio' || e === 'both' ){
+        target = e;
+      }else{
+        target = e.target.getAttribute("data-switch");
       }
-
-      return {
-        ...preList,
-        localUser: { video: videoSwitch, audio: audioSwitch, userId: 'localUser' },
-      };
-    });
-
-    socket.emit("BE-toggle-camera-audio", { roomId, switchTarget: target });
+      console.log( "target: ", target);
+      setUserVideoAudio((preList) => {
+        let videoSwitch = preList["localUser"].video;
+        let audioSwitch = preList["localUser"].audio;
+        let isHost = preList["localUser"].isHost;
+        let enabled = preList["localUser"].enabled;
+        let userId = preList["localUser"].userId;
+        
+        if(target === "both"){
+          enabled = false;
+          if(videoSwitch){
+            const userVideoTrack =
+            userVideoRef.current.srcObject.getVideoTracks()[0];
+            userVideoTrack.enabled = false;
+            videoSwitch = false;
+          }
+          if(audioSwitch){
+            const userAudioTrack =
+            userVideoRef.current.srcObject.getAudioTracks()[0];
+            if (userAudioTrack) {
+              userAudioTrack.enabled = false;
+            } else {
+              userStream.current.getAudioTracks()[0].enabled = false;
+            }
+            audioSwitch = false;
+          }
+        }
+        else if (target === "video") {
+          const userVideoTrack =
+          userVideoRef.current.srcObject.getVideoTracks()[0];
+          videoSwitch = !videoSwitch;
+          userVideoTrack.enabled = videoSwitch;
+          console.log("userVideoTrack : " , userVideoTrack);
+        }
+        else if(target === "audio"){
+          const userAudioTrack =
+          userVideoRef.current.srcObject.getAudioTracks()[0];
+          audioSwitch = !audioSwitch;
+          console.log( "userAudioTrack : ", userAudioTrack);
+          
+          if (userAudioTrack) {
+            userAudioTrack.enabled = audioSwitch;
+          } else {
+            userStream.current.getAudioTracks()[0].enabled = audioSwitch;
+          }
+        }
+        
+        return {
+          ...preList,
+          localUser: { video: videoSwitch, audio: audioSwitch, userId: 'localUser', isHost, enabled },
+        };
+      });
+      if(e === 'both'){
+        socket.emit("BE-toggle-both", {roomId});
+      }else{
+        socket.emit("BE-toggle-camera-audio", { roomId, switchTarget: target });
+      }
+    }else{
+      console.log("Can't toggle the media, (not enabled)");
+    }
   };
 
   const clickScreenSharing = () => {
@@ -600,7 +669,7 @@ const Room = (props) => {
         />
       </VideoAndBarContainer>
       <Chat display={displayChatOrList} roomId={roomId} chatEnabled={chatEnabled} chatToggleForAll={chatToggleForAll} isHost={isHost} />
-      <UserList display={displayChatOrList} roomId={roomId} isHost={isHost} userList={userVideoAudio} />
+      <UserList display={displayChatOrList} roomId={roomId} isHost={isHost} userList={userVideoAudio} setUserList={setUserVideoAudio} />
     </RoomContainer>
   );
 };
