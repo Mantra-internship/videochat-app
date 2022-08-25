@@ -4,7 +4,8 @@ import axios from 'axios';
 import styled from 'styled-components';
 
 function AstrologersPage(props) {
-  const [astrologerData, setAstrologerData] = useState([]);
+  const [astrologerData, setAstrologerData] = useState({});
+  const [astrologerInfo, setAstrologersInfo] = useState({});
 
   document.title = 'Astrologer - ' + props.match.params.uphone;
 
@@ -22,16 +23,17 @@ function AstrologersPage(props) {
         {}
       )
       .then((resObj) => {
-        console.log(resObj.data);
+        // console.log(resObj.data);
         setAstrologerData(resObj.data);
+        setAstrologersInfo(resObj.data.astrologerInfo);
         // console.log(astrologerData);
       })
       .catch((error) => {
         console.log(error);
         setAstrologerData([]);
       });
-  };
-
+    };
+    
    const getRoomHost = () => {
     console.log(astrologerData);
     sessionStorage.setItem('roomHost', JSON.stringify(astrologerData));
@@ -45,9 +47,9 @@ function AstrologersPage(props) {
             <img
               style={{
                 display: 'inline-block',
-                width: '150px',
+                width: '200px',
                 height: '150px',
-                borderRadius: '121px',
+                borderRadius: '20px',
                 border: '3px solid green',
               }}
               alt="user"
@@ -68,7 +70,7 @@ function AstrologersPage(props) {
           </Button>
         </a>
         </div>
-        <div style={{ }}>
+        <div style={{ width: '500px' }}>
           <p style={{ display: 'inline-block', fontSize: '30px', textDecoration: 'bold', margin: '10px 0' }}>{astrologerData.name}</p>
           {astrologerData.approved ? (
             <img
@@ -160,7 +162,6 @@ function AstrologersPage(props) {
               <b>14k</b> mins
             </p>
           </div>
-
           <div
             style={{
               display: 'flex',
@@ -171,10 +172,10 @@ function AstrologersPage(props) {
             }}
           >
             <p style={{ fontSize: '20px', marginTop: '0', marginRight: '10px' }}>
-              <b>Languages - </b> English
+              <b>Languages - </b> English, Hindi
             </p>
             <p style={{ fontSize: '20px', marginTop: '0', marginRight: '10px' }}>
-              <b>Experience - </b> 4 years
+              <b>Experience - </b> {astrologerInfo ? astrologerInfo.experience : 3} years
             </p>
             <p
               style={{
@@ -185,18 +186,12 @@ function AstrologersPage(props) {
               <b>Speciality</b> - Kundli
             </p>
           </div>
-        </div>
+      </div>
       </SectionLeft>
       <SectionRight>
         <h2>About Me</h2>
         <p>
-          ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-          veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-          ea commodo consequat. Duis aute irure dolor in reprehenderit in
-          voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia
-          deserunt mollit anim id est laborum.
+          {astrologerInfo ? astrologerInfo.description: "I am a description"}
         </p>
       </SectionRight>
     </Container>
@@ -214,10 +209,11 @@ const SectionLeft = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  margin: 0 90px;
+  margin: 0 120px;
   border: 2px solid #ccc;
   border-radius: 20px;
   padding: 20px;
+  font-size: '50px';
   color: #000;
   background: white;
   flex-wrap: wrap;
@@ -229,7 +225,7 @@ const SectionLeft = styled.div`
 
 const SectionRight = styled.div`
   display: flex;
-   margin: 30px 90px;
+   margin: 30px 120px;
    margin-bottom: 0px;
   border: 2px solid #ccc;
   padding: 20px;
