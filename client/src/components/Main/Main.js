@@ -11,12 +11,13 @@ const Main = (props) => {
   const [err, setErr] = useState(false);
   const [errMsg, setErrMsg] = useState('');
   const [loader, setLoader] = useState(false);
-  const [roomHost, setRoomHost] = useState({});
-   
-  const Host = JSON.parse(sessionStorage.getItem("roomHost"));
-  if (!(Host && Object.keys(Host).length === 0 && Object.getPrototypeOf(Host) === Object.prototype)) {
-    setRoomHost(Host)
-    const roomID = roomHost._id;
+
+  const roomHost = JSON.parse(sessionStorage.getItem("roomHost"))
+
+  let roomID = ''
+  
+  if (roomHost != null) {
+    roomID = roomHost._id
     const user = JSON.parse(sessionStorage.getItem('currentuser'));
   }
   const history = useHistory();
@@ -64,8 +65,6 @@ const Main = (props) => {
     let tokenObj = "";
     let userRole = "";
 
-    sessionStorage.setItem('roomID', '')
-
     await axios.post("http://localhost:5000/api/user/get-token", {
       roomId: roomName
     },{
@@ -96,6 +95,13 @@ const Main = (props) => {
     });
   }
 
+  const handleRoomReset = () => {
+    sessionStorage.removeItem('roomHost');
+    roomID = '';
+    sessionStorage.removeItem('roomID')
+    window.location.reload()
+  }
+
   return (
     <MainContainer>
       <Row>
@@ -107,13 +113,14 @@ const Main = (props) => {
           disabled={user?.role == 'astrologer' ? false : true}
           ref={roomRef}
         /> */}
-        {!(Host && Object.keys(Host).length === 0 && Object.getPrototypeOf(Host) === Object.prototype) ? (
+        {(roomID != '') ? (
           <Heading>{`You are about to join room of ${roomHost.name}`}</Heading>
         ) : (
             <Heading>Select a room to join <Link to="/astrologers">here</Link></Heading>
         )}
       </Row>    
-      {roomID && <JoinButton onClick={clickJoin}> Click to Join </JoinButton>}
+      {roomID != '' && <ResetButton onClick={handleRoomReset}>Reset Room</ResetButton>}
+      {roomID != '' && <JoinButton onClick={clickJoin}> Click to Join </JoinButton>}
       {err ? <Error>{errMsg}</Error> : null}
     </MainContainer>
   );
@@ -160,6 +167,28 @@ const Error = styled.div`
 `;
 
 const JoinButton = styled.button`
+  height: 40px;
+  margin-top: 20px;
+  outline: none;
+  border: none;
+  border-radius: 15px;
+  color: #d8e9ef;
+  background-color: #4ea1d3;
+  font-size: 25px;
+  font-weight: 500;
+
+  :hover {
+    background-color: #7bb1d1;
+    cursor: pointer;
+  }
+
+  a {
+    text-decoration: none;
+    color: #d8e9ef;
+  }
+`;
+
+const ResetButton = styled.button`
   height: 40px;
   margin-top: 20px;
   outline: none;

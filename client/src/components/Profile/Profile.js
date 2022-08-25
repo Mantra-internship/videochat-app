@@ -50,13 +50,13 @@ function Profile(props) {
         }
       )
       .then((response) => {
-        console.log(response.data.foundUser);
+        // console.log(response.data.foundUser);
         setUser(response.data.foundUser);
         setRole(response.data.foundUser.role);
         setLoader(false);
       })
       .catch((err) => {
-        console.log(err.response.status);
+        // console.log(err.response.status);
         if (err.response.status === 404) {
           alert('User not found');
         } else {
@@ -94,7 +94,8 @@ function Profile(props) {
         experience: experienceRef.current.value,
       };
     }
-    console.log(newData);
+    // console.log(newData);
+
     setUpdateLoader(true);
     await axios
       .post('http://localhost:5000/api/user/user/update', newData, {
@@ -114,7 +115,7 @@ function Profile(props) {
 
   const handleCreateMeet = () => {
     history.push('/');
-    sessionStorage.setItem('roomID', user._id);
+    sessionStorage.setItem('roomHost', JSON.stringify(user));
   }
 
   return (
@@ -147,8 +148,8 @@ function Profile(props) {
             )}
           </Inner>
         )}
-        <CreateMeetButton onClick={handleCreateMeet}>Start Meet</CreateMeetButton>
         <SendButton onClick={postData}>{updateLoader ? "Updating Data": "Update Data"}</SendButton>
+        {role === 'astrologer' && <CreateMeetButton onClick={handleCreateMeet}>Start Meet</CreateMeetButton>}
       </MainContainer>
     </>
   );
