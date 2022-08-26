@@ -606,7 +606,7 @@ const user = {
           else {
             credits = Math.ceil((eTime - leaveTime) / 60);
           }
-          if (credits != leavingUser.credits) {
+          if (credits <= leavingUser.credits) {
             leavingUser.credits = credits;
             await leavingUser.save();
           }

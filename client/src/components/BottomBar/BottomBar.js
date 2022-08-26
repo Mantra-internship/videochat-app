@@ -5,6 +5,7 @@ const BottomBar = ({
   clickChat,
   clickCameraDevice,
   goToBack,
+  reloadPage,
   toggleCameraAudio,
   userVideoAudio,
   clickScreenSharing,
@@ -74,8 +75,8 @@ const BottomBar = ({
               </div>
               Audio
             </CameraButton>
-      </Left>
-      <Center>
+          </Left>
+        <Center>
         <UserListButton onClick={clickUserList}>
           <div>
             <FaIcon className="fas fa-users"></FaIcon>
@@ -105,10 +106,16 @@ const BottomBar = ({
             Raise Hand
           </RaiseHandButton>
         } 
+        <ResetButton onClick={reloadPage}>
+          <div>
+            <FaIcon style={{ }} className="fas fa-redo-alt"></FaIcon>
+          </div>
+          Reset
+        </ResetButton>
       </Center>
       </>
        : 
-       <Left>
+          <Left>
         <ChatButton onClick={clickChat}>
           <div>
             <FaIcon className='fas fa-comments'></FaIcon>
@@ -178,6 +185,24 @@ const ChatButton = styled.div`
     pointer-events: none;
   }
 `;
+
+const ResetButton = styled.div`
+  width: 75px;
+  border: none;
+  font-size: 0.9375rem;
+  padding: 5px;
+
+  :hover {
+    background-color: #77b7dd;
+    cursor: pointer;
+    border-radius: 15px;
+  }
+
+  * {
+    pointer-events: none;
+  }
+`;
+
 const UserListButton = styled.div`
   width: 75px;
   border: none;
@@ -196,7 +221,7 @@ const UserListButton = styled.div`
 `;
 
 const RaiseHandButton = styled.div`
-  width: 75px;
+  width: 100px;
   border: none;
   font-size: 0.9375rem;
   padding: 5px;

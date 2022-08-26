@@ -200,6 +200,7 @@ function AstrologersPage(props) {
 
 const Container = styled.div`
   display: flex;
+  width: 100%;
   justify-content: center;
   align-items: space-around;
   flex-direction: column;
@@ -209,7 +210,7 @@ const SectionLeft = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  margin: 0 120px;
+  margin: 0 90px;
   border: 2px solid #ccc;
   border-radius: 20px;
   padding: 20px;
@@ -225,7 +226,7 @@ const SectionLeft = styled.div`
 
 const SectionRight = styled.div`
   display: flex;
-   margin: 30px 120px;
+   margin: 30px 90px;
    margin-bottom: 0px;
   border: 2px solid #ccc;
   padding: 20px;

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useHistory} from 'react-router'
 import Peer from "simple-peer";
 import styled from "styled-components";
 import socket from "../../socket";
@@ -26,6 +27,7 @@ const Room = (props) => {
   const [bottomBarButtonsEnabler, setBottomBarButtonsEnabler] = useState(true);
   const [isHost, setIsHost] = useState(false);
   const [chatEnabled, setChatEnabled] = useState(true);
+  const [showText, setShowText] = useState(true);
 
   document.title = `Room - ${roomId}`
 
@@ -42,6 +44,7 @@ const Room = (props) => {
           localUser: { video: false, audio: false, userId: 'localUser', isHost: true, enabled: true, handRaised: false }
         }
       });
+      
     }
     // Get Video Devices
     navigator.mediaDevices.enumerateDevices().then((devices) => {
@@ -301,6 +304,8 @@ const Room = (props) => {
       });
     });
 
+    // alert("If Your video fails to load, please press the reset button in the bottom bar.")
+
     return () => {
       // clearInterval(interval);
       socket.disconnect();
@@ -427,6 +432,26 @@ const Room = (props) => {
         alert('Unable to leave meet');
       });
   };
+
+  const reloadPage = (e) => {
+     if(e){
+      e.preventDefault();
+    }
+    // const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
+    // const leaveTime = Math.ceil(Date.now() / 1000);
+    // await axios
+    //   .post('http://localhost:5000/api/user/credit-saver', {
+    //     eTime,
+    //     leaveTime,
+    //     currentUser,
+    //   })
+      // .then((response) => {
+        // console.log(response);
+        socket.emit('BE-leave-room', { roomId, leaver: currentUser });
+        // sessionStorage.removeItem('user');
+        window.location.href = `/room/${roomId}`;
+      // })
+  }
 
   const endMeetForAll = (e) => {
     e.preventDefault();
@@ -634,6 +659,7 @@ const Room = (props) => {
   return (
     <RoomContainer onClick={clickBackground}>
       <VideoAndBarContainer>
+        {showText && <p onClick={() => {setShowText(false)}}>If Your video fails to load, please press the reset button in the bottom bar (X).</p>}
         <VideoContainer>
           {/* Current User Video */}
           <VideoBox
@@ -662,6 +688,7 @@ const Room = (props) => {
           clickUserList={clickUserList}
           clickCameraDevice={clickCameraDevice}
           goToBack={goToBack}
+          reloadPage={reloadPage}
           toggleCameraAudio={toggleCameraAudio}
           userVideoAudio={userVideoAudio['localUser']}
           screenShare={screenShare}
