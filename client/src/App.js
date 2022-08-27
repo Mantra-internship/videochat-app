@@ -15,6 +15,7 @@ import AstrologerRegister from './components/Register/AstrologerRegister';
 import VerifyOtp from './components/Register/VerifyOtp';
 import Profile from './components/Profile/Profile';
 import PageNotFound from './components/PageNotFound/PageNotFound';
+import PaymentResult from './components/Payment-Redirect/PaymentResult'
 
 import Navbar from './components/Navbar/Navbar';
 import Nav from './components/Navbar/Nav';
@@ -142,7 +143,7 @@ function App(props) {
             exact
             path="/room/:roomId"
             render={(props) =>
-              isAuthenticated ? <Room {...props} /> : <Redirect to="/login" />
+              <Room isAuthenticated={isAuthenticated} {...props} />
             }
           />
           <Route
@@ -173,6 +174,14 @@ function App(props) {
             exact
             path="/getPaymentInfo/:paymentId"
             render={(props) => <Invoice_Main {...props} />}
+          />
+
+          <Route
+            exact
+            path="/payment-result"
+            render={(props) =>
+             <PaymentResult {...props} />
+            }
           />
 
           <Route

@@ -326,10 +326,14 @@ const user = {
   getAstrologer: async (req, res) => {
     try {
       const { phone } = req.params;
-      await User.findOne({ role: 'astrologer', phone }, (error, astrologer) => {
+      await User.findOne({ role: 'astrologer', phone }, async (error, astrologer) => {
+        
         if (error) {
           return res.status(500).json({ message: 'something went wrong' });
         } else if (astrologer) {
+           if (astrologer.role === 'astrologer' && astrologer.astrologerInfo !== null) {
+              await astrologer.populate('astrologerInfo');
+          }
           return res.status(200).json(astrologer);
         } else {
           return res.status(404).json({ message: 'astrologer not found' });
@@ -602,7 +606,7 @@ const user = {
           else {
             credits = Math.ceil((eTime - leaveTime) / 60);
           }
-          if (credits != leavingUser.credits) {
+          if (credits <= leavingUser.credits) {
             leavingUser.credits = credits;
             await leavingUser.save();
           }

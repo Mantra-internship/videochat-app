@@ -7,9 +7,9 @@ const videoChat = (socket, io, socketList) => {
     socket.join(roomId);
     //change this to false
     if(userId === roomId)
-      socketList[socket.id] = { userName, video: false, audio: false, isHost: true, enabled: true };    
+      socketList[socket.id] = { userName, video: false, audio: false, isHost: true, enabled: true, handRaised: false };    
     else
-      socketList[socket.id] = { userName, video: false, audio: false, isHost: false, enabled: false };
+      socketList[socket.id] = { userName, video: false, audio: false, isHost: false, enabled: false, handRaised: false };
     // Set User List
     io.sockets.in(roomId).clients((err, clients) => {
       try {
@@ -143,9 +143,15 @@ const videoChat = (socket, io, socketList) => {
   socket.on('BE-toggle-both', ({ roomId }) => {
     socketList[socket.id].video = false;
     socketList[socket.id].audio = false;
+    socketList[socket.id].handRaised = false;
     socket.broadcast
       .to(roomId)
       .emit('FE-toggle-camera', { userId: socket.id, switchTarget: 'both' });
+  });
+
+  socket.on("BE-toggle-RH", ({ roomId, newHandState, userName }) => {
+    socketList[socket.id].handRaised = newHandState;
+    socket.broadcast.to(roomId).emit("FE-toggle-RH", { newHandState, userName });
   });
 };
 

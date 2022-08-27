@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {Link} from 'react-router-dom'
 import styled from 'styled-components';
 import axios from 'axios';
 
@@ -33,7 +34,7 @@ function Login(props) {
   return (
     <>
       <MainContainer>
-        <Heading>Login</Heading>
+        <Heading>Provide your phone number to talk with your astrologer</Heading>
         <Inner>
           <Row>
             <Label htmlFor="phone">Phone Number</Label>
@@ -61,6 +62,7 @@ function Login(props) {
           </Row>
         </Inner>
         <SendButton onClick={postData}>{Loader ? "OTP Sent Successfully!": "Get OTP"}</SendButton>
+        <SendButton><Link style={{textDecoration: 'none', color: 'white'}} to="/register">New here ? Register!</Link></SendButton>
       </MainContainer>
     </>
   );
@@ -82,7 +84,7 @@ const MainContainer = styled.div`
 const Heading = styled.div`
   width: 100%;
   text-align: center;
-  font-size: 7vw;
+  font-size: 3vw;
   margin: 20px 0;
 `;
 
@@ -125,6 +127,7 @@ const SendButton = styled.button`
     background-color: #7bb1d1;
     cursor: pointer;
   }
+  
 `;
 
 export default Login;

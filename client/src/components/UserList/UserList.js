@@ -4,13 +4,6 @@ import socket from '../../socket';
 
 const UserList = ({ display, roomId, isHost, userList }) => {
 
-  // useEffect(() => {
-  //   // console.log(userList);
-  //   // socket.on('FE-receive-message', ({ msg, sender }) => {
-  //   //   setMsg((msgs) => [...msgs, { sender, msg }]);
-  //   // });
-  // }, []);
-
   // const currentUser = sessionStorage.getItem('user');
 
   const closeVideo = (user) => {   // can only switch off
@@ -56,7 +49,7 @@ const UserList = ({ display, roomId, isHost, userList }) => {
           Object.entries(userList).length > 0
             ?
               Object.entries(userList).map((user) => (
-                <User style={{backgroundColor: 'rgb(152,251,152)'}}> 
+                <User style={{backgroundColor: (( user[1] && user[1].handRaised ) ? 'rgb(152,251,152)': 'white') }}> 
                   { user[0] === "localUser" ? (isHost ? "You (Host)" : "You") : (user[1].isHost ? `${user[0]} (Host)` : user[0]) }
                   <div>
                     <VideoIcon className={user[1] && user[1].video ? 'fas fa-video' : 'fas fa-video-slash'} style={{ color:  user[1] && user[1].video ? 'green' : 'grey'}} onClick={() => { closeVideo(user[1]) }}/>

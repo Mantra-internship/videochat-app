@@ -11,24 +11,26 @@ function AstrologerCard({ astrologer }) {
     <Card>
       <img
         style={{
-          width: '100px',
+          width: '150px',
           borderRadius: '20px',
-          margin: '0 31% 0 33%',
+          // margin: '0 31% 0 33%',
         }}
         src={astrologer.profilePic}
         alt="user"
       />
-      <h3
+      <h2
         style={{
           padding: '5px 20px',
           margin: '5px 0 0 0',
+          fontSize: '25px',
         }}
       >
         Name - {astrologer.name}
-      </h3>
+      </h2>
       <p
         style={{
           margin: '5px 0 20px 0',
+          fontSize: '25px',
         }}
       >
         Phone - {astrologer.phone}
@@ -36,24 +38,24 @@ function AstrologerCard({ astrologer }) {
       <p
         style={{
           margin: '5px 0 20px 0',
+          fontSize: '25px',
         }}
       >
         E-Mail - {astrologer.email}
       </p>
       <ButtonContainer>
-        <Button
+        <a
+          style={{
+            textDecoration: 'none',
+            color: 'white',
+            fontSize: '20px',
+          }}
+          href={`/astrologer/${astrologer.phone}`}
         >
-          <a
-            style={{
-              textDecoration: 'none',
-              color: 'white',
-              fontSize: '20px',
-            }}
-            href={`/astrologer/${astrologer.phone}`}
-          >
-            See Profile
-          </a>
-        </Button>
+          <Button>
+              See Profile
+          </Button>
+        </a>
         <a
           style={{
             textDecoration: 'none',
@@ -91,7 +93,7 @@ const Card = styled.div`
   border: 4px solid #ccc;
   border-radius: 15%;
   padding: 15px;
-  width: 300px;
+  width: 400px;
   height: 400px;
   margin: 20px;
 
@@ -119,7 +121,8 @@ const Button = styled.button`
   border: none;
   border-radius: 15px;
   padding: 10px 20px;
-  color: #d8e9ef;
+  // color: #d8e9ef;
+  color: white;
   background-color: #4ea1d3;
   font-size: 20px;
   font-weight: 500;
@@ -133,6 +136,7 @@ const Button = styled.button`
   > a {
     width: 100%;
     height: 100%;
+    color: white;
   }
 `;
 

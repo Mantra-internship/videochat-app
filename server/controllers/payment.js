@@ -12,7 +12,7 @@ const payment = {
       if (user) {
         const data = new Insta.PaymentData();
 
-        data.setRedirectUrl(process.env.REDIRECT_URL); // Store payment details
+        data.setRedirectUrl(process.env.REDIRECT_URL_2); // Store payment details
         data.send_sms = "True";
         // data.send_email = "True";
         // data.email = user.email;
