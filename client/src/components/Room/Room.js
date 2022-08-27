@@ -32,6 +32,7 @@ const Room = (props) => {
   document.title = `Room - ${roomId}`
 
   useEffect(() => {
+    console.log("Mounted &&&&&&&&&&&&&&&")
     // console.log(JSON.parse(sessionStorage.getItem("userI")).eTime);
     if(JSON.parse(sessionStorage.getItem("userI")) === null || JSON.parse(sessionStorage.getItem("userI")).eTime === undefined){
       return window.location.href = "/";
@@ -449,7 +450,11 @@ const Room = (props) => {
         // console.log(response);
         socket.emit('BE-leave-room', { roomId, leaver: currentUser });
         // sessionStorage.removeItem('user');
-        window.location.href = `/room/${roomId}`;
+    window.location.href = `/room/${roomId}`;
+    // console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+    // props.history.push(`/room/${roomId}`)
+    // console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+
       // })
   }
 
