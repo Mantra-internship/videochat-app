@@ -27,7 +27,7 @@ const user = {
 
       // Send OTP to user
       try {
-        if (process.env.NODE_ENV === 'production') {
+        if (process.env.NODE_ENV === 'production' || phone === '+919876920532') {
           const msg = await twilio.messages.create({
             body: `Your OTP is ${otp}`,
             from: process.env.TWILIO_PHONE_NUMBER,
@@ -81,7 +81,7 @@ const user = {
 
       // For sending OTP
       try {
-        if (process.env.NODE_ENV === 'production') {
+        if (process.env.NODE_ENV === 'production' || phone === '+919876920532') {
           const msg = await twilio.messages.create({
             body: `Your OTP is ${otp}`,
             from: process.env.TWILIO_PHONE_NUMBER,
