@@ -146,10 +146,10 @@ const Room = (props) => {
     
         console.log("stream", stream);
         
-//         if(JSON.parse(sessionStorage.getItem("userI")).id != roomId){
-//           console.log("disabler called");
-//           setTimeout(disabler, 3000);
-//         }
+        if(JSON.parse(sessionStorage.getItem("userI")).id != roomId){
+          console.log("disabler called");
+          setTimeout(disabler, 3000);
+        }
 
         socket.on("FE-user-join", (users) => {
           // all users
