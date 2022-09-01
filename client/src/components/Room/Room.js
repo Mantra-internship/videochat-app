@@ -65,8 +65,6 @@ const Room = (props) => {
     //   return "...";
     // }
 
-    
-
     // Connect Camera & Mic
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
@@ -79,6 +77,8 @@ const Room = (props) => {
         const interval = setInterval(() => {
           let eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime);
           let currTime = Math.ceil(Date.now() / 1000);
+          console.log("eTime - " + eTime);
+          console.log("currTime - " + currTime);
           if (currTime >= eTime) {
             setBottomBarButtonsEnabler(false);
             alert("Time Up : Credits Expired the camera and audio will stop withing 10 secs");
