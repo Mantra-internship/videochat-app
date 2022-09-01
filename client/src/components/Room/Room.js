@@ -13,7 +13,7 @@ const Room = (props) => {
   const currentUser = sessionStorage.getItem("user");
   const [peers, setPeers] = useState([]);
   const [userVideoAudio, setUserVideoAudio] = useState({
-    localUser: { video: false, audio: false, userId: 'localUser', isHost: false, enabled: false, handRaised: false },
+    localUser: { video: true, audio: true, userId: 'localUser', isHost: false, enabled: false, handRaised: false },
   });
   const [videoDevices, setVideoDevices] = useState([]);
   const [displayChatOrList, setDisplayChatOrList] = useState(0);    // 0 => None, 1 => chat, 2 => list
@@ -42,108 +42,109 @@ const Room = (props) => {
       setUserVideoAudio((preList) => {
         return {
           ...preList,
-          localUser: { video: false, audio: false, userId: 'localUser', isHost: true, enabled: true, handRaised: false }
+          localUser: { video: true, audio: true, userId: 'localUser', isHost: true, enabled: true, handRaised: false }
         }
       });
       
     }
-    // Get Video Devices
+//     // Get Video Devices
     navigator.mediaDevices.enumerateDevices().then((devices) => {
       const filtered = devices.filter((device) => device.kind === "videoinput");
       setVideoDevices(filtered);
       console.log("filtered: ",filtered);
     });
 
-    // Set Back Button Event
+//     // Set Back Button Event
     window.addEventListener("popstate", goToBack);
 
-    // Handle close event when user presses cross or Alt + F4 / Ctrl + W
-    // To be fixed
-    // window.onbeforeunload = () => {
-    //   socket.emit("BE-leave-room", { roomId, leaver: currentUser });
-    //   props.history.push("/");
-    //   sessionStorage.removeItem("user");
-    //   return "...";
-    // }
+//     // Handle close event when user presses cross or Alt + F4 / Ctrl + W
+//     // To be fixed
+//     // window.onbeforeunload = () => {
+//     //   socket.emit("BE-leave-room", { roomId, leaver: currentUser });
+//     //   props.history.push("/");
+//     //   sessionStorage.removeItem("user");
+//     //   return "...";
+//     // }
 
-    socket.emit("BE-join-room", { roomId, userName: currentUser, userId: JSON.parse(sessionStorage.getItem("userI")).id });
+//     
 
-    // Connect Camera & Mic
+//     // Connect Camera & Mic
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
-        stream.getAudioTracks()[0].enabled = false;
-        console.log("stream.getVideoTrack() :", stream.getVideoTracks())
-        console.log("stream.audioTrack() :", stream.getAudioTracks())
-        stream.getVideoTracks()[0].enabled = false;
-        console.log(stream.getAudioTracks()[0].enabled)
-        const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime); 
-        // console.log(sessionStorage.getItem("userI"));
-        let currTime = Math.ceil(Date.now() / 1000);
+        // stream.getAudioTracks()[0].enabled = false;
+        // console.log("stream.getVideoTrack() :", stream.getVideoTracks())
+        // console.log("stream.audioTrack() :", stream.getAudioTracks())
+        // stream.getVideoTracks()[0].enabled = false;
+        // console.log(stream.getAudioTracks()[0].enabled)
+        // const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime); 
+        // // console.log(sessionStorage.getItem("userI"));
+        // let currTime = Math.ceil(Date.now() / 1000);
         // console.log("currTime : ", currTime);
-        if (currTime >= eTime) {
-          setBottomBarButtonsEnabler(false);
-          alert("Time Up : Credits Expired, Please Recharge to get camera and audio access");
-          stopStreamingCameraAndAudio(stream);
-        }
-        else{
-          const interval = setInterval(() => {
-            const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime);
-            console.log("eTime : ", eTime);
-            console.log(Date.now() / 1000);
-            let currTime = Math.ceil(Date.now() / 1000);
-            console.log("currTime : ", currTime);
-            if (currTime >= eTime) {
-              setBottomBarButtonsEnabler(false);
-              alert("Time Up : Credits Expired the camera and audio will stop withing 10 secs");
-              const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
-              const leaveTime = Math.ceil(Date.now() / 1000);
-              axios
-                .post('http://localhost:5000/api/user/credit-saver', {
-                  eTime,
-                  leaveTime,
-                  currentUser,
-                })
-                .catch((err) => {
-                  console.log(err);
-                  alert('Unable to leave meet');
-                });
+        // if (currTime >= eTime) {
+        //   setBottomBarButtonsEnabler(false);
+        //   alert("Time Up : Credits Expired, Please Recharge to get camera and audio access");
+        //   stopStreamingCameraAndAudio(stream);
+        // }
+        // else{
+          // const interval = setInterval(() => {
+            // const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime);
+            // console.log("eTime : ", eTime);
+            // console.log(Date.now() / 1000);
+            // let currTime = Math.ceil(Date.now() / 1000);
+            // console.log("currTime : ", currTime);
+            // if (currTime >= eTime) {
+              // setBottomBarButtonsEnabler(false);
+              // alert("Time Up : Credits Expired the camera and audio will stop withing 10 secs");
+              // const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
+              // const leaveTime = Math.ceil(Date.now() / 1000);
+              // axios
+              //   .post('http://localhost:5000/api/user/credit-saver', {
+              //     eTime,
+              //     leaveTime,
+              //     currentUser,
+              //   })
+              //   .catch((err) => {
+              //     console.log(err);
+              //     alert('Unable to leave meet');
+              //   });
               
-              setTimeout(() => stopStreamingCameraAndAudio(stream), 10000);
+              // setTimeout(() => stopStreamingCameraAndAudio(stream), 10000);
               
-              setUserVideoAudio((preList) => {
-                  const userVideoTrack =
-                    userVideoRef.current.srcObject.getVideoTracks()[0];
-                  const userAudioTrack =
-                    userVideoRef.current.srcObject.getAudioTracks()[0];
-                userVideoTrack.enabled = false;
-                  console.log("userVideoTrack : " , userVideoTrack);
+            //   setUserVideoAudio((preList) => {
+            //       const userVideoTrack =
+            //         userVideoRef.current.srcObject.getVideoTracks()[0];
+            //       const userAudioTrack =
+            //         userVideoRef.current.srcObject.getAudioTracks()[0];
+            //     userVideoTrack.enabled = false;
+            //       console.log("userVideoTrack : " , userVideoTrack);
 
-                  console.log( "userAudioTrack : ", userAudioTrack);
+            //       console.log( "userAudioTrack : ", userAudioTrack);
           
-                  if (userAudioTrack) {
-                    userAudioTrack.enabled = false;
-                  } else {
-                    userStream.current.getAudioTracks()[0].enabled = false;
-                  }
+            //       if (userAudioTrack) {
+            //         userAudioTrack.enabled = false;
+            //       } else {
+            //         userStream.current.getAudioTracks()[0].enabled = false;
+            //       }
           
-                return {
-                  ...preList,
-                  localUser: { video: false, audio: false, userId: 'localUser', isHost: isHost, enabled: false, handRaised: false },
-                };
-              });
+            //     return {
+            //       ...preList,
+            //       localUser: { video: false, audio: false, userId: 'localUser', isHost: isHost, enabled: false, handRaised: false },
+            //     };
+            //   });
           
-              socket.emit("BE-toggle-both", { roomId });
+            //   socket.emit("BE-toggle-both", { roomId });
 
-              return clearInterval(interval);
-            }
-          }, 5000);
-        }
+            //   return clearInterval(interval);
+            // }
+          // }, 5000);
+        // }
     
         console.log("stream", stream);
         userVideoRef.current.srcObject = stream;
         userStream.current = stream;
 
+        socket.emit("BE-join-room", { roomId, userName: currentUser, userId: JSON.parse(sessionStorage.getItem("userI")).id });
 
         socket.on("FE-user-join", (users) => {
           // all users
@@ -169,7 +170,7 @@ const Room = (props) => {
               setUserVideoAudio((preList) => {
                 return {
                   ...preList,
-                  [peer.userName]: { video, audio: false, userId, isHost, enabled, handRaised: false },
+                  [peer.userName]: { video, audio, userId, isHost, enabled, handRaised: false },
                 };
               });
             }
@@ -270,7 +271,7 @@ const Room = (props) => {
       try{
         if(newState){
           setUserVideoAudio((preList) => {
-            let {video, audio, userId, isHost} = userVideoAudio['localUser'];
+            let {video, audio, userId, isHost} = preList['localUser'];
             return {
               ...preList,
               localUser: {video, audio, userId, isHost, enabled: true, handRaised: false},    // when the host enables user, hand is set to unraised state
@@ -319,7 +320,7 @@ const Room = (props) => {
   function createPeer(userId, caller, stream) {
     const peer = new Peer({
       initiator: true,
-      trickle: true,
+      trickle: false,
       stream,
     });
 
@@ -336,13 +337,13 @@ const Room = (props) => {
 
     return peer;
   }
-  function stopStreamingCameraAndAudio(stream){
-    stream.getTracks().forEach(function(track) {
-        if (track.readyState == 'live') {
-            track.stop();
-        }
-    });
-  }
+//   function stopStreamingCameraAndAudio(stream){
+//     stream.getTracks().forEach(function(track) {
+//         if (track.readyState == 'live') {
+//             track.stop();
+//         }
+//     });
+//   }
   function addPeer(incomingSignal, callerId, stream) {
     const peer = new Peer({
       initiator: false,
@@ -414,30 +415,6 @@ const Room = (props) => {
     if(e){
       e.preventDefault();
     }
-    const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
-    const leaveTime = Math.ceil(Date.now() / 1000);
-    await axios
-      .post('http://localhost:5000/api/user/credit-saver', {
-        eTime,
-        leaveTime,
-        currentUser,
-      })
-      .then((response) => {
-        console.log(response);
-        socket.emit('BE-leave-room', { roomId, leaver: currentUser });
-        sessionStorage.removeItem('user');
-        window.location.href = '/';
-      })
-      .catch((err) => {
-        console.log(err);
-        alert('Unable to leave meet');
-      });
-  };
-
-  const reloadPage = (e) => {
-     if(e){
-      e.preventDefault();
-    }
     // const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
     // const leaveTime = Math.ceil(Date.now() / 1000);
     // await axios
@@ -449,8 +426,32 @@ const Room = (props) => {
       // .then((response) => {
         // console.log(response);
         socket.emit('BE-leave-room', { roomId, leaver: currentUser });
+        sessionStorage.removeItem('user');
+        window.location.href = '/';
+      // })
+      // .catch((err) => {
+      //   console.log(err);
+      //   alert('Unable to leave meet');
+      // });
+  };
+
+  const reloadPage = (e) => {
+    //  if(e){
+      e.preventDefault();
+    // }
+    // const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
+    // const leaveTime = Math.ceil(Date.now() / 1000);
+    // await axios
+    //   .post('http://localhost:5000/api/user/credit-saver', {
+    //     eTime,
+    //     leaveTime,
+    //     currentUser,
+    //   })
+      // .then((response) => {
+        // console.log(response);
+        // socket.emit('BE-leave-room', { roomId, leaver: currentUser });
         // sessionStorage.removeItem('user');
-    window.location.href = `/room/${roomId}`;
+    // window.location.href = `/room/${roomId}`;
     // console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
     // props.history.push(`/room/${roomId}`)
     // console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
@@ -460,19 +461,19 @@ const Room = (props) => {
 
   const endMeetForAll = (e) => {
     e.preventDefault();
-    socket.emit("BE-remove-user", { roomId, target: 'all' });
-    goToBack();
+    // socket.emit("BE-remove-user", { roomId, target: 'all' });
+    // goToBack();
   }
 
   const chatToggleForAll = () => {
-    socket.emit("BE-chat-toggler", { roomId, chatEnabled: !chatEnabled });
-    setChatEnabled(!chatEnabled);
+    // socket.emit("BE-chat-toggler", { roomId, chatEnabled: !chatEnabled });
+    // setChatEnabled(!chatEnabled);
   }
 
   const toggleCameraAudio = (e) => {
-    console.log(e, " and enabled - ", userVideoAudio['localUser'].enabled);
+    // console.log(e, " and enabled - ", userVideoAudio['localUser'].enabled);
     if( userVideoAudio['localUser'].enabled || e == 'both' || e == 'videoH' || e == 'audioH' ){
-      console.log("Toggle the media, (enabled)");
+//       console.log("Toggle the media, (enabled)");
       let target;
       if(e == 'videoH' || e == 'audioH'){
         target = e.slice(0, -1);
@@ -481,7 +482,7 @@ const Room = (props) => {
       }else{
         target = e.target.getAttribute("data-switch");
       }
-      console.log( "target: ", target);
+//       console.log( "target: ", target);
       setUserVideoAudio((preList) => {
         let videoSwitch = preList["localUser"].video;
         let audioSwitch = preList["localUser"].audio;
@@ -543,77 +544,77 @@ const Room = (props) => {
   };
 
   const toggleRaiseHand = (newHandState) => {
-    setUserVideoAudio((preList) => {
-      let {video, audio, userId, isHost, enabled, handRaised} = preList['localUser'];
-      handRaised = !handRaised;
-      return {
-        ...preList,
-        localUser: { video, audio, userId, isHost, enabled, handRaised },
-      }
-    });
-    socket.emit("BE-toggle-RH", { roomId, newHandState, userName: sessionStorage.getItem('user') });
+    // setUserVideoAudio((preList) => {
+    //   let {video, audio, userId, isHost, enabled, handRaised} = preList['localUser'];
+    //   handRaised = !handRaised;
+    //   return {
+    //     ...preList,
+    //     localUser: { video, audio, userId, isHost, enabled, handRaised },
+    //   }
+    // });
+    // socket.emit("BE-toggle-RH", { roomId, newHandState, userName: sessionStorage.getItem('user') });
   };
 
   const clickScreenSharing = () => {
-    if (!screenShare) {
-      navigator.mediaDevices
-        .getDisplayMedia({ cursor: true })
-        .then((stream) => {
-          const screenTrack = stream.getTracks()[0];
+    // if (!screenShare) {
+    //   navigator.mediaDevices
+    //     .getDisplayMedia({ cursor: true })
+    //     .then((stream) => {
+    //       const screenTrack = stream.getTracks()[0];
 
-          peersRef.current.forEach(({ peer }) => {
-            // replaceTrack (oldTrack, newTrack, oldStream);
-            peer.replaceTrack(
-              peer.streams[0]
-                .getTracks()
-                .find((track) => track.kind === "video"),
-              screenTrack,
-              userStream.current
-            );
-          });
+    //       peersRef.current.forEach(({ peer }) => {
+    //         // replaceTrack (oldTrack, newTrack, oldStream);
+    //         peer.replaceTrack(
+    //           peer.streams[0]
+    //             .getTracks()
+    //             .find((track) => track.kind === "video"),
+    //           screenTrack,
+    //           userStream.current
+    //         );
+    //       });
 
-          // Listen click end
-          screenTrack.onended = () => {
-            peersRef.current.forEach(({ peer }) => {
-              peer.replaceTrack(
-                screenTrack,
-                peer.streams[0]
-                  .getTracks()
-                  .find((track) => track.kind === "video"),
-                userStream.current
-              );
-            });
-            userVideoRef.current.srcObject = userStream.current;
-            setScreenShare(false);
-          };
+    //       // Listen click end
+    //       screenTrack.onended = () => {
+    //         peersRef.current.forEach(({ peer }) => {
+    //           peer.replaceTrack(
+    //             screenTrack,
+    //             peer.streams[0]
+    //               .getTracks()
+    //               .find((track) => track.kind === "video"),
+    //             userStream.current
+    //           );
+    //         });
+    //         userVideoRef.current.srcObject = userStream.current;
+    //         setScreenShare(false);
+    //       };
 
-          userVideoRef.current.srcObject = stream;
-          screenTrackRef.current = screenTrack;
-          setScreenShare(true);
-        });
-    } else {
-      screenTrackRef.current.onended();
-    }
+    //       userVideoRef.current.srcObject = stream;
+    //       screenTrackRef.current = screenTrack;
+    //       setScreenShare(true);
+    //     });
+    // } else {
+    //   screenTrackRef.current.onended();
+    // }
   };
 
   const expandScreen = (e) => {
-    const elem = e.target;
+//     const elem = e.target;
 
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) {
-      /* Firefox */
-      elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) {
-      /* Chrome, Safari & Opera */
-      elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) {
-      /* IE/Edge */
-      elem.msRequestFullscreen();
-    }
+//     if (elem.requestFullscreen) {
+//       elem.requestFullscreen();
+//     } else if (elem.mozRequestFullScreen) {
+//       /* Firefox */
+//       elem.mozRequestFullScreen();
+//     } else if (elem.webkitRequestFullscreen) {
+//       /* Chrome, Safari & Opera */
+//       elem.webkitRequestFullscreen();
+//     } else if (elem.msRequestFullscreen) {
+//       /* IE/Edge */
+//       elem.msRequestFullscreen();
+//     }
   };
 
-  // Buy Credits 
+//   // Buy Credits 
   const goToBuyCredits = () => {
     props.history.push("/buy-credits");
  }
