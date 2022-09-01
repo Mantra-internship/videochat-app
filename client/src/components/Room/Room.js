@@ -32,7 +32,6 @@ const Room = (props) => {
   document.title = `Room - ${roomId}`
 
   useEffect(() => {
-    console.log("Mounted &&&&&&&&&&&&&&&")
     // console.log(JSON.parse(sessionStorage.getItem("userI")).eTime);
     if(JSON.parse(sessionStorage.getItem("userI")) === null || JSON.parse(sessionStorage.getItem("userI")).eTime === undefined){
       return window.location.href = "/";
@@ -72,77 +71,34 @@ const Room = (props) => {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
-        // stream.getAudioTracks()[0].enabled = false;
-        // console.log("stream.getVideoTrack() :", stream.getVideoTracks())
-        // console.log("stream.audioTrack() :", stream.getAudioTracks())
-        // stream.getVideoTracks()[0].enabled = false;
         
         userVideoRef.current.srcObject = stream;
         userStream.current = stream;
         socket.emit("BE-join-room", { roomId, userName: currentUser, userId: JSON.parse(sessionStorage.getItem("userI")).id });
-        // console.log(stream.getAudioTracks()[0].enabled)
-        // const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime); 
-        // console.log(sessionStorage.getItem("userI"));
-        // let currTime = Math.ceil(Date.now() / 1000);
-        // console.log("currTime : ", currTime);
-        // if (currTime >= eTime) {
-        //   setBottomBarButtonsEnabler(false);
-        //   alert("Time Up : Credits Expired, Please Recharge to get camera and audio access");
-        //   stopStreamingCameraAndAudio(stream);
-        // }
-        // else{
-        //   const interval = setInterval(() => {
-        //     const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime);
-        //     console.log("eTime : ", eTime);
-        //     console.log(Date.now() / 1000);
-        //     let currTime = Math.ceil(Date.now() / 1000);
-        //     console.log("currTime : ", currTime);
-        //     if (currTime >= eTime) {
-        //       setBottomBarButtonsEnabler(false);
-        //       alert("Time Up : Credits Expired the camera and audio will stop withing 10 secs");
-        //       const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
-        //       const leaveTime = Math.ceil(Date.now() / 1000);
-        //       axios
-        //         .post('http://localhost:5000/api/user/credit-saver', {
-        //           eTime,
-        //           leaveTime,
-        //           currentUser,
-        //         })
-        //         .catch((err) => {
-        //           console.log(err);
-        //           alert('Unable to leave meet');
-        //         });
-              
-        //       setTimeout(() => stopStreamingCameraAndAudio(stream), 10000);
-              
-        //       setUserVideoAudio((preList) => {
-        //           const userVideoTrack =
-        //             userVideoRef.current.srcObject.getVideoTracks()[0];
-        //           const userAudioTrack =
-        //             userVideoRef.current.srcObject.getAudioTracks()[0];
-        //         userVideoTrack.enabled = false;
-        //           console.log("userVideoTrack : " , userVideoTrack);
 
-        //           console.log( "userAudioTrack : ", userAudioTrack);
-          
-        //           if (userAudioTrack) {
-        //             userAudioTrack.enabled = false;
-        //           } else {
-        //             userStream.current.getAudioTracks()[0].enabled = false;
-        //           }
-          
-        //         return {
-        //           ...preList,
-        //           localUser: { video: false, audio: false, userId: 'localUser', isHost: isHost, enabled: false, handRaised: false },
-        //         };
-        //       });
-          
-        //       socket.emit("BE-toggle-both", { roomId });
-
-        //       return clearInterval(interval);
-        //     }
-        //   }, 5000);
-        // }
+        const interval = setInterval(() => {
+          let eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime);
+          let currTime = Math.ceil(Date.now() / 1000);
+          if (currTime >= eTime) {
+            setBottomBarButtonsEnabler(false);
+            alert("Time Up : Credits Expired the camera and audio will stop withing 10 secs");
+            const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
+            const leaveTime = Math.ceil(Date.now() / 1000);
+            axios
+              .post('http://localhost:5000/api/user/credit-saver', {
+                eTime,
+                leaveTime,
+                currentUser,
+              })
+              .catch((err) => {
+                console.log(err);
+                alert('Unable to leave meet');
+              });
+            // setTimeout((stream) => stopStreamingCameraAndAudio(stream), 10000);
+            setTimeout(disabler, 10000);
+            return clearInterval(interval);
+          }
+        }, 5000);
     
         console.log("stream", stream);
         
@@ -316,7 +272,7 @@ const Room = (props) => {
     // alert("If Your video fails to load, please press the reset button in the bottom bar.")
 
     return () => {
-      // clearInterval(interval);
+      clearInterval(interval);
       socket.disconnect();
     };
     // eslint-disable-next-line
@@ -344,13 +300,7 @@ const Room = (props) => {
 
     return peer;
   }
-//   function stopStreamingCameraAndAudio(stream){
-//     stream.getTracks().forEach(function(track) {
-//         if (track.readyState == 'live') {
-//             track.stop();
-//         }
-//     });
-//   }
+
   function addPeer(incomingSignal, callerId, stream) {
     const peer = new Peer({
       initiator: false,
@@ -446,6 +396,14 @@ const Room = (props) => {
         alert('Unable to leave meet');
       });
   };
+
+  // function stopStreamingCameraAndAudio(stream){
+  //   stream.getTracks().forEach(function(track) {
+  //     if (track.readyState == 'live') {
+  //         track.stop();
+  //     }
+  //   });
+  // }
 
   const reloadPage = (e) => {
      if(e){
