@@ -272,7 +272,7 @@ const Room = (props) => {
     // alert("If Your video fails to load, please press the reset button in the bottom bar.")
 
     return () => {
-      clearInterval(interval);
+      // clearInterval(interval);
       socket.disconnect();
     };
     // eslint-disable-next-line
