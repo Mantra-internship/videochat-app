@@ -146,10 +146,10 @@ const Room = (props) => {
     
         console.log("stream", stream);
         
-        if(JSON.parse(sessionStorage.getItem("userI")).id != roomId){
-          console.log("disabler called");
-          setTimeout(disabler, 3000);
-        }
+//         if(JSON.parse(sessionStorage.getItem("userI")).id != roomId){
+//           console.log("disabler called");
+//           setTimeout(disabler, 3000);
+//         }
 
         socket.on("FE-user-join", (users) => {
           // all users
@@ -278,7 +278,7 @@ const Room = (props) => {
           // console.log("-----------------------"+video+", "+audio);
           setUserVideoAudio((preList) => {
             let {video, audio, userId, isHost} = preList['localUser'];
-            console.log("-----------------------"+video+", "+audio);
+//             console.log("-----------------------"+video+", "+audio);
             return {
               ...preList,
               localUser: {video, audio, userId, isHost, enabled: true, handRaised: false},    // when the host enables user, hand is set to unraised state
@@ -327,7 +327,7 @@ const Room = (props) => {
   function createPeer(userId, caller, stream) {
     const peer = new Peer({
       initiator: true,
-      trickle: true,
+      trickle: false,
       stream,
     });
 
@@ -344,13 +344,13 @@ const Room = (props) => {
 
     return peer;
   }
-  function stopStreamingCameraAndAudio(stream){
-    stream.getTracks().forEach(function(track) {
-        if (track.readyState == 'live') {
-            track.stop();
-        }
-    });
-  }
+//   function stopStreamingCameraAndAudio(stream){
+//     stream.getTracks().forEach(function(track) {
+//         if (track.readyState == 'live') {
+//             track.stop();
+//         }
+//     });
+//   }
   function addPeer(incomingSignal, callerId, stream) {
     const peer = new Peer({
       initiator: false,
