@@ -13,7 +13,7 @@ const Room = (props) => {
   const currentUser = sessionStorage.getItem("user");
   const [peers, setPeers] = useState([]);
   const [userVideoAudio, setUserVideoAudio] = useState({
-    localUser: { video: false, audio: false, userId: 'localUser', isHost: false, enabled: false, handRaised: false },
+    localUser: { video: true, audio: true, userId: 'localUser', isHost: false, enabled: false, handRaised: false },
   });
   const [videoDevices, setVideoDevices] = useState([]);
   const [displayChatOrList, setDisplayChatOrList] = useState(0);    // 0 => None, 1 => chat, 2 => list
@@ -42,7 +42,7 @@ const Room = (props) => {
       setUserVideoAudio((preList) => {
         return {
           ...preList,
-          localUser: { video: false, audio: false, userId: 'localUser', isHost: true, enabled: true, handRaised: false }
+          localUser: { video: true, audio: true, userId: 'localUser', isHost: true, enabled: true, handRaised: false }
         }
       });
       
@@ -66,84 +66,90 @@ const Room = (props) => {
     //   return "...";
     // }
 
-    socket.emit("BE-join-room", { roomId, userName: currentUser, userId: JSON.parse(sessionStorage.getItem("userI")).id });
+    
 
     // Connect Camera & Mic
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
-        console.log("stream.getVideoTrack() :", stream.getVideoTracks())
-        stream.getVideoTracks()[0].enabled = false;
-        stream.getAudioTracks()[0].enabled = false;
-        console.log("stream.getVideoTrack() :", stream.getVideoTracks())
-        console.log("stream.audioTrack() :", stream.getAudioTracks())
-        const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime); 
-        // console.log(sessionStorage.getItem("userI"));
-        let currTime = Math.ceil(Date.now() / 1000);
-        // console.log("currTime : ", currTime);
-        if (currTime >= eTime) {
-          setBottomBarButtonsEnabler(false);
-          alert("Time Up : Credits Expired, Please Recharge to get camera and audio access");
-          stopStreamingCameraAndAudio(stream);
-        }
-        else{
-          const interval = setInterval(() => {
-            const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime);
-            console.log("eTime : ", eTime);
-            console.log(Date.now() / 1000);
-            let currTime = Math.ceil(Date.now() / 1000);
-            console.log("currTime : ", currTime);
-            if (currTime >= eTime) {
-              setBottomBarButtonsEnabler(false);
-              alert("Time Up : Credits Expired the camera and audio will stop withing 10 secs");
-              const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
-              const leaveTime = Math.ceil(Date.now() / 1000);
-              axios
-                .post('https://video-chat-backend99.herokuapp.com/api/user/credit-saver', {
-                  eTime,
-                  leaveTime,
-                  currentUser,
-                })
-                .catch((err) => {
-                  console.log(err);
-                  alert('Unable to leave meet');
-                });
-              
-              setTimeout(() => stopStreamingCameraAndAudio(stream), 10000);
-              
-              setUserVideoAudio((preList) => {
-                  const userVideoTrack =
-                    userVideoRef.current.srcObject.getVideoTracks()[0];
-                  const userAudioTrack =
-                    userVideoRef.current.srcObject.getAudioTracks()[0];
-                userVideoTrack.enabled = false;
-                  console.log("userVideoTrack : " , userVideoTrack);
-
-                  console.log( "userAudioTrack : ", userAudioTrack);
-          
-                  if (userAudioTrack) {
-                    userAudioTrack.enabled = false;
-                  } else {
-                    userStream.current.getAudioTracks()[0].enabled = false;
-                  }
-          
-                return {
-                  ...preList,
-                  localUser: { video: false, audio: false, userId: 'localUser', isHost: isHost, enabled: false, handRaised: false },
-                };
-              });
-          
-              socket.emit("BE-toggle-both", { roomId });
-
-              return clearInterval(interval);
-            }
-          }, 5000);
-        }
-    
-        console.log("stream", stream);
+        // stream.getAudioTracks()[0].enabled = false;
+        // console.log("stream.getVideoTrack() :", stream.getVideoTracks())
+        // console.log("stream.audioTrack() :", stream.getAudioTracks())
+        // stream.getVideoTracks()[0].enabled = false;
+        
         userVideoRef.current.srcObject = stream;
         userStream.current = stream;
+        socket.emit("BE-join-room", { roomId, userName: currentUser, userId: JSON.parse(sessionStorage.getItem("userI")).id });
+        // console.log(stream.getAudioTracks()[0].enabled)
+        // const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime); 
+        // console.log(sessionStorage.getItem("userI"));
+        // let currTime = Math.ceil(Date.now() / 1000);
+        // console.log("currTime : ", currTime);
+        // if (currTime >= eTime) {
+        //   setBottomBarButtonsEnabler(false);
+        //   alert("Time Up : Credits Expired, Please Recharge to get camera and audio access");
+        //   stopStreamingCameraAndAudio(stream);
+        // }
+        // else{
+        //   const interval = setInterval(() => {
+        //     const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime);
+        //     console.log("eTime : ", eTime);
+        //     console.log(Date.now() / 1000);
+        //     let currTime = Math.ceil(Date.now() / 1000);
+        //     console.log("currTime : ", currTime);
+        //     if (currTime >= eTime) {
+        //       setBottomBarButtonsEnabler(false);
+        //       alert("Time Up : Credits Expired the camera and audio will stop withing 10 secs");
+        //       const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
+        //       const leaveTime = Math.ceil(Date.now() / 1000);
+        //       axios
+        //         .post('http://localhost:5000/api/user/credit-saver', {
+        //           eTime,
+        //           leaveTime,
+        //           currentUser,
+        //         })
+        //         .catch((err) => {
+        //           console.log(err);
+        //           alert('Unable to leave meet');
+        //         });
+              
+        //       setTimeout(() => stopStreamingCameraAndAudio(stream), 10000);
+              
+        //       setUserVideoAudio((preList) => {
+        //           const userVideoTrack =
+        //             userVideoRef.current.srcObject.getVideoTracks()[0];
+        //           const userAudioTrack =
+        //             userVideoRef.current.srcObject.getAudioTracks()[0];
+        //         userVideoTrack.enabled = false;
+        //           console.log("userVideoTrack : " , userVideoTrack);
 
+        //           console.log( "userAudioTrack : ", userAudioTrack);
+          
+        //           if (userAudioTrack) {
+        //             userAudioTrack.enabled = false;
+        //           } else {
+        //             userStream.current.getAudioTracks()[0].enabled = false;
+        //           }
+          
+        //         return {
+        //           ...preList,
+        //           localUser: { video: false, audio: false, userId: 'localUser', isHost: isHost, enabled: false, handRaised: false },
+        //         };
+        //       });
+          
+        //       socket.emit("BE-toggle-both", { roomId });
+
+        //       return clearInterval(interval);
+        //     }
+        //   }, 5000);
+        // }
+    
+        console.log("stream", stream);
+        
+        if(JSON.parse(sessionStorage.getItem("userI")).id != roomId){
+          console.log("disabler called");
+          setTimeout(disabler, 3000);
+        }
 
         socket.on("FE-user-join", (users) => {
           // all users
@@ -169,7 +175,7 @@ const Room = (props) => {
               setUserVideoAudio((preList) => {
                 return {
                   ...preList,
-                  [peer.userName]: { video, audio: false, userId, isHost, enabled, handRaised: false },
+                  [peer.userName]: { video, audio, userId, isHost, enabled, handRaised: false },
                 };
               });
             }
@@ -269,8 +275,10 @@ const Room = (props) => {
     socket.on("FE-toggle-enabled", ({ target, newState, targetName }) => {
       try{
         if(newState){
+          // console.log("-----------------------"+video+", "+audio);
           setUserVideoAudio((preList) => {
-            let {video, audio, userId, isHost} = userVideoAudio['localUser'];
+            let {video, audio, userId, isHost} = preList['localUser'];
+            console.log("-----------------------"+video+", "+audio);
             return {
               ...preList,
               localUser: {video, audio, userId, isHost, enabled: true, handRaised: false},    // when the host enables user, hand is set to unraised state
@@ -409,6 +417,11 @@ const Room = (props) => {
     }
   }
 
+  const disabler = () =>{
+    console.log("inside disabler");
+    toggleCameraAudio('both');
+  }
+
   // BackButton
   const goToBack = async (e) => {
     if(e){
@@ -417,7 +430,7 @@ const Room = (props) => {
     const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
     const leaveTime = Math.ceil(Date.now() / 1000);
     await axios
-      .post('https://video-chat-backend99.herokuapp.com/api/user/credit-saver', {
+      .post('http://localhost:5000/api/user/credit-saver', {
         eTime,
         leaveTime,
         currentUser,
@@ -486,7 +499,7 @@ const Room = (props) => {
         let videoSwitch = preList["localUser"].video;
         let audioSwitch = preList["localUser"].audio;
         let { isHost, enabled, userId, handRaised } = preList["localUser"];
-        
+        console.log(target + ", " + videoSwitch + ", " + audioSwitch);
         if(target === "both"){
           enabled = false;
           handRaised = false;
@@ -527,6 +540,7 @@ const Room = (props) => {
           }
         }
         
+        console.log(target + ", " + videoSwitch + ", " + audioSwitch);
         return {
           ...preList,
           localUser: { video: videoSwitch, audio: audioSwitch, userId: 'localUser', isHost, enabled, handRaised },
