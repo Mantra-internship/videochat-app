@@ -85,14 +85,16 @@ const Room = (props) => {
             const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
             const leaveTime = Math.ceil(Date.now() / 1000);
             axios
-              .post('http://localhost:5000/api/user/credit-saver', {
+              .post('https://video-chat-backend99.herokuapp.com/api/user/credit-saver', {
                 eTime,
                 leaveTime,
                 currentUser,
+              }).then((res) => {
+                console.log(res);
+                console.log("Your credits has been exhausted");
               })
               .catch((err) => {
                 console.log(err);
-                alert('Unable to leave meet');
               });
             // setTimeout((stream) => stopStreamingCameraAndAudio(stream), 10000);
             setTimeout(disabler, 10000);
