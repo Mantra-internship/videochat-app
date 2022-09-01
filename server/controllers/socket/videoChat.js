@@ -7,9 +7,9 @@ const videoChat = (socket, io, socketList) => {
     socket.join(roomId);
     //change this to false
     if(userId === roomId)
-      socketList[socket.id] = { userName, video: false, audio: false, isHost: true, enabled: true, handRaised: false };    
+      socketList[socket.id] = { userName, video: true, audio: true, isHost: true, enabled: true, handRaised: false };    
     else
-      socketList[socket.id] = { userName, video: false, audio: false, isHost: false, enabled: false, handRaised: false };
+      socketList[socket.id] = { userName, video: true, audio: true, isHost: false, enabled: false, handRaised: false };
     // Set User List
     io.sockets.in(roomId).clients((err, clients) => {
       try {
@@ -20,7 +20,7 @@ const videoChat = (socket, io, socketList) => {
         });
         console.log({ socketList });
         socket.broadcast.to(roomId).emit('FE-user-join', users);
-        io.to(socket.id).emit('FE-user-join', users);
+        // io.to(socket.id).emit('FE-user-join', users);
         // io.sockets.in(roomId).emit('FE-user-join', users);
       } catch (e) {
         io.sockets.in(roomId).emit('FE-error-user-exist', { err: true });
