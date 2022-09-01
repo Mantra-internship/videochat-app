@@ -11,10 +11,10 @@ function AstrologersPage(props) {
 
   // make a call for a particular astrolger with a unique phone number.
   useEffect(() => {
-    // console.log(props.match.params.uphone);
     astrologersDataFetcher();
   }, []);
 
+  // axios request to fetch a particular user data from  the database
   const astrologersDataFetcher = async () => {
     await axios
       .get(
@@ -23,10 +23,8 @@ function AstrologersPage(props) {
         {}
       )
       .then((resObj) => {
-        // console.log(resObj.data);
         setAstrologerData(resObj.data);
         setAstrologersInfo(resObj.data.astrologerInfo);
-        // console.log(astrologerData);
       })
       .catch((error) => {
         console.log(error);
@@ -241,14 +239,6 @@ const SectionRight = styled.div`
   }
 `;
 
-const IMG = styled.div`
-  display: inline-block;
-  width: 200px;
-  height: 200px;
-  border-radius: 121px;
-  border: 3px solid red;
-`;
-
 const Button = styled.button`
   height: 50px;
   margin-top: 15px;
@@ -266,45 +256,5 @@ const Button = styled.button`
     cursor: pointer;
   }
 `;
-
-// const outerDiv = styled.div`
-//     width: 80%;
-//     border: 2px solid #ccc;
-//     border-radius: 5px;
-//     margin: 20px 130px 20px 130px;
-//     padding-top: 20px;
-// `;
-
-// const Left = styled.div`
-//     float: left;
-// 	display: inline-block;
-// 	width: 275px;
-// 	height: 215px;
-//     margin-left: 20px;
-//     `;
-
-// const Pic = styled.div`
-// 	width:200px;
-// 	height: 200px;
-//     border-radius: 100px;
-//     border: 3px solid red;
-//      `;
-
-// const Right = styled.div`
-// 	float: left;
-// `;
-
-// const Clear = styled.div`
-// 	clear: both;
-// `;
-
-// const Button = styled.div`
-// 	padding: 15px;
-// 	border-radius: 15px;
-// 	background-color: white;
-// 	color: lightgreen;
-// 	font-size: 20px;
-// 	border: 2px solid lightgreen;
-// `;
 
 export default AstrologersPage;

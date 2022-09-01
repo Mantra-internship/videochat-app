@@ -4,8 +4,6 @@ import socket from '../../socket';
 
 const UserList = ({ display, roomId, isHost, userList }) => {
 
-  // const currentUser = sessionStorage.getItem('user');
-
   const closeVideo = (user) => {   // can only switch off
     const { userId, video } = user;
     if(userId != 'localUser' && isHost && video){
@@ -20,6 +18,7 @@ const UserList = ({ display, roomId, isHost, userList }) => {
       socket.emit('BE-media-close', { userId, targetType: 'audioH' });
     }
   }
+  // host functionality
   const removeUser = (userId) => {
     if(userId != 'localUser' && isHost){
       console.log(`remove user - ${userId}`)
@@ -27,6 +26,7 @@ const UserList = ({ display, roomId, isHost, userList }) => {
     }
   }
 
+  // enable /  disable audio-video
   const toggleEnable = (user) => {
     const {userId} = user[1];
     console.log(`${userId} - enabled = ${user[1].enabled}`);
@@ -36,8 +36,8 @@ const UserList = ({ display, roomId, isHost, userList }) => {
     }
   }
 
+  // test fucntion
   const printer = (e) => {
-    // console.log(Object.entries(userList));
     console.log(userList);
   }
 
@@ -57,7 +57,6 @@ const UserList = ({ display, roomId, isHost, userList }) => {
                     { isHost && user[1].userId != 'localUser' ? <RemoveIcon className={'fas fa-minus-circle'} onClick={() => { removeUser(user[1].userId) }}/> : <></>}
                     { isHost && user[0] != 'localUser' ? <ToggleIcon className={ user[1] && user[1].enabled ? 'fa fa-toggle-on' : 'fa fa-toggle-off' } style={{ color:  user[1] && user[1].enabled ? 'green' : 'red'}} onClick={() => { toggleEnable(user) }}/> : <></>}
                   </div>
-                  {/* <div>{user[1].userId}</div> */}
                 </User>              
                 ))
             :
@@ -65,7 +64,7 @@ const UserList = ({ display, roomId, isHost, userList }) => {
         }
       </ListArea>
 
-
+{/* {test button} */}
       <DisableButton onClick={printer}>
         tester
       </DisableButton>

@@ -14,6 +14,7 @@ function AstrologerMain() {
     astrologersDataFetcher();
   }, []);
 
+  // axios request to fetch all the astrologers data in the database
   const astrologersDataFetcher = async () => {
     await axios
       .get('http://localhost:5000/api/user/astrologers')

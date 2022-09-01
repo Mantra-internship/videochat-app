@@ -17,9 +17,7 @@ import Profile from './components/Profile/Profile';
 import PageNotFound from './components/PageNotFound/PageNotFound';
 import PaymentResult from './components/Payment-Redirect/PaymentResult'
 
-import Navbar from './components/Navbar/Navbar';
 import Nav from './components/Navbar/Nav';
-import Navbar2 from './components/Navbar/Navbar2';
 import axios from 'axios';
 
 function App(props) {
@@ -28,6 +26,7 @@ function App(props) {
     checkAuth();
   }, []);
 
+  // extract token from cookie
   const getToken = () => {
     const cArray = document.cookie.split(' ');
     let anotherToken;
@@ -43,15 +42,13 @@ function App(props) {
     return anotherToken;
   };
 
+  // validate user session (24hr validation)
   const checkAuth = async () => {
     const jwtToken = document.cookie;
     if (jwtToken == '') {
       setIsAuthenticated(false);
       return;
     }
-
-    // console.log({ token });
-
     await axios
       .post(
         'http://localhost:5000/api/user/authenticate-user',
@@ -61,7 +58,6 @@ function App(props) {
         }
       )
       .then((resObj) => {
-        // console.log(resObj.data.user);
         sessionStorage.setItem('currentuser', JSON.stringify(resObj.data.user));
         if (resObj.data.isAuthenticated) {
           setIsAuthenticated(true);
@@ -73,23 +69,16 @@ function App(props) {
         console.log(error);
         setIsAuthenticated(false);
       });
-    // console.log('isAuthenticated', isAuthenticated);
   };
 
   return (
     <BrowserRouter>
-      {/* <Navbar
-        isAuthenticated={isAuthenticated}
-        setIsAuthenticated={setIsAuthenticated}
-      /> */}
+     {/* {Navbar Component} */}
       <Nav
         isAuthenticated={isAuthenticated}
         setIsAuthenticated={setIsAuthenticated}
       />
-      {/* <Navbar2
-        isAuthenticated={isAuthenticated}
-        setIsAuthenticated={setIsAuthenticated}
-      /> */}
+      
       <AppContainer>
         <Switch>
           <Route exact path="/" render={(props) => <Main {...props} />} />

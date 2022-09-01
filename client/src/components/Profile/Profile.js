@@ -41,6 +41,7 @@ function Profile(props) {
   };
 
   const getData = async () => {
+    // get user data to fill the fields on component mount
     await axios
       .post(
         'http://localhost:5000/api/user/get-user',
@@ -50,13 +51,11 @@ function Profile(props) {
         }
       )
       .then((response) => {
-        // console.log(response.data.foundUser);
         setUser(response.data.foundUser);
         setRole(response.data.foundUser.role);
         setLoader(false);
       })
       .catch((err) => {
-        // console.log(err.response.status);
         if (err.response.status === 404) {
           alert('User not found');
         } else {
@@ -66,7 +65,6 @@ function Profile(props) {
   };
 
   const postData = async () => {
-    // console.log("posting")
     let newData = {
       name: nameRef.current.value,
       email: emailRef.current.value,
@@ -94,15 +92,14 @@ function Profile(props) {
         experience: experienceRef.current.value,
       };
     }
-    // console.log(newData);
 
     setUpdateLoader(true);
+    // update data
     await axios
       .post('http://localhost:5000/api/user/user/update', newData, {
         headers: { authorization: `Bearer ` + getToken() },
       })
       .then((response) => {
-        // console.log(response);
         setUpdateLoader(false)
         alert('Updated Successfully');
       })

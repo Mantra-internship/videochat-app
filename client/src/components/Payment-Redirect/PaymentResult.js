@@ -14,7 +14,6 @@ const Main = (props) => {
 
   useEffect(() => {
     console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-    // console.log(props.location.search);
     paymentResultFetecher()
   }, []);
 
@@ -23,7 +22,6 @@ const Main = (props) => {
     let payment_id, payment_request_id, payment_status;
     let queryString = props.location.search;
     queryString = queryString.substr(1);
-    // console.log(queryString);
     queryString.split('&').forEach((str) => {
       str = str.split('=')
       if(str[0] == 'payment_id') payment_id = str[1];
@@ -68,85 +66,6 @@ const MainContainer = styled.div`
 
   display: flex;
   flex-direction: column;
-`;
-
-const Row = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-top: 15px;
-  line-height: 35px;
-`;
-
-const Heading = styled.h5`
-  font-size: 25px;
-
-  > a {
-    text-decoration: none;
-    color: gold;
-  }
-`;
-
-const Label = styled.label``;
-
-const Input = styled.input`
-  width: 150px;
-  height: 35px;
-  margin-left: 15px;
-  padding-left: 10px;
-  outline: none;
-  border: none;
-  border-radius: 5px;
-`;
-
-const Error = styled.div`
-  margin-top: 10px;
-  font-size: 20px;
-  color: #e85a71;
-`;
-
-const JoinButton = styled.button`
-  height: 40px;
-  margin-top: 20px;
-  outline: none;
-  border: none;
-  border-radius: 15px;
-  color: #d8e9ef;
-  background-color: #4ea1d3;
-  font-size: 25px;
-  font-weight: 500;
-
-  :hover {
-    background-color: #7bb1d1;
-    cursor: pointer;
-  }
-
-  a {
-    text-decoration: none;
-    color: #d8e9ef;
-  }
-`;
-
-const ResetButton = styled.button`
-  height: 40px;
-  margin-top: 20px;
-  outline: none;
-  border: none;
-  border-radius: 15px;
-  color: #d8e9ef;
-  background-color: #4ea1d3;
-  font-size: 25px;
-  font-weight: 500;
-
-  :hover {
-    background-color: #7bb1d1;
-    cursor: pointer;
-  }
-
-  a {
-    text-decoration: none;
-    color: #d8e9ef;
-  }
 `;
 
 export default Main;

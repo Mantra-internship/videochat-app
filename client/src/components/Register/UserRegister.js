@@ -35,10 +35,10 @@ function UserRegister(props) {
 
   const postData = async () => {
     setLoader(true);
+    // axios request to get OTP from backend.
     await axios
       .post('http://localhost:5000/api/user/register/get-otp', data)
       .then((response) => {
-        // console.log(response.data);
         sessionStorage.setItem('phone', phone);
         sessionStorage.setItem('role', role);
         history.push('/verify-otp');

@@ -29,10 +29,10 @@ function VerifyOtp(props) {
 
   const otpValidater = async () => {
     setLoader(true);
+    // verify otp data in backend
     await axios
       .post('http://localhost:5000/api/user/verify-otp', data)
       .then((response) => {
-        // console.log(response.data.message);
         createCookie('user', response.data.token, 1);
         props.checker(true);
 

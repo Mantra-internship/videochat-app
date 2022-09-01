@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 function AstrologerCard({ astrologer }) {
   const [roomID, setRoomID] = useState('');
+
+  // to set the room host in session storage on join room button. 
   const getRoomHost = () => {
     console.log(astrologer);
     sessionStorage.setItem('roomHost', JSON.stringify(astrologer));

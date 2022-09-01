@@ -2,12 +2,10 @@ import React, { Fragment } from 'react';
 import { PDFViewer } from '@react-pdf/renderer';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-// import styled from 'styled-components';
 import Invoice from './Invoice';
 
 function Invoice_Main() {
   const [invoiceData, setInvoiceData] = useState(false);
-  // const [token, setToken] = useState('');
   document.title = 'Invoice';
 
   useEffect(() => {
@@ -30,13 +28,12 @@ function Invoice_Main() {
     return jwtToken;
   }
 
-  // To be tested
   const transactionDataFetcher = async () => {
 
     const currentURLArray = window.location.href.split('/');
     const len = currentURLArray.length;
     const paymentId = currentURLArray[len - 1];
-
+    // fetch the payment details
     await axios
       .post(`http://localhost:5000/api/user/getPaymentInfo/${paymentId}`,
       {},
@@ -45,7 +42,6 @@ function Invoice_Main() {
       })
       .then((resObj) => {
         setInvoiceData(resObj.data);
-        // console.log(resObj.data);
       })
       .catch((error) => {
         console.log(error);

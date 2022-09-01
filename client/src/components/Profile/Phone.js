@@ -19,7 +19,8 @@ function Phone({
     // to accomodate all country codes for now
     if(userPhone.length < 10 || userPhone.length > 14){
       alert("Enter a valid phone number");
-    }else{
+    } else {
+      // axios to update the profile data
       await axios
         .post(
           'http://localhost:5000/api/user/phone-update',
@@ -30,7 +31,6 @@ function Phone({
             headers: { authorization: `Bearer ` + getToken() },
           }
         ).then((response) => {
-          // console.log(response);
           setShowFields(true);
           alert(response.data.message);
         }).catch((error) => {

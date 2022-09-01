@@ -42,7 +42,6 @@ function AstrologerRegister(props) {
         headers: { authorization: `Bearer ` + getToken() },
       })
       .then((response) => {
-        // console.log(response.data);
         props.history.push('/profile');
         setLoader(false);
       })

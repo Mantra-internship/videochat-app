@@ -6,13 +6,13 @@ import styled from 'styled-components';
 const Payment_records = (props) => {
   const [transactionData, setTransactionData] = useState([]);
   const [loader, setLoader] = useState(true);
-  // const [token, setToken] = useState("");
   document.title = 'Payment Records';
 
   useEffect(() => {
     transactionDataFetcher();
   }, []);
 
+  // extract token from cookie
   const getToken = () => {
     const cArray = document.cookie.split(' ');
     let anotherToken;
@@ -28,6 +28,7 @@ const Payment_records = (props) => {
     return anotherToken;
   };
 
+  // fetch payment records from the database
   const transactionDataFetcher = async () => {
     await axios
       .post(
@@ -38,10 +39,8 @@ const Payment_records = (props) => {
         }
       )
       .then((resObj) => {
-        // console.log(resObj.data);
         setTransactionData(resObj.data.paymentRecord);
         setLoader(false);
-        // console.log(transactionData);
       })
       .catch((error) => {
         console.log(error);
@@ -54,7 +53,6 @@ const Payment_records = (props) => {
       <>
         <Heading>Transaction history</Heading>
         <Container>
-          {/* <div>No Transaction History</div> */}
           {loader ? (
             <Inner>
               <h3>Loading...</h3>
@@ -88,10 +86,6 @@ const Payment_records = (props) => {
                   <p>Payment Request ID - {record.paymentRequestId}</p>
                   {record.paymentRequestStatus === 'Pending' ? (
                     <Button
-                    // style={{
-                    //   padding: '5px 15px',
-                    //   margin: '5px 0',
-                    // }}
                     >
                       <a
                         style={{
@@ -109,10 +103,6 @@ const Payment_records = (props) => {
                   )}
                   {record.paymentRequestStatus !== 'Pending' ? (
                     <Button
-                    // style={{
-                    //   padding: '5px 15px',
-                    //   margin: '5px 0',
-                    // }}
                     >
                       <a
                         style={{

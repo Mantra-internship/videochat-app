@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useHistory} from 'react-router'
 import Peer from "simple-peer";
 import styled from "styled-components";
 import socket from "../../socket";
@@ -32,11 +31,11 @@ const Room = (props) => {
   document.title = `Room - ${roomId}`
 
   useEffect(() => {
-    console.log("Mounted &&&&&&&&&&&&&&&")
-    // console.log(JSON.parse(sessionStorage.getItem("userI")).eTime);
+    // check user data is valid
     if(JSON.parse(sessionStorage.getItem("userI")) === null || JSON.parse(sessionStorage.getItem("userI")).eTime === undefined){
       return window.location.href = "/";
     }
+    // check if the user is host
     if(JSON.parse(sessionStorage.getItem("userI")).id == roomId){
       setIsHost(true);
       setUserVideoAudio((preList) => {
@@ -56,15 +55,7 @@ const Room = (props) => {
 
     // Set Back Button Event
     window.addEventListener("popstate", goToBack);
-
-    // Handle close event when user presses cross or Alt + F4 / Ctrl + W
-    // To be fixed
-    // window.onbeforeunload = () => {
-    //   socket.emit("BE-leave-room", { roomId, leaver: currentUser });
-    //   props.history.push("/");
-    //   sessionStorage.removeItem("user");
-    //   return "...";
-    // }
+    
 
     socket.emit("BE-join-room", { roomId, userName: currentUser, userId: JSON.parse(sessionStorage.getItem("userI")).id });
 
@@ -78,9 +69,7 @@ const Room = (props) => {
         stream.getVideoTracks()[0].enabled = false;
         console.log(stream.getAudioTracks()[0].enabled)
         const eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime); 
-        // console.log(sessionStorage.getItem("userI"));
         let currTime = Math.ceil(Date.now() / 1000);
-        // console.log("currTime : ", currTime);
         if (currTime >= eTime) {
           setBottomBarButtonsEnabler(false);
           alert("Time Up : Credits Expired, Please Recharge to get camera and audio access");
@@ -98,6 +87,7 @@ const Room = (props) => {
               alert("Time Up : Credits Expired the camera and audio will stop withing 10 secs");
               const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
               const leaveTime = Math.ceil(Date.now() / 1000);
+              // axios request to save credit data
               axios
                 .post('http://localhost:5000/api/user/credit-saver', {
                   eTime,
@@ -109,6 +99,7 @@ const Room = (props) => {
                   alert('Unable to leave meet');
                 });
               
+              // stop camera, audio after 10 sec.
               setTimeout(() => stopStreamingCameraAndAudio(stream), 10000);
               
               setUserVideoAudio((preList) => {
@@ -134,7 +125,6 @@ const Room = (props) => {
               });
           
               socket.emit("BE-toggle-both", { roomId });
-
               return clearInterval(interval);
             }
           }, 5000);
@@ -220,11 +210,8 @@ const Room = (props) => {
             ({ peerID }) => peerID !== userId
           );
 
-          // below code is yet to be fully tested
           setUserVideoAudio((preList) => {
-            console.log(preList);
             delete preList[userName];
-            console.log(preList);
             return {
               ...preList
             };
@@ -308,14 +295,12 @@ const Room = (props) => {
     // alert("If Your video fails to load, please press the reset button in the bottom bar.")
 
     return () => {
-      // clearInterval(interval);
       socket.disconnect();
     };
     // eslint-disable-next-line
   }, []);
 
-  // function for connect camera and mic
-
+  // function for connect camera and mic (Peer Connection)
   function createPeer(userId, caller, stream) {
     const peer = new Peer({
       initiator: true,
@@ -336,6 +321,7 @@ const Room = (props) => {
 
     return peer;
   }
+  // on credit exipration
   function stopStreamingCameraAndAudio(stream){
     stream.getTracks().forEach(function(track) {
         if (track.readyState == 'live') {
@@ -359,13 +345,13 @@ const Room = (props) => {
     });
 
     peer.signal(incomingSignal);
-
     return peer;
   }
 
   function findPeer(id) {
     return peersRef.current.find((p) => p.peerID === id);
   }
+
   function createUserVideo(peer, index, arr) {
     return (
       <VideoBox
@@ -416,6 +402,7 @@ const Room = (props) => {
     }
     const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
     const leaveTime = Math.ceil(Date.now() / 1000);
+    // save user's credit and leave room
     await axios
       .post('http://localhost:5000/api/user/credit-saver', {
         eTime,
@@ -438,24 +425,8 @@ const Room = (props) => {
      if(e){
       e.preventDefault();
     }
-    // const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
-    // const leaveTime = Math.ceil(Date.now() / 1000);
-    // await axios
-    //   .post('http://localhost:5000/api/user/credit-saver', {
-    //     eTime,
-    //     leaveTime,
-    //     currentUser,
-    //   })
-      // .then((response) => {
-        // console.log(response);
-        socket.emit('BE-leave-room', { roomId, leaver: currentUser });
-        // sessionStorage.removeItem('user');
+    socket.emit('BE-leave-room', { roomId, leaver: currentUser });
     window.location.href = `/room/${roomId}`;
-    // console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-    // props.history.push(`/room/${roomId}`)
-    // console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-
-      // })
   }
 
   const endMeetForAll = (e) => {
@@ -469,6 +440,7 @@ const Room = (props) => {
     setChatEnabled(!chatEnabled);
   }
 
+  // toggle resources
   const toggleCameraAudio = (e) => {
     console.log(e, " and enabled - ", userVideoAudio['localUser'].enabled);
     if( userVideoAudio['localUser'].enabled || e == 'both' || e == 'videoH' || e == 'audioH' ){
@@ -562,7 +534,6 @@ const Room = (props) => {
           const screenTrack = stream.getTracks()[0];
 
           peersRef.current.forEach(({ peer }) => {
-            // replaceTrack (oldTrack, newTrack, oldStream);
             peer.replaceTrack(
               peer.streams[0]
                 .getTracks()
@@ -650,7 +621,6 @@ const Room = (props) => {
           userStream.current.addTrack(newStreamTrack);
 
           peersRef.current.forEach(({ peer }) => {
-            // replaceTrack (oldTrack, newTrack, oldStream);
             peer.replaceTrack(
               oldStreamTrack,
               newStreamTrack,
@@ -683,7 +653,7 @@ const Room = (props) => {
               playInline
             ></MyVideo>
           </VideoBox>
-          {/* Joined User Vidoe */}
+          {/* Joined User Video */}
           {peers &&
             peers.map((peer, index, arr) => createUserVideo(peer, index, arr))}
         </VideoContainer>

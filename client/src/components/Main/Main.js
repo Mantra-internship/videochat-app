@@ -57,6 +57,7 @@ const Main = (props) => {
     return jwtToken;
   };
 
+  // join meet functionality
   const clickJoin = async () => {
     setLoader(true);
     const roomName = roomRef.current;
@@ -105,14 +106,6 @@ const Main = (props) => {
   return (
     <MainContainer>
       <Row>
-        {/* <Label htmlFor="roomName">Room Address</Label> */}
-        {/* <Input
-          type="text"
-          id="roomName"
-          value={roomID}
-          disabled={user?.role == 'astrologer' ? false : true}
-          ref={roomRef}
-        /> */}
         {(roomID != '') ? (
           <Heading>{`You are about to join room of ${roomHost.name}`}</Heading>
         ) : (
@@ -146,18 +139,6 @@ const Heading = styled.h5`
     text-decoration: none;
     color: gold;
   }
-`;
-
-const Label = styled.label``;
-
-const Input = styled.input`
-  width: 150px;
-  height: 35px;
-  margin-left: 15px;
-  padding-left: 10px;
-  outline: none;
-  border: none;
-  border-radius: 5px;
 `;
 
 const Error = styled.div`
