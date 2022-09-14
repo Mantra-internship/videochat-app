@@ -20,38 +20,11 @@ const videoChat = (socket, io, socketList) => {
         });
         console.log({ socketList });
         socket.broadcast.to(roomId).emit('FE-user-join', users);
-//         io.to(socket.id).emit('FE-user-join', users);
-        // io.sockets.in(roomId).emit('FE-user-join', users);
       } catch (e) {
         io.sockets.in(roomId).emit('FE-error-user-exist', { err: true });
       }
     });
   });
-
-  // socket.on("BE-token-create", ({ userID }) => {
-  //   if(!userID){
-  //     socket.emit("FE-token-saver", {code: 400}, {});
-  //   }else{
-  //     User.findOne({ _id: userID }, (error, foundUser) => {
-  //       if(error){
-  //         console.log(error);
-  //         socket.emit("FE-token-saver", {code: 400}, {});
-  //       }else if(foundUser){
-  //         console.log(foundUser);
-  //         const tokenObj = {
-  //           name: foundUser.name,
-  //           phone_no: foundUser.phone,
-  //           credits: foundUser.credits,
-  //           eTime: (new Date().getTime() / 1000) + (foundUser.credits * 60) + 5
-  //         }
-  //         socket.emit("FE-token-saver", {}, tokenObj);
-  //       }else{
-  //         // console.log(userPhone);
-  //         socket.emit("FE-token-saver", {code: 404}, {});
-  //       }
-  //     });
-  //   }
-  // });
 
   socket.on('BE-call-user', ({ userToCall, from, signal }) => {
     io.to(userToCall).emit('FE-receive-call', {
@@ -97,30 +70,9 @@ const videoChat = (socket, io, socketList) => {
   });
 
   socket.on("BE-list-updator", ({roomId, newState, target, targetName}) => {
+    socketList[socket.id].enabled = newState;
     socket.broadcast.to(roomId).emit("FE-list-updator", { target, newState, targetName });
   });
-
-  // console.log(leaver)
-  // console.log("Etime : ", eTime);
-  // console.log("leavetime : ", leaveTime);
-  //   if(leaveTime){
-  //   console.log("inside if");
-  //   const leavingUser =  User.findOne({ name : leaver});
-  //   console.log("leavingUser : " + leavingUser);
-  //   // ! error handling yet to be implemented
-  //   if(leavingUser){
-  //     let credits = leavingUser.credits;
-  //     if((eTime - leaveTime <= 0))
-  //       credits = 0;
-  //     else{
-  //       credits = Math.ceil((eTime - leaveTime)/60);
-  //     }
-  //     if(credits != leavingUser.credits){
-  //       leavingUser.credits = credits;
-  //       leavingUser.save();
-  //     }
-  //   }
-  // }
 
   socket.on('BE-media-close', ({ userId, targetType }) => {
     if( userId && (targetType === 'videoH' || targetType === 'audioH') ){
