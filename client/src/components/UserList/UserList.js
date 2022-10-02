@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import socket from '../../socket';
 
 const UserList = ({ display, roomId, isHost, userList }) => {
-
   // const currentUser = sessionStorage.getItem('user');
 
   const closeVideo = (user) => {   // can only switch off
@@ -36,10 +35,14 @@ const UserList = ({ display, roomId, isHost, userList }) => {
     }
   }
 
-  const printer = (e) => {
-    // console.log(Object.entries(userList));
-    console.log(userList);
+  // Improved version code
+  const disableAllMedia = () => {
+    socket.emit('BE-disable-media-All', { roomId });
   }
+
+  // const printer = (e) => {
+  //   console.log(userList);
+  // }
 
   return (
     <UserContainer className={display === 2 ? '' : 'width0'}>
@@ -66,9 +69,12 @@ const UserList = ({ display, roomId, isHost, userList }) => {
       </ListArea>
 
 
-      <DisableButton onClick={printer}>
-        tester
-      </DisableButton>
+      <ToggleMediaButton onClick={disableAllMedia}>
+        Disable Everyone's Camera and Audio
+      </ToggleMediaButton>
+      {/* <toggleAllMicButton onClick={toggleAllMic}>
+        
+      </toggleAllMicButton> */}
 
     </UserContainer>
   );
@@ -136,7 +142,7 @@ const RemoveIcon = styled.i`
   color: red;
 `;
 
-const DisableButton = styled.button`
+const ToggleMediaButton = styled.button`
   bottom: 0;
   width: 100%;
   height: 6%;
