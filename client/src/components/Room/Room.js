@@ -28,6 +28,7 @@ const Room = (props) => {
   const [isHost, setIsHost] = useState(false);
   const [chatEnabled, setChatEnabled] = useState(true);
   const [showText, setShowText] = useState(true);
+  const [credits, setCredits] = useState(0);
 
   document.title = `Room - ${roomId}`
 
@@ -67,6 +68,10 @@ const Room = (props) => {
         const interval = setInterval(() => {
           let eTime = Math.ceil(JSON.parse(sessionStorage.getItem("userI")).eTime);
           let currTime = Math.ceil(Date.now() / 1000);
+
+          let cre = eTime - currTime;
+          setCredits(cre);
+
           console.log("eTime - " + eTime);
           console.log("currTime - " + currTime);
           if (currTime >= eTime) {
@@ -677,10 +682,11 @@ const Room = (props) => {
           endMeetForAll={endMeetForAll}
           toggleRaiseHand={toggleRaiseHand}
           userList={userVideoAudio}
+          credits={credits}
         />
       </VideoAndBarContainer>
-      <Chat display={displayChatOrList} roomId={roomId} chatEnabled={chatEnabled} chatToggleForAll={chatToggleForAll} isHost={isHost} userList={userVideoAudio} />
-      <UserList display={displayChatOrList} roomId={roomId} isHost={isHost} userList={userVideoAudio} setUserList={setUserVideoAudio} />
+      <Chat display={displayChatOrList} roomId={roomId} chatEnabled={chatEnabled} chatToggleForAll={chatToggleForAll} isHost={isHost} userList={userVideoAudio} credits={credits} />
+      <UserList display={displayChatOrList} roomId={roomId} isHost={isHost} userList={userVideoAudio} setUserList={setUserVideoAudio} credits={credits} />
     </RoomContainer>
   );
 };
@@ -711,7 +717,10 @@ const VideoAndBarContainer = styled.div`
   height: 100vh;
 `;
 
-const MyVideo = styled.video``;
+const MyVideo = styled.video`
+  width: 400px;
+  height: 300px;
+`;
 
 const VideoBox = styled.div`
   position: relative;

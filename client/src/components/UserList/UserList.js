@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import socket from '../../socket';
 
-const UserList = ({ display, roomId, isHost, userList }) => {
+const UserList = ({ display, roomId, isHost, userList, credits }) => {
   // const currentUser = sessionStorage.getItem('user');
 
   const closeVideo = (user) => {   // can only switch off
@@ -40,13 +40,10 @@ const UserList = ({ display, roomId, isHost, userList }) => {
     socket.emit('BE-disable-media-All', { roomId });
   }
 
-  // const printer = (e) => {
-  //   console.log(userList);
-  // }
-
   return (
     <UserContainer className={display === 2 ? '' : 'width0'}>
-      <TopHeader>Participants</TopHeader>
+      <TopHeader>Meet Participants</TopHeader>
+      <TopHeader>Current Credits - {credits}</TopHeader>
       <ListArea>
         {
           Object.entries(userList).length > 0
@@ -60,7 +57,6 @@ const UserList = ({ display, roomId, isHost, userList }) => {
                     { isHost && user[1].userId != 'localUser' ? <RemoveIcon className={'fas fa-minus-circle'} onClick={() => { removeUser(user[1].userId) }}/> : <></>}
                     { isHost && user[0] != 'localUser' ? <ToggleIcon className={ user[1] && user[1].enabled ? 'fa fa-toggle-on' : 'fa fa-toggle-off' } style={{ color:  user[1] && user[1].enabled ? 'green' : 'red'}} onClick={() => { toggleEnable(user) }}/> : <></>}
                   </div>
-                  {/* <div>{user[1].userId}</div> */}
                 </User>              
                 ))
             :
