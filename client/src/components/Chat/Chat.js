@@ -87,7 +87,7 @@ const Chat = ({ display, roomId, chatEnabled, isHost, chatToggleForAll, userList
           </DisableButton>
         :
           <RecieverSelector onClick={recieverToggler}>
-            To: {recieverSelector === 'all' ? "Host" : "All"}
+            To: {recieverSelector === 'all' ? "All" : "Host"}
           </RecieverSelector>
       }
       <BottomInput
@@ -204,6 +204,22 @@ const BottomInput = styled.input`
 `;
 
 const DisableButton = styled.button`
+  bottom: 0;
+  width: 100%;
+  height: 6%;
+  padding: 15px;
+  background-color: #4ea1d3;
+  color: white;
+  box-sizing: border-box;
+  outline: none;
+  cursor: pointer;
+
+  :focus {
+    outline: none;
+  }
+`;
+
+const RecieverSelector = styled.button`
   bottom: 0;
   width: 100%;
   height: 6%;
