@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 // import 'react-phone-input-2/lib/style.css';
@@ -102,7 +102,8 @@ function UserRegister(props) {
             </Select>
           </Row>
         </Inner>
-        <SendButton onClick={postData}>{Loader ? "Saving Data and sending OTP": "Get OTP"}</SendButton>
+        <SendButton onClick={postData}>{Loader ? "Saving Data and sending OTP" : "Get OTP"}</SendButton>
+        <SendButton><Link style={{textDecoration: 'none', color: 'white'}} to="/login">visited before? Login!</Link></SendButton>
       </MainContainer>
     </>
   );

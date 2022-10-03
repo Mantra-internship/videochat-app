@@ -56,6 +56,17 @@ function UserProfile({
           ))}
         </Select>
       </Row>
+      <Row>
+        <Label htmlFor="credits">Credits</Label>
+        <Input
+          type="number"
+          id="Name"
+          disabled={true}
+          placeholder="John Doe"
+          defaultValue={data.credits}
+          ref={nameRef}
+        />
+      </Row>
     </>
   );
 }

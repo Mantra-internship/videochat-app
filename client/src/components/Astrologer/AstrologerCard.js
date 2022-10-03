@@ -43,6 +43,14 @@ function AstrologerCard({ astrologer }) {
       >
         E-Mail - {astrologer.email}
       </p>
+      <p
+        style={{
+          margin: '5px 0 20px 0',
+          fontSize: '20px',
+        }}
+      >
+        Verified - {astrologer.approved ? "true" : "false"}
+      </p>
       <ButtonContainer>
         <a
           style={{
@@ -94,7 +102,7 @@ const Card = styled.div`
   border-radius: 15%;
   padding: 15px;
   width: 400px;
-  height: 400px;
+  height: 420px;
   margin: 20px;
 
   :hover{
