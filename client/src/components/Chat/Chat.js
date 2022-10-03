@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import socket from '../../socket';
 
-const Chat = ({ display, roomId, chatEnabled, isHost, chatToggleForAll }) => {
+const Chat = ({ display, roomId, chatEnabled, isHost, chatToggleForAll, credits }) => {
   const currentUser = sessionStorage.getItem('user');
   const [msg, setMsg] = useState([]);
   const messagesEndRef = useRef(null);
@@ -35,6 +35,7 @@ const Chat = ({ display, roomId, chatEnabled, isHost, chatToggleForAll }) => {
   return (
     <ChatContainer className={display === 1 ? '' : 'width0'}>
       <TopHeader>Group Chat Room</TopHeader>
+      <TopHeader>Current Credits - {credits}</TopHeader>
       <ChatArea>
         <MessageList>
           {msg &&

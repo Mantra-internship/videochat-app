@@ -105,6 +105,9 @@ const Main = (props) => {
   return (
     <MainContainer>
       <Row>
+        <Heading>Welcome to the video chat app, please <Link to="/login">Login</Link> to continue or visit te <Link to="/astrologers">astrologers</Link> page.</Heading>
+      </Row>
+      <Row>
         {/* <Label htmlFor="roomName">Room Address</Label> */}
         {/* <Input
           type="text"
@@ -134,13 +137,14 @@ const MainContainer = styled.div`
 const Row = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   margin-top: 15px;
   line-height: 35px;
 `;
 
 const Heading = styled.h5`
   font-size: 25px;
+  text-align: center;
 
   > a {
     text-decoration: none;
