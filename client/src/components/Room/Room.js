@@ -32,7 +32,6 @@ const Room = (props) => {
   document.title = `Room - ${roomId}`
 
   useEffect(() => {
-    // console.log(JSON.parse(sessionStorage.getItem("userI")).eTime);
     if(JSON.parse(sessionStorage.getItem("userI")) === null || JSON.parse(sessionStorage.getItem("userI")).eTime === undefined){
       return window.location.href = "/";
     }
@@ -44,8 +43,8 @@ const Room = (props) => {
           localUser: { video: true, audio: true, userId: 'localUser', isHost: true, enabled: true, handRaised: false }
         }
       });
-      
     }
+
     // Get Video Devices
     navigator.mediaDevices.enumerateDevices().then((devices) => {
       const filtered = devices.filter((device) => device.kind === "videoinput");
@@ -55,15 +54,6 @@ const Room = (props) => {
 
     // Set Back Button Event
     window.addEventListener("popstate", goToBack);
-
-    // Handle close event when user presses cross or Alt + F4 / Ctrl + W
-    // To be fixed
-    // window.onbeforeunload = () => {
-    //   socket.emit("BE-leave-room", { roomId, leaver: currentUser });
-    //   props.history.push("/");
-    //   sessionStorage.removeItem("user");
-    //   return "...";
-    // }
 
     // Connect Camera & Mic
     navigator.mediaDevices
@@ -233,10 +223,8 @@ const Room = (props) => {
     socket.on("FE-toggle-enabled", ({ target, newState, targetName }) => {
       try{
         if(newState){
-          // console.log("-----------------------"+video+", "+audio);
           setUserVideoAudio((preList) => {
             let {video, audio, userId, isHost} = preList['localUser'];
-//             console.log("-----------------------"+video+", "+audio);
             return {
               ...preList,
               localUser: {video, audio, userId, isHost, enabled: true, handRaised: false},    // when the host enables user, hand is set to unraised state
@@ -250,6 +238,15 @@ const Room = (props) => {
         console.log(error);
       }
     });
+
+    // Improved version code
+    socket.on("FE-disable-enabled", () => {
+      try{
+        toggleCameraAudio('both');
+      }catch(error){
+        console.log(error);
+      }
+    })
 
     socket.on("FE-list-updator", ({ target, newState, targetName }) => {
       setUserVideoAudio((preList) => {

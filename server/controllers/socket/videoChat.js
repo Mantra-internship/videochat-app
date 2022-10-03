@@ -96,6 +96,7 @@ const videoChat = (socket, io, socketList) => {
     socketList[socket.id].video = false;
     socketList[socket.id].audio = false;
     socketList[socket.id].handRaised = false;
+    socketList[socket.id].enabled = false;
     socket.broadcast
       .to(roomId)
       .emit('FE-toggle-camera', { userId: socket.id, switchTarget: 'both' });
@@ -104,6 +105,10 @@ const videoChat = (socket, io, socketList) => {
   socket.on("BE-toggle-RH", ({ roomId, newHandState, userName }) => {
     socketList[socket.id].handRaised = newHandState;
     socket.broadcast.to(roomId).emit("FE-toggle-RH", { newHandState, userName });
+  });
+
+  socket.on("BE-disable-media-All", ({ roomId }) => {
+    socket.broadcast.to(roomId).emit("FE-disable-enabled", { roomId });
   });
 };
 
