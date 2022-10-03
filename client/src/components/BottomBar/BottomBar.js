@@ -5,7 +5,7 @@ const BottomBar = ({
   clickChat,
   clickCameraDevice,
   goToBack,
-  reloadPage,
+  // reloadPage,
   toggleCameraAudio,
   userVideoAudio,
   clickScreenSharing,
@@ -106,12 +106,12 @@ const BottomBar = ({
             Raise Hand
           </RaiseHandButton>
         } 
-        <ResetButton onClick={reloadPage}>
+        {/* <ResetButton onClick={reloadPage}>
           <div>
             <FaIcon style={{ }} className="fas fa-redo-alt"></FaIcon>
           </div>
           Reset
-        </ResetButton>
+        </ResetButton> */}
       </Center>
       </>
        : 
@@ -153,7 +153,6 @@ const Bar = styled.div`
 const Left = styled.div`
   display: flex;
   align-items: center;
-
   margin-left: 15px;
 `;
 

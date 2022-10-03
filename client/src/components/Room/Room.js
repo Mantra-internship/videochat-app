@@ -404,29 +404,29 @@ const Room = (props) => {
   //   });
   // }
 
-  const reloadPage = (e) => {
-     if(e){
-      e.preventDefault();
-    }
-    // const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
-    // const leaveTime = Math.ceil(Date.now() / 1000);
-    // await axios
-    //   .post('http://localhost:5000/api/user/credit-saver', {
-    //     eTime,
-    //     leaveTime,
-    //     currentUser,
-    //   })
-      // .then((response) => {
-        // console.log(response);
-        socket.emit('BE-leave-room', { roomId, leaver: currentUser });
-        // sessionStorage.removeItem('user');
-    window.location.href = `/room/${roomId}`;
-    // console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-    // props.history.push(`/room/${roomId}`)
-    // console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+  // const reloadPage = (e) => {
+  //    if(e){
+  //     e.preventDefault();
+  //   }
+  //   // const eTime = Math.ceil(JSON.parse(sessionStorage.getItem('userI')).eTime);
+  //   // const leaveTime = Math.ceil(Date.now() / 1000);
+  //   // await axios
+  //   //   .post('http://localhost:5000/api/user/credit-saver', {
+  //   //     eTime,
+  //   //     leaveTime,
+  //   //     currentUser,
+  //   //   })
+  //     // .then((response) => {
+  //       // console.log(response);
+  //       socket.emit('BE-leave-room', { roomId, leaver: currentUser });
+  //       // sessionStorage.removeItem('user');
+  //   window.location.href = `/room/${roomId}`;
+  //   // console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+  //   // props.history.push(`/room/${roomId}`)
+  //   // console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 
-      // })
-  }
+  //     // })
+  // }
 
   const endMeetForAll = (e) => {
     e.preventDefault();
@@ -664,7 +664,7 @@ const Room = (props) => {
           clickUserList={clickUserList}
           clickCameraDevice={clickCameraDevice}
           goToBack={goToBack}
-          reloadPage={reloadPage}
+          // reloadPage={reloadPage}
           toggleCameraAudio={toggleCameraAudio}
           userVideoAudio={userVideoAudio['localUser']}
           screenShare={screenShare}
@@ -679,7 +679,7 @@ const Room = (props) => {
           userList={userVideoAudio}
         />
       </VideoAndBarContainer>
-      <Chat display={displayChatOrList} roomId={roomId} chatEnabled={chatEnabled} chatToggleForAll={chatToggleForAll} isHost={isHost} />
+      <Chat display={displayChatOrList} roomId={roomId} chatEnabled={chatEnabled} chatToggleForAll={chatToggleForAll} isHost={isHost} userList={userVideoAudio} />
       <UserList display={displayChatOrList} roomId={roomId} isHost={isHost} userList={userVideoAudio} setUserList={setUserVideoAudio} />
     </RoomContainer>
   );

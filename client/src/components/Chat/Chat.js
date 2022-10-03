@@ -2,16 +2,22 @@ import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import socket from '../../socket';
 
-const Chat = ({ display, roomId, chatEnabled, isHost, chatToggleForAll }) => {
+const Chat = ({ display, roomId, chatEnabled, isHost, chatToggleForAll, userList }) => {
   const currentUser = sessionStorage.getItem('user');
   const [msg, setMsg] = useState([]);
   const messagesEndRef = useRef(null);
   const inputRef = useRef();
+  const [recieverSelector, setRecieverSelector] = useState('all')
+  let hostId;
   
   useEffect(() => {
     socket.on('FE-receive-message', ({ msg, sender }) => {
       setMsg((msgs) => [...msgs, { sender, msg }]);
     });
+    // To be improved Later
+    Object.entries(userList).map((user) => (
+      (user[1].isHost) ? hostId = user[1].userId : ""
+    ))
   }, []);
 
   // Scroll to Bottom of Message List
@@ -21,12 +27,20 @@ const Chat = ({ display, roomId, chatEnabled, isHost, chatToggleForAll }) => {
     messagesEndRef.current.scrollIntoView({ behavior: 'smooth'});
   }
 
+  const recieverToggler = () => {
+    if(recieverSelector === 'all'){
+      setRecieverSelector('host');
+    }else{
+      setRecieverSelector('all');
+    }
+  }
+
   const sendMessage = (e) => {
     if (e.key === 'Enter') {
       const msg = e.target.value;
 
       if (msg) {
-        socket.emit('BE-send-message', { roomId, msg, sender: currentUser });
+        socket.emit('BE-send-message', { roomId, msg, sender: currentUser, reciever: recieverSelector, hostId });
         inputRef.current.value = '';
       }
     }
@@ -72,7 +86,9 @@ const Chat = ({ display, roomId, chatEnabled, isHost, chatToggleForAll }) => {
             }
           </DisableButton>
         :
-          <></>
+          <RecieverSelector onClick={recieverToggler}>
+            To: {recieverSelector === 'all' ? "Host" : "All"}
+          </RecieverSelector>
       }
       <BottomInput
         ref={inputRef}
